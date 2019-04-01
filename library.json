@@ -1,7 +1,7 @@
 {
 	"id": "{45499E56-5EDE-4A5C-AFE8-DBA5C9E2E610}",
 	"author": "Torsten Beck",
-	"name": "MyModules",
+	"name": "MyWebSocket",
 	"url": "",
 	"compatibility": {
 		"version": "4.4"
