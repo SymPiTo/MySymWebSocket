@@ -1473,6 +1473,7 @@ class MyWebsocketServer extends IPSModule
 	public function getIPSVars(){
             
             $IPSVariables = json_decode($this->ReadPropertyString("IPSVars"));
+            $this->SendDebug('Event Variable', $IPSVariables, 0);
             foreach($IPSVariables as $IPSVariable) {
                 $varid = $IPSVariable->ID;
                 $data['ID'.$varid] = getvalue($varid);
