@@ -1534,7 +1534,7 @@ class MyWebsocketServer extends IPSModule
                     $Name = "VarEvent".$var;
                     $Position = 0;
                     $trigger = 1;  //Bei Änderung von Variable
-                    RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var);
+                    $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var);
                 }
             }
         }
