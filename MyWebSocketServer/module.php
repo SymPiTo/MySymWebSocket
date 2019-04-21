@@ -1527,7 +1527,8 @@ class MyWebsocketServer extends IPSModule
                     $vars[$i]['ID'] = $var;
                     $vars[$i]['EventID'] = "VarEvent".$var;
                     $i++;
-                    $ParentID = $this->GetIDForIdent("IPSVarEvents");
+                    $ParentID = @IPS_GetCategoryIDByName("IPSVarEvents", $this->InstanceID);
+                
                     $Typ = 0;  //ausgelöstes Ereignis
                     $Ident = "IPS".$var;
                     $Name = "VarEvent".$var;
