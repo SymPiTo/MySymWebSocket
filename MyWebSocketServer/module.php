@@ -1503,7 +1503,40 @@ class MyWebsocketServer extends IPSModule
             setvalue($this->GetIDForIdent("DataSendToClient"), $xml);
         } 
         
-
+        /* ----------------------------------------------------------------------------
+         Function: RegisterWssVarEvents
+        ...............................................................................
+         
+        ...............................................................................
+        Parameters: 
+            none.
+        ..............................................................................
+        Returns:   
+             none
+        ------------------------------------------------------------------------------- */
+	public function RegisterIPSvars(){
+            //Alle alten Events löschen und neu anlegen
+            //IPS_DeleteEvent($EreignisID);
+            //Alle Variablen mit Beschreibung WSS holen und ein Evet anlegen.
+            $alleVariablen = IPS_GetVariableList();
+            $i = 0;    
+            foreach($alleVariablen as $key => $var){
+                $x = IPS_GetObject($var);
+                $y = $x['ObjectInfo'];
+                if ($y === "WSS"){
+                    $vars[$i]['ID'] = $var;
+                    $vars[$i]['EventID'] = "VarEvent".$var;
+                    $i++;
+                    $ParentID = $this->GetIDForIdent("IPSVarEvents");
+                    $Typ = 0;  //ausgelöstes Ereignis
+                    $Ident = "IPS".$var;
+                    $Name = "VarEvent".$var;
+                    $Position = 0;
+                    $trigger = 1;  //Bei Änderung von Variable
+                    RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var);
+                }
+            }
+        }
 }
 
 
