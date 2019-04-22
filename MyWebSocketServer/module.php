@@ -1546,6 +1546,7 @@ class MyWebsocketServer extends IPSModule
             }
             setvalue($this->GetIDForIdent("IpsSendVars"), json_encode($IpsVars));
         }
+        
 }
 
 
