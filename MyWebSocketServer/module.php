@@ -90,7 +90,7 @@ class MyWebsocketServer extends IPSModule
         $this->RegisterVariableString("Client4", "connected Client 4"); 
         
         //Variable für zu übertragende Variable (Array) anlegen
-        $this->RegisterVariableString("IPSVars", "IPS Variablen");   
+        $this->RegisterVariableString("IpsSendVars", "IPS Variablen");   
         
         //Listen Einträge als JSON regisrieren
         // zum umwandeln in ein Array 
@@ -1544,6 +1544,7 @@ class MyWebsocketServer extends IPSModule
                     //$IpsVars[$key]['EventID'] = $EventID;
                 }
             }
+            setvalue($this->GetIDForIdent("IpsSendVars"), json_encode($IpsVars));
         }
 }
 
