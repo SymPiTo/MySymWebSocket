@@ -89,6 +89,9 @@ class MyWebsocketServer extends IPSModule
         $this->RegisterVariableString("Client3", "connected Client 3"); 
         $this->RegisterVariableString("Client4", "connected Client 4"); 
         
+        //Variable für zu übertragende Variable (Array) anlegen
+        $this->RegisterVariableString("IPSVars", "IPS Variablen");   
+        
         //Listen Einträge als JSON regisrieren
         // zum umwandeln in ein Array 
         // $IPSVars = json_decode($this->ReadPropertyString("IPSVars"));
@@ -1416,8 +1419,8 @@ class MyWebsocketServer extends IPSModule
     -------------------------------------------------------------------------------*/
     private function RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var)
     {
-            $eid =  @IPS_GetEventIDByName($Name, $ParentID);
-            if($eid === false) {
+            $EventID =  @IPS_GetEventIDByName($Name, $ParentID);
+            if($EventID === false) {
                 //we need to create one
                 $EventID = IPS_CreateEvent($Typ);
                 IPS_SetParent($EventID, $ParentID);
@@ -1431,7 +1434,7 @@ class MyWebsocketServer extends IPSModule
             } 
             else{
             }
- 
+            return $EventID;
     }    
     
     /* ----------------------------------------------------------------------------------------------------- 
@@ -1462,7 +1465,8 @@ class MyWebsocketServer extends IPSModule
         /* ----------------------------------------------------------------------------
          Function: getIPSVars
         ...............................................................................
-         
+         * holt die Variablen aus der Event Liste und packt sie in ein Array
+         * und sendet sie an den client
         ...............................................................................
         Parameters: 
             none.
@@ -1534,7 +1538,10 @@ class MyWebsocketServer extends IPSModule
                     $Name = "VarEvent".$var;
                     $Position = 0;
                     $trigger = 1;  //Bei Änderung von Variable
-                    $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var);
+                    //$EventID = $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var);
+                    
+                    $IpsVars[$key]['ID'] = $var;
+                    $IpsVars[$key]['EventID'] = $EventID;
                 }
             }
         }
