@@ -1541,7 +1541,7 @@ class MyWebsocketServer extends IPSModule
                     //$EventID = $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var);
                     
                     $IpsVars[$key]['ID'] = $var;
-                    $IpsVars[$key]['EventID'] = $EventID;
+                    //$IpsVars[$key]['EventID'] = $EventID;
                 }
             }
         }
