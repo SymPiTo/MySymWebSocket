@@ -137,6 +137,7 @@ class MyWebsocketServer extends IPSModule
             case 10603:
                 //VM_UPDATE
                 $this->SendDebug('VM_UPDATE', $SenderID, 0);
+                setvalue(40308,$SenderID);
                 break;
         }
     }
