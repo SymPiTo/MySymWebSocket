@@ -193,7 +193,7 @@ class MyWebsocketServer extends IPSModule
             $this->RegisterMessage(0, IPS_KERNELSTARTED);
             $this->RegisterMessage(0, IPS_KERNELSHUTDOWN);
         }
-        $this->RegisterMessage(0, VM_UPDATE);  
+        $this->RegisterMessage(11035, VM_UPDATE);  
         
         $this->RegisterMessage($this->InstanceID, FM_CONNECT);
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
