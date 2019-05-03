@@ -134,7 +134,7 @@ class MyWebsocketServer extends IPSModule
                     }
                 }
                 break;
-            case 10603:
+            case VM_UPDATE:
                 //VM_UPDATE
                 $this->SendDebug('VM_UPDATE', $SenderID, 0);
                 setvalue(40308,$SenderID);
@@ -193,7 +193,8 @@ class MyWebsocketServer extends IPSModule
             $this->RegisterMessage(0, IPS_KERNELSTARTED);
             $this->RegisterMessage(0, IPS_KERNELSHUTDOWN);
         }
-        $this->RegisterMessage($this->InstanceID, 10603); //VM_UPDATE
+        $this->RegisterMessage(0, VM_UPDATE);  
+        
         $this->RegisterMessage($this->InstanceID, FM_CONNECT);
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
 
