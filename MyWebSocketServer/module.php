@@ -137,7 +137,7 @@ class MyWebsocketServer extends IPSModule
             case VM_UPDATE:
                 //VM_UPDATE
                 $this->SendDebug('VM_UPDATE', $SenderID, 0);
-                setvalue(40308,$SenderID);
+                setvalue(40308, "Variable aktualisiert");
                 break;
         }
     }
