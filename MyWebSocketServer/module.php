@@ -1533,7 +1533,8 @@ class MyWebsocketServer extends IPSModule
                 $myIDs = explode(',', $myfile );
                 
                 foreach($myIDs as $IDvalue){
-                    $this->UnregisterMessage((string)$IDvalue, VM_UPDATE);
+                
+                    $this->UnregisterMessage(intval($id), VM_UPDATE);
                 }
                 
             }
