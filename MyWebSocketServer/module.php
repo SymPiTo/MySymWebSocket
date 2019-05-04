@@ -1632,21 +1632,34 @@ class MyWebsocketServer extends IPSModule
             //CLients in 4 Variable schreiben
             $this->SendDebug('writeclient','SSSSSSOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO', 0);
             $this->SendDebug('writeclient',$list, 0);
+            $anz = count($a);
             foreach ($list as $Client) {
                 $i=$i+1;
                 //verbundene Client Adressen in Variale schreiben
                 switch ($i){
                     case 1:
-                    setValue($this->GetIDForIdent("Client1"),$Client->ClientIP . ':' . $Client->ClientPort);
+                        setValue($this->GetIDForIdent("Client1"),$Client->ClientIP . ':' . $Client->ClientPort);
+                        if($anz<1){
+                            setValue($this->GetIDForIdent("Client1"),'');    
+                        }
                         break;
                     case 2: 
-                    setValue($this->GetIDForIdent("Client2"),$Client->ClientIP . ':' . $Client->ClientPort);
+                        setValue($this->GetIDForIdent("Client2"),$Client->ClientIP . ':' . $Client->ClientPort);
+                        if($anz<2){
+                            setValue($this->GetIDForIdent("Client2"),'');    
+                        }
                         break;
                     case 3:
-                    setValue($this->GetIDForIdent("Client3"),$Client->ClientIP . ':' . $Client->ClientPort);
+                        setValue($this->GetIDForIdent("Client3"),$Client->ClientIP . ':' . $Client->ClientPort);
+                        if($anz<3){
+                            setValue($this->GetIDForIdent("Client3"),'');    
+                        }
                         break;
                     case 4:
-                    setValue($this->GetIDForIdent("Client4"),$Client->ClientIP . ':' . $Client->ClientPort);
+                        setValue($this->GetIDForIdent("Client4"),$Client->ClientIP . ':' . $Client->ClientPort);
+                        if($anz<4){
+                            setValue($this->GetIDForIdent("Client4"),'');    
+                        } 
                 }
             }
         }
