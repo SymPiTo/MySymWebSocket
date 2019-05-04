@@ -140,7 +140,7 @@ class MyWebsocketServer extends IPSModule
                 // Variablen Änderung erkannt -> Daten holen und an Clients senden
 
                 $this->sendIPSVars();
-                
+                ips_sleep(1000);
                 break;
         }
     }
