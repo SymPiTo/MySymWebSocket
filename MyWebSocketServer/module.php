@@ -1536,9 +1536,9 @@ class MyWebsocketServer extends IPSModule
             $this->UnregisterMessage(12345, VM_UPDATE);
             foreach($alleVariablen as $key => $var){
                 $IPSVariable = IPS_GetObject($var);
-                $Info = $$IPSVariable['ObjectInfo'];
+                $Info = $IPSVariable['ObjectInfo'];
                 // WSS Variablen in ein File schreiben und Message registrieren
-                if ($y === "WSS"){
+                if ($Info === "WSS"){
                     $vars[$i]['ID'] = $var."\n";
                     fwrite($myfile, $vars[$i]['ID']);
                     $i = $i+1;
