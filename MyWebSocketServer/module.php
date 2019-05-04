@@ -1640,9 +1640,8 @@ class MyWebsocketServer extends IPSModule
         //////////////////////////////////////////////////////////////////////////////*/
         Protected function writeClients($list){ 
             //CLients in 4 Variable schreiben
-            $this->SendDebug('writeclient','SSSSSSOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO', 0);
-            $this->SendDebug('writeclient',$list, 0);
-            $anz = count($a);
+            
+            $anz = count($list);
             setValue($this->GetIDForIdent("Client1"),'');   
             setValue($this->GetIDForIdent("Client2"),'');    
             setValue($this->GetIDForIdent("Client3"),'');    
