@@ -1529,7 +1529,7 @@ class MyWebsocketServer extends IPSModule
             //IPS_DeleteEvent($EreignisID);
             $file = 'newfile.txt';
             if (file_exists($file)) {
-                $myfile = fopen("newfile.txt", "r");
+                $myfile =  file_get_contents($file, true);
                 $myIDs = explode($myfile, ',');
                 
                 foreach($myIDs as $IDvalue){
