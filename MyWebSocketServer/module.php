@@ -1524,32 +1524,26 @@ class MyWebsocketServer extends IPSModule
         Returns:   
              none
         ------------------------------------------------------------------------------- */
-	public function RegisterIPSvars(){
+	public function RegisterIPSMessages(){
             //Alle alten Events löschen und neu anlegen
             //IPS_DeleteEvent($EreignisID);
             //Alle Variablen mit Beschreibung WSS holen und ein Evet anlegen.
             $alleVariablen = IPS_GetVariableList();
-            $i = 0;    
+            $i = 0; 
+            //file öffnen falls vorhanden - wird überschreieben
+            $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+ 
             foreach($alleVariablen as $key => $var){
-                $x = IPS_GetObject($var);
-                $y = $x['ObjectInfo'];
+                $IPSVariable = IPS_GetObject($var);
+                $Info = $$IPSVariable['ObjectInfo'];
+                // WSS Variablen in ein File schreiben und Message registrieren
                 if ($y === "WSS"){
-                    $vars[$i]['ID'] = $var;
-                    $vars[$i]['EventID'] = "VarEvent".$var;
-                    $i++;
-                    $ParentID = @IPS_GetCategoryIDByName("IPSVarEvents", $this->InstanceID);
-                
-                    $Typ = 0;  //ausgelöstes Ereignis
-                    $Ident = "IPS".$var;
-                    $Name = "VarEvent".$var;
-                    $Position = 0;
-                    $trigger = 1;  //Bei Änderung von Variable
-                    //$EventID = $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var);
-                    
-                    $IpsVars[$key]['ID'] = $var;
-                    //$IpsVars[$key]['EventID'] = $EventID;
+                    $vars[$i]['ID'] = $var."\n";
+                    fwrite($myfile, $vars[$i]['ID']);
+                    $i = $i+1;
                 }
             }
+            fclose($myfile);    
             setvalue($this->GetIDForIdent("IpsSendVars"), json_encode($IpsVars));
         }
         
