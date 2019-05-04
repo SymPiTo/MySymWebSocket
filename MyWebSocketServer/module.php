@@ -137,7 +137,7 @@ class MyWebsocketServer extends IPSModule
             case VM_UPDATE:
                 //VM_UPDATE
                 $this->SendDebug('VM_UPDATE', $SenderID, 0);
-                setvalue(40308, "Variable aktualisiert");
+                
                 break;
         }
     }
@@ -193,7 +193,7 @@ class MyWebsocketServer extends IPSModule
             $this->RegisterMessage(0, IPS_KERNELSTARTED);
             $this->RegisterMessage(0, IPS_KERNELSHUTDOWN);
         }
-        $this->RegisterMessage(26315, VM_UPDATE);  
+        
         
         $this->RegisterMessage($this->InstanceID, FM_CONNECT);
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
@@ -1551,7 +1551,8 @@ class MyWebsocketServer extends IPSModule
                 if ($Info === "WSS"){
                     $IpsVars[$i]['ID'] = $var;
                     fwrite($myfile, $var.",");
-                    $i = $i+1;
+                    $i++;
+                    $this->RegisterMessage($var, VM_UPDATE);  
                 }
             }
             fclose($myfile);    
