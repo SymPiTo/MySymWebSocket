@@ -1532,7 +1532,8 @@ class MyWebsocketServer extends IPSModule
             $i = 0; 
             //file öffnen falls vorhanden - wird überschreieben
             $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
- 
+            //Das Modul "horcht" nicht mehr auf Nachrichten der Instanz 12345 mit der NachrichtID 10505
+            $this->UnregisterMessage(12345, VM_UPDATE);
             foreach($alleVariablen as $key => $var){
                 $IPSVariable = IPS_GetObject($var);
                 $Info = $$IPSVariable['ObjectInfo'];
