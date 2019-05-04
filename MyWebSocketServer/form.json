@@ -136,8 +136,8 @@
     [
                     { 
                             "type": "Button", 
-                            "caption": "Create WSS-Variable Events", 
-                            "onClick": "MyWSS_RegisterIPSvars($id);" 
+                            "caption": "Create WSS-Variable and Messages", 
+                            "onClick": "MyWSS_RegisterIPSMessages($id);" 
                     }
     ],
     "status":
