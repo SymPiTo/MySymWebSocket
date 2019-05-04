@@ -91,7 +91,7 @@ class MyWebsocketServer extends IPSModule
         $this->RegisterVariableString("Client4", "connected Client 4"); 
         
         //Status Variablen für Server
-        $this->RegisterVariableBoolean("active", "WSS_active", $Profile);
+        $this->RegisterVariableBoolean("active", "WSS_active", ~"Switch");
         
         
         //Variable für zu übertragende Variable (Array) anlegen
