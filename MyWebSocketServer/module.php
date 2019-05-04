@@ -1627,6 +1627,7 @@ class MyWebsocketServer extends IPSModule
         //////////////////////////////////////////////////////////////////////////////*/
         Protected function writeClients($list){ 
             //CLients in 4 Variable schreiben
+            $this->SendDebug('WRITECLIEnT',"SOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO", 0);
             foreach ($list as $Client) {
                 $i=$i+1;
                 //verbundene Client Adressen in Variale schreiben
