@@ -80,19 +80,24 @@ class MyWebsocketServer extends IPSModule
         $this->RegisterPropertyString("KeyPassword", "xxx");
         $this->RegisterTimer('KeepAlivePing', 0, 'MyWSS_KeepAlive($_IPS[\'TARGET\']);');
         // Daten die von Client kommen werden in folgende Variable geschrieben
-        $this->RegisterVariableString("CommandSendToServer", "CommandSendToServer");
+        $variablenID = $this->RegisterVariableString("CommandSendToServer", "CommandSendToServer");
+        IPS_SetInfo ($variablenID, "WSS"); 
         //Bei  Variablenänderung folgender Variable wird dieser Inhalt an alle Clients gesendet
         $this->RegisterVariableString("DataSendToClient", "DataSendToClient");
 
         //4 Variable der verbundenen Clients IP anlegen
-        $this->RegisterVariableString("Client1", "connected Client 1");        
-        $this->RegisterVariableString("Client2", "connected Client 2"); 
-        $this->RegisterVariableString("Client3", "connected Client 3"); 
-        $this->RegisterVariableString("Client4", "connected Client 4"); 
+        $variablenID = $this->RegisterVariableString("Client1", "connected Client 1");    
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString("Client2", "connected Client 2"); 
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString("Client3", "connected Client 3");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString("Client4", "connected Client 4"); 
+        IPS_SetInfo ($variablenID, "WSS"); 
         
         //Status Variablen für Server
-        $this->RegisterVariableBoolean("active", "WSS_active", "~Switch");
-        
+        $variablenID = $this->RegisterVariableBoolean("active", "WSS_active", "~Switch");
+        IPS_SetInfo ($variablenID, "WSS"); 
         
         //Variable für zu übertragende Variable (Array) anlegen
         $this->RegisterVariableString("IpsSendVars", "IPS Variablen");   
