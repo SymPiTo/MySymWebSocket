@@ -1534,7 +1534,7 @@ class MyWebsocketServer extends IPSModule
                 
                 foreach($myIDs as $IDvalue){
                 
-                    $this->UnregisterMessage(intval($id), VM_UPDATE);
+                    $this->UnregisterMessage(intval($IDvalue), VM_UPDATE);
                 }
                 
             }
