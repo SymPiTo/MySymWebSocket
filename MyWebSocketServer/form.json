@@ -5,6 +5,11 @@
                     "type": "CheckBox",
                     "caption": "Activate WebSocketServer"
                 },
+                {   "type": "NumberSpinner", 
+                    "name": "UpdateInterval",    
+                    "caption": "UpdateInterval", 
+                    "suffix": "milisekunden"
+                },
                 {
                     "type": "Label",
                     "label": "--------------------------------------------------"
@@ -124,42 +129,8 @@
                     "name": "Password",
                     "type": "PasswordTextBox",
                     "caption": "Password"
-                },
-                 { 
-                            "type": "Label", "label": "Add/Delete variables, which shall be tranfered to client" 
-                },
-                {
-                  "type": "List",
-                  "name": "IPSVars",
-                  "caption": "IPS Variable",
-                  "rowCount": "40", 
-                  "add": true,
-                  "delete": true,
-                  "sort": {
-                    "column": "ID",
-                    "direction": "ascending"
-                  },
-                  "columns": [{
-                    "name" : "ID",
-                    "label" : "ID",
-                    "width" : "460px",
-                    "add": 0,
-                    "edit": {
-                      "type": "SelectVariable"
-                    }
-                  }, {
-                    "name" : "Name",
-                    "label" : "Name",
-                    "width" : "auto",
-                    "add": "Select variable"
-                  }, {
-                    "name" : "Status",
-                    "label" : "Status",
-                    "width" : "120",
-                    "add": ""
-                  }],
-                    "values": []
-             }
+                }
+
             ],
     "actions":
     [

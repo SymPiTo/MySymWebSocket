@@ -65,6 +65,7 @@ class MyWebsocketServer extends IPSModule
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
         $this->RegisterPropertyBoolean("Open", false);
+        $this->RegisterPropertyInteger("UpdateInterval", 5000);
         $this->RegisterPropertyInteger("IDcommand", 0);
         $this->RegisterPropertyInteger("Port", 8080);
         $this->RegisterPropertyInteger("Interval", 0);
@@ -95,7 +96,11 @@ class MyWebsocketServer extends IPSModule
         //Listen Einträge als JSON regisrieren
         // zum umwandeln in ein Array 
         // $IPSVars = json_decode($this->ReadPropertyString("IPSVars"));
-        $this->RegisterPropertyString("IPSVars", "[]");
+        //$this->RegisterPropertyString("IPSVars", "[]");
+        
+        // Timer erstellen
+        $this->RegisterTimer("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"), 'WSS_sendIPSVars($_IPS[\'TARGET\']);');
+        
     }
 
     /**
@@ -140,7 +145,7 @@ class MyWebsocketServer extends IPSModule
                 // Variablen Änderung erkannt -> Daten holen und an Clients senden
             
                 $this->sendIPSVars();
-                ips_sleep(1000);
+            
            
                 break;
         }
@@ -184,6 +189,12 @@ class MyWebsocketServer extends IPSModule
      */
     public function ApplyChanges()
     {
+        if($this->ReadPropertyBoolean("Open")){
+            $this->SetTimerInterval("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"));
+        }
+        else {
+            $this->SetTimerInterval("UpdateVars", 0);
+        }
         //Variable für Webfront ausblenden.
         IPS_SetHidden ($this->GetIDForIdent("CommandSendToServer"), true );
         
@@ -1517,7 +1528,7 @@ class MyWebsocketServer extends IPSModule
             setvalue($this->GetIDForIdent("DataSendToClient"), $xml);
         } 
 
-        
+
     
         /* ----------------------------------------------------------------------------
          Function: sendIPSVarsToClients
@@ -1554,7 +1565,7 @@ class MyWebsocketServer extends IPSModule
                                 $data['ID57942'] = $h.':'.$m;	
 
                     $reply = 	array();
-                    $this->SendDebug('updateIPSvalues', $data, 0);
+                    //$this->SendDebug('updateIPSvalues', $data, 0);
                     $c =array($data, $reply);
                     //json_encode$c);
                     $xml = json_encode($c);
@@ -1613,7 +1624,9 @@ class MyWebsocketServer extends IPSModule
                     $IpsVars[$i]['ID'] = $var;
                     fwrite($myfile, $var.",");
                     $i++;
-                    $this->RegisterMessage($var, VM_UPDATE);  
+                    if($Info === "WSS1"){
+                        $this->RegisterMessage($var, VM_UPDATE);  
+                    }
                 }
             }
             fclose($myfile);    
