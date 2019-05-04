@@ -1171,7 +1171,10 @@ class MyWebsocketServer extends IPSModule
                     $this->SetNextTimer();
                 }
                 $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $NewData;
-                $this->writeClients($this->Multi_Clients);// Clients in variable schreiben
+                
+                $Clients = $this->Multi_Clients->GetClients();
+                $this->writeClients($Clients);// Clients in variable schreiben
+                
             } elseif ($Client->State == WebSocketState::CloseSend) {
                 $this->SendDebug('Receive', 'client answer server stream close !', 0);
                 $this->{'WaitForClose' . $Client->ClientIP . $Client->ClientPort} = true;
