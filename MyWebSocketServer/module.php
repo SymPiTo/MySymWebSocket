@@ -137,6 +137,9 @@ class MyWebsocketServer extends IPSModule
             case VM_UPDATE:
                 //VM_UPDATE
                 $this->SendDebug('VM_UPDATE', $SenderID, 0);
+                // Variablen Änderung erkannt -> Daten holen und an Clients senden
+
+                $this->sendIPSVars();
                 
                 break;
         }
@@ -213,7 +216,7 @@ class MyWebsocketServer extends IPSModule
 
         parent::ApplyChanges();
 
-        
+ /* Dies wurde ersetzt durch Meldungs Events       
         ///Für alle im Listen Konfigurationsfeld enthaltene Variable ein Event anlegen.
         //Unterkategorie anlegen
         $IPSVarsCatID = $this->RegisterCategory("IPSVarEvents");
@@ -226,7 +229,7 @@ class MyWebsocketServer extends IPSModule
             $Name = "VarEvent".$IPSVariable->ID;
             $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, 0, 1, $IPSVariable->ID);
         } 
-        
+*/
         /* nicht mehr benötigt"
          $ID_DSTC = $this->GetIDForIdent("DataSendToClient");
         // Trigger Event für Änderung der Variable "DataSendToClient" erstellen wenn nicht vorhanden
@@ -1512,6 +1515,63 @@ class MyWebsocketServer extends IPSModule
             //zum sichtbar machen
             setvalue($this->GetIDForIdent("DataSendToClient"), $xml);
         } 
+
+        
+    
+        /* ----------------------------------------------------------------------------
+         Function: sendIPSVarsToClients
+        ...............................................................................
+         * holt die Variablen aus der Event Liste und packt sie in ein Array
+         * und sendet sie an den client
+        ...............................................................................
+        Parameters: 
+            none.
+        ..............................................................................
+        Returns:   
+             none
+        ------------------------------------------------------------------------------- */
+	public function sendIPSVars(){
+                if (IPS_SemaphoreEnter("sendIPSVars", 5000)) {
+                      // ...Kritischer Codeabschnitt
+                    $IPSVariablesjson = getvalue($this->GetIDForIdent("IpsSendVars"));
+                    $IPSVariables = json_decode($IPSVariablesjson);
+                    //$this->SendDebug('Event Variable', $IPSVariables, 0);
+                    foreach($IPSVariables as $IPSVariable) {
+                        $varid = $IPSVariable->ID;
+                        $data['ID'.$varid] = getvalue($varid);
+                    }
+                                $a = getvalue(11938);
+                                $b = date('m/d/Y H:i:s', $a);
+                                $h = substr($b,11,2);
+                                $m = substr($b,14,2);
+                                $data['ID11938'] = $h.':'.$m;
+
+                                $a = getvalue(57942);
+                                $b = date('m/d/Y H:i:s', $a);
+                                $h = substr($b,11,2);
+                                $m = substr($b,14,2);
+                                $data['ID57942'] = $h.':'.$m;	
+
+                    $reply = 	array();
+                    $this->SendDebug('updateIPSvalues', $data, 0);
+                    $c =array($data, $reply);
+                    //json_encode$c);
+                    $xml = json_encode($c);
+                    $this->SendText($xml);
+                    //zum sichtbar machen
+                    setvalue($this->GetIDForIdent("DataSendToClient"), $xml);
+
+                    //Semaphore wieder freigeben!
+                     IPS_SemaphoreLeave("sendIPSVars");
+                    }
+                else
+                {
+                    // ...Keine ausführung Möglich. Ein anderes Skript nutzt den "KritischenPunkt" 
+                    // für länger als 1 Sekunde, sodass unsere Wartezeit überschritten wird.
+                }
+        } 
+
+        
         
         /* ----------------------------------------------------------------------------
          Function: RegisterWssVarEvents
