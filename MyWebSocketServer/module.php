@@ -1530,7 +1530,7 @@ class MyWebsocketServer extends IPSModule
             $file = 'newfile.txt';
             if (file_exists($file)) {
                 $myfile =  file_get_contents($file, true);
-                $myIDs = explode($myfile, ',');
+                $myIDs = explode(',', $myfile );
                 
                 foreach($myIDs as $IDvalue){
                     $this->UnregisterMessage($IDvalue, VM_UPDATE);
