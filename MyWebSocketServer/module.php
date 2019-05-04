@@ -1527,20 +1527,30 @@ class MyWebsocketServer extends IPSModule
 	public function RegisterIPSMessages(){
             //Alle alten Events löschen und neu anlegen
             //IPS_DeleteEvent($EreignisID);
+            $file = 'newfile.txt';
+            if (file_exists($file)) {
+                $myfile = fopen("newfile.txt", "r");
+                $myIDs = explode($myfile, ',');
+                
+                foreach($myIDs as $IDvalue){
+                    $this->UnregisterMessage($IDvalue, VM_UPDATE);
+                }
+                
+            }
             //Alle Variablen mit Beschreibung WSS holen und ein Evet anlegen.
             $alleVariablen = IPS_GetVariableList();
             $i = 0; 
             //file öffnen falls vorhanden - wird überschreieben
             $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
             //Das Modul "horcht" nicht mehr auf Nachrichten der Instanz 12345 mit der NachrichtID 10505
-            $this->UnregisterMessage(12345, VM_UPDATE);
+            
             foreach($alleVariablen as $key => $var){
                 $IPSVariable = IPS_GetObject($var);
                 $Info = $IPSVariable['ObjectInfo'];
                 // WSS Variablen in ein File schreiben und Message registrieren
                 if ($Info === "WSS"){
                     $IpsVars[$i]['ID'] = $var;
-                    fwrite($myfile, $var."\n");
+                    fwrite($myfile, $var.",");
                     $i = $i+1;
                 }
             }
