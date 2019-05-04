@@ -390,7 +390,6 @@ class WebSocket_ClientList
             //$list[$Client->ClientPort . $Client->ClientPort] = $Client;
             $list[$Client->ClientIP . $Client->ClientPort] = $Client;
         }
-
         return $list;
     }
 
