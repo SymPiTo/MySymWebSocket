@@ -390,6 +390,24 @@ class WebSocket_ClientList
             //$list[$Client->ClientPort . $Client->ClientPort] = $Client;
             $list[$Client->ClientIP . $Client->ClientPort] = $Client;
         }
+        //CLients in 4 Variable schreiben
+        foreach ($list as $Client) {
+            $i=$i+1;
+            //verbundene Client Adressen in Variale schreiben
+            switch ($i){
+                case 1:
+                setValue($this->GetIDForIdent("Client1"),$Client->ClientIP . ':' . $Client->ClientPort);
+                    break;
+                case 2: 
+                setValue($this->GetIDForIdent("Client2"),$Client->ClientIP . ':' . $Client->ClientPort);
+                    break;
+                case 3:
+                setValue($this->GetIDForIdent("Client3"),$Client->ClientIP . ':' . $Client->ClientPort);
+                    break;
+                case 4:
+                setValue($this->GetIDForIdent("Client4"),$Client->ClientIP . ':' . $Client->ClientPort);
+            }
+        }
         return $list;
     }
 
