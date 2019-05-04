@@ -90,6 +90,10 @@ class MyWebsocketServer extends IPSModule
         $this->RegisterVariableString("Client3", "connected Client 3"); 
         $this->RegisterVariableString("Client4", "connected Client 4"); 
         
+        //Status Variablen für Server
+        $this->RegisterVariableBoolean("active", "WSS_active", $Profile);
+        
+        
         //Variable für zu übertragende Variable (Array) anlegen
         $this->RegisterVariableString("IpsSendVars", "IPS Variablen");   
         
@@ -189,6 +193,7 @@ class MyWebsocketServer extends IPSModule
      */
     public function ApplyChanges()
     {
+        setvalue($this->GetIDForIdent("active"),$this->ReadPropertyBoolean("Open"));
         if($this->ReadPropertyBoolean("Open")){
             $this->SetTimerInterval("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"));
         }
