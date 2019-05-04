@@ -1549,7 +1549,7 @@ class MyWebsocketServer extends IPSModule
         
         
         /* ----------------------------------------------------------------------------
-         Function: RegisterWssVarEvents
+         Function: RegisterIPSMessages
         ...............................................................................
          
         ...............................................................................
@@ -1583,7 +1583,7 @@ class MyWebsocketServer extends IPSModule
                 $IPSVariable = IPS_GetObject($var);
                 $Info = $IPSVariable['ObjectInfo'];
                 // WSS Variablen in ein File schreiben und Message registrieren
-                if ($Info === "WSS"){
+                if ($Info === "WSS" or Info === "WSS1"){
                     $IpsVars[$i]['ID'] = $var;
                     fwrite($myfile, $var.",");
                     $i++;
