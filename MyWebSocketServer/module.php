@@ -99,7 +99,7 @@ class MyWebsocketServer extends IPSModule
         //$this->RegisterPropertyString("IPSVars", "[]");
         
         // Timer erstellen
-        $this->RegisterTimer("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"), 'WSS_sendIPSVars($_IPS[\'TARGET\']);');
+        $this->RegisterTimer("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"), 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
         
     }
 
