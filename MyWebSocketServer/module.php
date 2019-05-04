@@ -1541,7 +1541,7 @@ class MyWebsocketServer extends IPSModule
             $alleVariablen = IPS_GetVariableList();
             $i = 0; 
             //file öffnen falls vorhanden - wird überschreieben
-            $myfile = fopen("newfile.txt", "w");
+            $myfile = fopen("newfile.txt", "x");
             //Das Modul "horcht" nicht mehr auf Nachrichten der Instanz 12345 mit der NachrichtID 10505
             
             foreach($alleVariablen as $key => $var){
