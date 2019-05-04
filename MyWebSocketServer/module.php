@@ -1527,7 +1527,7 @@ class MyWebsocketServer extends IPSModule
 	public function RegisterIPSMessages(){
             //Alle alten Events löschen und neu anlegen
             //IPS_DeleteEvent($EreignisID);
-            $file = 'newfile.txt';
+            $file = $this->Kernel()."media/".'newfile.txt';
             if (file_exists($file)) {
                 $myfile =  file_get_contents($file, true);
                 $myIDs = explode(',', $myfile );
@@ -1541,9 +1541,9 @@ class MyWebsocketServer extends IPSModule
             $alleVariablen = IPS_GetVariableList();
             $i = 0; 
             //file öffnen falls vorhanden - wird überschreieben
-            $myfile = fopen("newfile.txt", "w+");
+            $myfile = fopen($file, "w+");
             //Das Modul "horcht" nicht mehr auf Nachrichten der Instanz 12345 mit der NachrichtID 10505
-            
+                
             foreach($alleVariablen as $key => $var){
                 $IPSVariable = IPS_GetObject($var);
                 $Info = $IPSVariable['ObjectInfo'];
@@ -1558,6 +1558,24 @@ class MyWebsocketServer extends IPSModule
             setvalue($this->GetIDForIdent("IpsSendVars"), json_encode($IpsVars));
         }
         
+        
+	//*****************************************************************************
+	/* Function: Kernel()
+        ...............................................................................
+        Stammverzeichnis von IP Symcon
+        ...............................................................................
+        Parameter:  
+
+        --------------------------------------------------------------------------------
+        return:  
+
+        --------------------------------------------------------------------------------
+        Status  checked 11.6.2018
+        //////////////////////////////////////////////////////////////////////////////*/
+        Protected function Kernel(){ 
+            $Kernel = str_replace("\\", "/", IPS_GetKernelDir());
+            return $Kernel;
+        }
 }
 
 
