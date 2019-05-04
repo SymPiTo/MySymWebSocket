@@ -138,9 +138,11 @@ class MyWebsocketServer extends IPSModule
                 //VM_UPDATE
                 $this->SendDebug('VM_UPDATE', $SenderID, 0);
                 // Variablen Änderung erkannt -> Daten holen und an Clients senden
-
+                /*
                 $this->sendIPSVars();
                 ips_sleep(1000);
+                 * 
+                 */
                 break;
         }
     }
