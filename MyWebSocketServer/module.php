@@ -1647,8 +1647,9 @@ class MyWebsocketServer extends IPSModule
             setValue($this->GetIDForIdent("Client2"),'');    
             setValue($this->GetIDForIdent("Client3"),'');    
             setValue($this->GetIDForIdent("Client4"),'');   
+            $i = 0;
             foreach ($list as $Client) {
-                $i=$i+1;
+                $i++;
                 //verbundene Client Adressen in Variale schreiben
                 switch ($i){
                     case 1:
