@@ -1226,7 +1226,7 @@ class MyWebsocketServer extends IPSModule
     public function KeepAlive()
     {
         $this->SendDebug('KeepAlive', 'start', 0);
-        //removed by TB 20.10.2019 weil kein ping gestezt wurde bei abgeschaltetem Client
+        //removed by TB 20.10.2019 weil kein Aliveping gestezt wurde bei abgeschaltetem oder abgewürgtem Client
         //$this->SetTimerInterval('KeepAlivePing', 0);
         $Client = true;
         
@@ -1651,7 +1651,7 @@ class MyWebsocketServer extends IPSModule
             setValue($this->GetIDForIdent("Client2"),'');    
             setValue($this->GetIDForIdent("Client3"),'');    
             setValue($this->GetIDForIdent("Client4"),'');   
-            $i = 0;
+            $i = 1;
             foreach ($list as $Client) {
                 $i++;
                 //verbundene Client Adressen in Variale schreiben
