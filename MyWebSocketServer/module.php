@@ -61,6 +61,7 @@ class MyWebsocketServer extends IPSModule
     public function Create()
     {
         parent::Create();
+        //create server Socket if not exist
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
@@ -1225,7 +1226,8 @@ class MyWebsocketServer extends IPSModule
     public function KeepAlive()
     {
         $this->SendDebug('KeepAlive', 'start', 0);
-        $this->SetTimerInterval('KeepAlivePing', 0);
+        //removed by TB 20.10.2019 weil kein ping gestezt wurde bei abgeschaltetem Client
+        //$this->SetTimerInterval('KeepAlivePing', 0);
         $Client = true;
         
             $Clients = $this->Multi_Clients->GetClients();
@@ -1561,7 +1563,10 @@ class MyWebsocketServer extends IPSModule
         /* ----------------------------------------------------------------------------
          Function: RegisterIPSMessages
         ...............................................................................
-         
+         Alle IP Symcon Variable mit der Bershreibung WSS oder WSS1 werden ausgelesen 
+         und in ein file "/media/newfile.txt" und in die Variablen Liste "IpsSenVars" 
+         geschrieben. Alle Variable in dieser Liste werden von WSS übertragen.
+         Aktualisierung dieser Liste nur Manuell über die Konfiguration. 
         ...............................................................................
         Parameters: 
             none.
