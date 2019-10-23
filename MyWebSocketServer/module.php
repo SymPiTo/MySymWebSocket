@@ -847,7 +847,7 @@ class MyWebsocketServer extends IPSModule
 
     /**
      * Leert die entsprechenden Buffer eines Clients.
-     *
+     * b
      * @access private
      * @param Websocket_Client $Client Der zu löschende Client.
      */
