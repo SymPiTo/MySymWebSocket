@@ -1381,6 +1381,8 @@ class MyWebsocketServer extends IPSModule
                     //TB 21.10.2019 egänzt entferne Client wenn nicht verbunden
                     $this->SendDebug('Entferne Client da nicht verbunden: ', $ClientIP . ':' . $ClientPort, 0);
                     $this->RemoveClient($Client);
+                    $x = this->GetClients();
+                    $this->SendDebug('bereinigte Client Liste: ',  $x, 0);
                     //$this->RestartServer();
                     //return false;
                 }
