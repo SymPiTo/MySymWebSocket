@@ -1300,7 +1300,6 @@ class MyWebsocketServer extends IPSModule
                 $this->ModErrorLog("MyWebSocketSever", $text, $array);
             //Fehler Ausgabe Ende 
             trigger_error($this->Translate('Timeout'), E_USER_NOTICE);
-            666
             return false;
         }
         if ($Result !== $Text) {
@@ -1384,7 +1383,7 @@ class MyWebsocketServer extends IPSModule
 
                     $this->Multi_Clients->Remove($Client);
                     $x = $this->Multi_Clients->GetClients();
-                    
+
                     $this->SendDebug('bereinigte Client Liste: ',  $x, 0);
                     //$this->RestartServer();
                     //return false;
