@@ -1300,7 +1300,7 @@ class MyWebsocketServer extends IPSModule
                 $this->ModErrorLog("MyWebSocketSever", $text, $array);
             //Fehler Ausgabe Ende 
             trigger_error($this->Translate('Timeout'), E_USER_NOTICE);
-            $this->Multi_Clients->Remove($Client);
+            666
             return false;
         }
         if ($Result !== $Text) {
@@ -1380,8 +1380,11 @@ class MyWebsocketServer extends IPSModule
                     // Client ist nicht richtig verbunden IP OK aber Port hat sich geändert.
                     //TB 21.10.2019 egänzt entferne Client wenn nicht verbunden
                     $this->SendDebug('Entferne Client da nicht verbunden: ', $ClientIP . ':' . $ClientPort, 0);
-                    $this->RemoveClient($Client);
-                    $x = $this->GetClients();
+                   
+
+                    $this->Multi_Clients->Remove($Client);
+                    $x = $this->Multi_Clients->GetClients();
+                    
                     $this->SendDebug('bereinigte Client Liste: ',  $x, 0);
                     //$this->RestartServer();
                     //return false;
