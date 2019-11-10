@@ -1184,6 +1184,8 @@ class MyWebsocketServer extends IPSModule
                 $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $NewData;
                 
                 $Clients = $this->Multi_Clients->GetClients();
+                // Array neu indizieren
+                $Clients =array_values($Clients);
                 $this->writeClients($Clients);// Clients in variable schreiben
                 
             } elseif ($Client->State == WebSocketState::CloseSend) {
