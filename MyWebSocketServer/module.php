@@ -1379,7 +1379,7 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug('Multi-Client not connected', $ClientIP . ':' . $ClientPort, 0);
                     trigger_error($this->Translate('Client not connected') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
                     // Client ist nicht richtig verbunden IP OK aber Port hat sich geändert.
-                    //TB 21.10.2019 egänzt entferne Client wenn nicht verbunden
+                    //TB 21.10.2019 ergänzt entferne Client wenn nicht verbunden
                     $this->SendDebug('Entferne Client da nicht verbunden: ', $ClientIP . ':' . $ClientPort, 0);
                    
 
