@@ -1216,6 +1216,9 @@ class MyWebsocketServer extends IPSModule
             IPS_RunScript($this->ReadPropertyInteger('IDcommand'));
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
         }
+        if(substr($Data, 0, 4) == 'func'){
+            SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
+        }
         
     }
     
