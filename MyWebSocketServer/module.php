@@ -1217,7 +1217,9 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
         }
         if(substr($Data, 0, 4) == 'func'){
+            $Data = explode(",", $Data);
             SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
+            $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
         }
         
     }
