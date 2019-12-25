@@ -1218,7 +1218,7 @@ class MyWebsocketServer extends IPSModule
         }
         if(substr($Data, 0, 4) == 'func'){
             
-            $Data = explode(",", substr($Data, 5, strlen($Data)-2));
+            $Data = explode(",", substr($Data, 5, strlen($Data)-6));
             foreach ($Data as $key => $value) {
                 if($key == 0){
                     $MyFunktion = $value;
