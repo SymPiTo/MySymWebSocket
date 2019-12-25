@@ -1204,19 +1204,19 @@ class MyWebsocketServer extends IPSModule
             setvalue($Data[0],$Data[1]);
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
         }
-        if(substr($Data, 0, 13) == 'IPS_RunScript'){
+        elseif(substr($Data, 0, 13) == 'IPS_RunScript'){
            $Data = substr($Data, 14, strlen($Data)-15);
             IPS_RunScript($Data[0]);
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
         }
-        if(substr($Data, 0, 7) == 'command'){
+        elseif(substr($Data, 0, 7) == 'command'){
            $Data = substr($Data, 8, strlen($Data)-9);
            SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
            
             IPS_RunScript($this->ReadPropertyInteger('IDcommand'));
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
         }
-        if(substr($Data, 0, 4) == 'func'){
+        elseif(substr($Data, 0, 4) == 'func'){
             
             $Data = explode(",", substr($Data, 5, strlen($Data)-6));
             foreach ($Data as $key => $value) {
@@ -1230,6 +1230,10 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
             //Funktion ausführen
             call_user_func_array($MyFunktion, $param);
+            SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data[0].",".$Data[1].",".$Data[2]);
+        }
+        else{
+            SetValueString($this->GetIDForIdent("CommandSendToServer"), "Befehl wird nicht unterstützt");
         }
         
     }
