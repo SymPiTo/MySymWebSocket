@@ -1218,9 +1218,18 @@ class MyWebsocketServer extends IPSModule
         }
         if(substr($Data, 0, 4) == 'func'){
             
-            $Data = explode(",", substr($Data, 5, strlen($Data)-1));
-            
+            $Data = explode(",", substr($Data, 5, strlen($Data)-2));
+            foreach ($Data as $key => $value) {
+                if($key == 0){
+                    $MyFunktion = $value;
+                }
+                else{
+                    $param[$key-1] = $value;
+                }
+            }
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
+            //Funktion ausführen
+            call_user_func_array($MyFunktion, $param);
         }
         
     }
