@@ -1376,8 +1376,7 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('Client Liste =' , $Clients, 0);
 
             foreach ($Clients as $Client) {
-  
-                $ClientIP = $Client->ClientIP ;
+                 $ClientIP = $Client->ClientIP ;
                 $ClientPort = $Client->ClientPort;
                 if ($Client === false) {
                     //Fehler Ausgabe
