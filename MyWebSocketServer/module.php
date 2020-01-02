@@ -1014,6 +1014,9 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug("Fuenftes Data Byte", ord($Data[5]), 0);
             $Clients = $this->Multi_Clients;
             $Client = $Clients->GetByIpPort(new Websocket_Client($data->ClientIP, $data->ClientPort));
+            
+            $this->SendDebug("Client der Daten sendet: ", $Client,0); //added 2.1.2020
+
     //        if (($Client === false) or ( preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Data, $match)) or ( (ord($Data[0]) >= 0x14) && (ord($Data[0]) <= 0x18) && (ord($Data[1]) == 0x03) && (ord($Data[5]) == 0x01)))
             if (($Client === false) or (preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Data, $match)) or ((ord($Data[0]) == 0x16) && (ord($Data[1]) == 0x03) && (ord($Data[5]) == 0x01))) { // neu oder neu verbunden!
                 if ($this->NoNewClients) { //Server start neu... keine neuen Verbindungen annehmen.
@@ -1051,7 +1054,8 @@ class MyWebsocketServer extends IPSModule
             // Client jetzt bekannt.
             
           
-            
+            $this->SendDebug("Client Status: ",$Client->State,0);   //added 2.1.2020
+
             if ($Client->UseTLS) { // TLS Daten
                 $Data = $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} .= $Data;
                 if (!isset($TLS)) {
