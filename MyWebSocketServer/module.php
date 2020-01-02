@@ -1547,6 +1547,10 @@ class MyWebsocketServer extends IPSModule
 	public function sendIPSVars(){
                 if (IPS_SemaphoreEnter("sendIPSVars", 5000)) {
                       // ...Kritischer Codeabschnitt
+                    //Daten holen die bereits gesendet wurden
+                    $dataOld = getvalue($this->GetIDForIdent("DataSendToClient"));  
+                    $dataOldHash = md5($dataOld);
+                    SendDebug("OldHash: ",$dataOldHash, 0);
                     $IPSVariablesjson = getvalue($this->GetIDForIdent("IpsSendVars"));
                     $IPSVariables = json_decode($IPSVariablesjson);
                     //$this->SendDebug('Event Variable', $IPSVariables, 0);
@@ -1570,11 +1574,15 @@ class MyWebsocketServer extends IPSModule
                     //$this->SendDebug('updateIPSvalues', $data, 0);
                     $c =array($data, $reply);
                     //json_encode$c);
-                    $xml = json_encode($c);
-                    $this->SendText($xml);
-                    //zum sichtbar machen
-                    setvalue($this->GetIDForIdent("DataSendToClient"), $xml);
-
+                    $json = json_encode($c);
+                    $dataNewHash = md5($json);
+                    SendDebug("NewHash: ",$dataNewHash, 0);
+                    //Daten nur senden wenn Änderung erkannt wurde
+                    if($dataNewHash != $dataOldHash){
+                        $this->SendText($json);
+                        //zum sichtbar machen
+                        setvalue($this->GetIDForIdent("DataSendToClient"), $json);
+                    }
                     //Semaphore wieder freigeben!
                      IPS_SemaphoreLeave("sendIPSVars");
                     }
