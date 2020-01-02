@@ -1048,7 +1048,7 @@ class MyWebsocketServer extends IPSModule
                     $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = "";
                 }
                 if ($Client === false) { // Paket verwerfen, da Daten nicht zum Protocol passen.
-                    $this->SendDebug("Client Status: ",$Client->State,0);   //added 2.1.2020
+                    $this->SendDebug("Client Status: ", "Client muss neu gestartet werden",0);   //added 2.1.2020
                     return;
                 }
             }
