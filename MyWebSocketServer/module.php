@@ -1550,7 +1550,7 @@ class MyWebsocketServer extends IPSModule
                     //Daten holen die bereits gesendet wurden
                     $dataOld = getvalue($this->GetIDForIdent("DataSendToClient"));  
                     $dataOldHash = md5($dataOld);
-                    $this->SendDebugSendDebug("OldHash: ",$dataOldHash, 0);
+                    $this->SendDebug("OldHash: ",$dataOldHash, 0);
                     $IPSVariablesjson = getvalue($this->GetIDForIdent("IpsSendVars"));
                     $IPSVariables = json_decode($IPSVariablesjson);
                     //$this->SendDebug('Event Variable', $IPSVariables, 0);
