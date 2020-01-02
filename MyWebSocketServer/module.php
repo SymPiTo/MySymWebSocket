@@ -1406,8 +1406,8 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug('Entferne Client da nicht verbunden: ', $ClientIP . ':' . $ClientPort, 0);
                    
                     $this->RemoveClient($Client); //added 2.1.2020
-                    $Clients->Remove($Client);
-                    $x = $Clients->GetClients();
+                    $this->Multi_Clients->Remove($Client);
+                    $x = $this->Multi_Clients->GetClients();
 
                     $this->SendDebug('bereinigte Client Liste: ',  $x, 0);
                     //$this->RestartServer();
