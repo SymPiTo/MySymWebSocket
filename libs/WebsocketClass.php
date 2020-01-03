@@ -17,6 +17,34 @@
 //$autoloader->register();
 
 /**
+ * Der Typ des Paketes.
+ */
+class SocketType
+{
+    const Data = 0;
+    const Connected = 1;
+    const Disconnected = 2;
+    /**
+     *  Liefert den Klartext zu einem Pakettyp.
+     *
+     * @param int $Type
+     *
+     * @return string
+     */
+    public static function ToString(int $Type)
+    {
+        switch ($Type) {
+            case self::Data:
+                return 'Data';
+            case self::Connected:
+                return 'Connected';
+            case self::Disconnected:
+                return 'Disconnected';
+        }
+    }
+}
+
+/**
  * Der Status der Verbindung.
  */
 class WebSocketState
@@ -330,7 +358,7 @@ class WebSocket_ClientList
      * @var array
      * @access public
      */
-    private $Items = array();
+    private $Items = [];
 
     /**
      * Liefert die Daten welche behalten werden mÃ¼ssen.
@@ -338,7 +366,7 @@ class WebSocket_ClientList
      */
     public function __sleep()
     {
-        return array('Items');
+        return ['Items'];
     }
 
     /**
@@ -376,8 +404,7 @@ class WebSocket_ClientList
         if (!isset($this->Items[$Client->ClientIP . $Client->ClientPort])) {
             return false;
         }
-        $Client = $this->Items[$Client->ClientIP . $Client->ClientPort];
-        return $Client;
+        return $this->Items[$Client->ClientIP . $Client->ClientPort];
     }
 
     /**
@@ -388,8 +415,6 @@ class WebSocket_ClientList
     {
         $list = array();
         foreach ($this->Items as $Client) {
-            //geändert von pito scheint Fehler zu sein ursrünglicher Code war
-            //$list[$Client->ClientPort . $Client->ClientPort] = $Client;
             $list[$Client->ClientIP . $Client->ClientPort] = $Client;
         }
         return $list;
@@ -407,6 +432,9 @@ class WebSocket_ClientList
         $FoundClient = false;
         foreach ($this->Items as $Client) {
             if ($Client->Timestamp == 0) {
+                continue;
+            }
+            if ($Client->State != WebSocketState::Connected) {
                 continue;
             }
             if ($Client->Timestamp < $Timestamp) {

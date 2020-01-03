@@ -240,35 +240,7 @@ class MyWebsocketServer extends IPSModule
 
         parent::ApplyChanges();
 
- /* Dies wurde ersetzt durch Meldungs Events       
-        ///Für alle im Listen Konfigurationsfeld enthaltene Variable ein Event anlegen.
-        //Unterkategorie anlegen
-        $IPSVarsCatID = $this->RegisterCategory("IPSVarEvents");
-        // für jedes Liste ID ein Event anlegen
-        $IPSVariables = json_decode($this->ReadPropertyString("IPSVars"));
-        foreach($IPSVariables as $IPSVariable) {
-            $ParentID = $IPSVarsCatID;
-            $Typ = 0;
-            $Ident = "IPS".$IPSVariable->ID;
-            $Name = "VarEvent".$IPSVariable->ID;
-            $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, 0, 1, $IPSVariable->ID);
-        } 
-*/
-        /* nicht mehr benötigt"
-         $ID_DSTC = $this->GetIDForIdent("DataSendToClient");
-        // Trigger Event für Änderung der Variable "DataSendToClient" erstellen wenn nicht vorhanden
-        $ParentID = IPS_GetVariableIDByName("DataSendToClient", $this->InstanceID);
-        if (!IPS_EventExists(@IPS_GetEventIDByName("EventChangedIpsValues", $ParentID))){
-            $eid = IPS_CreateEvent(0);                  //Ausgelöstes Ereignis
-            IPS_SetEventTrigger($eid, 1, $ID_DSTC);        //Bei Änderung von Variable mit ID 15754
-            IPS_SetParent($eid, $_IPS['SELF']);         //Ereignis zuordnen
-            IPS_SetEventActive($eid, true);             //Ereignis aktivieren
-            IPS_SetEventScript($eid, "MyWSS_SendText(IPS_GetParent($ID_DSTC),getvalue($ID_DSTC));"); 
-            IPS_SetParent($eid, $ID_DSTC);
-            IPS_SetName($eid, "EventChangedIpsValues");            
-        }       
-        */
-        
+       
         $NewState = IS_ACTIVE;
         $this->UseTLS = $this->ReadPropertyBoolean('TLS');
         $this->UsePlain = $this->ReadPropertyBoolean('Plain');
@@ -510,126 +482,60 @@ class MyWebsocketServer extends IPSModule
     {
         $this->SendDebug('Receive Handshake', $Data, 0);
         if (preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Data, $match)) {
-            $this->SendDebug('PREG MATCH 1', $match, 0);
             if (substr($Data, -4) != "\r\n\r\n") {
                 $this->SendDebug('WAIT', $Data, 0);
                 return false;
             }
-
             if (trim($match[1]) != trim($this->ReadPropertyString('URI'))) {
                 $this->SendDebug('Wrong URI requested', $Data, 0);
-                //Fehler Ausgabe
-                    $text = "ReceiveHandshake: Wrong URI requested. ";
-                    $array = $Data;
-                    $this->ModErrorLog("MyWebSocketSever", $text, $array);
-                //Fehler Ausgabe Ende
                 return HTTP_ERROR_CODES::Not_Found;
             }
-
-            if ($this->ReadPropertyBoolean("BasisAuth")) {
-                $realm = base64_encode($this->ReadPropertyString("Username") . ':' . $this->ReadPropertyString("Password"));
-                $this->SendDebug('Authentifizierung mit Daten: ', $Data, 0);
+            if ($this->ReadPropertyBoolean('BasisAuth')) {
+                $realm = base64_encode($this->ReadPropertyString('Username') . ':' . $this->ReadPropertyString('Password'));
                 if (preg_match("/Authorization: Basic (.*)\r\n/", $Data, $match)) {
                     if ($match[1] != $realm) {
                         $this->SendDebug('Unauthorized Connection:', base64_decode($match[1]), 0);
-                        //Fehler Ausgabe
-                            $text = "ReceiveHandshake: Unauthorized Connection. ";
-                            $array = base64_decode($match[1]);
-                            $this->ModErrorLog("MyWebSocketSever", $text, $array);
-                        //Fehler Ausgabe Ende
                         return HTTP_ERROR_CODES::Forbidden;
                     }
                 } else {
                     $this->SendDebug('Authorization missing', '', 0);
-                        //Fehler Ausgabe
-                            $text = "ReceiveHandshake: Authorization missing. ";
-                            $array =  "";
-                            $this->ModErrorLog("MyWebSocketSever", $text, $array);
-                        //Fehler Ausgabe Ende
                     return HTTP_ERROR_CODES::Unauthorized;
                 }
             }
             if (preg_match("/Connection: (.*)\r\n/", $Data, $match)) {
-                $this->SendDebug('PREG MATCH Connection', $match, 0);
-                if (strtolower($match[1]) != 'upgrade' and strtolower($match[1]) != 'keep-alive, upgrade') {
-                // falsch wegen FireFox sendet 'keep-alive, upgrade  -    if (strtolower($match[1]) != 'upgrade') {
+                if (strtolower($match[1]) != 'upgrade') {
                     $this->SendDebug('WRONG Connection:', $match[1], 0);
-                    //Fehler Ausgabe
-                       $text = "ReceiveHandshake: WRONG Connection. ";
-                       $array =  "";
-                       $this->ModErrorLog("MyWebSocketSever", $text, $array);
-                    //Fehler Ausgabe Ende
                     return HTTP_ERROR_CODES::Method_Not_Allowed;
                 }
             } else {
                 $this->SendDebug('MISSING', 'Connection: Upgrade', 0);
-                    //Fehler Ausgabe
-                       $text = "ReceiveHandshake: MISSING Connection: Upgrade. ";
-                       $array =  "";
-                       $this->ModErrorLog("MyWebSocketSever", $text, $array);
-                    //Fehler Ausgabe Ende
                 return HTTP_ERROR_CODES::Bad_Request;
             }
-
             if (preg_match("/Upgrade: (.*)\r\n/", $Data, $match)) {
                 if (strtolower($match[1]) != 'websocket') {
                     $this->SendDebug('WRONG Upgrade:', $match[1], 0);
-                    //Fehler Ausgabe
-                       $text = "ReceiveHandshake: WRONG Upgrade. ";
-                       $array =  "";
-                       $this->ModErrorLog("MyWebSocketSever", $text, $array);
-                    //Fehler Ausgabe Ende
                     return HTTP_ERROR_CODES::Method_Not_Allowed;
                 }
             } else {
                 $this->SendDebug('MISSING', 'Upgrade: websocket', 0);
-                //Fehler Ausgabe
-                   $text = "ReceiveHandshake: MISSING Upgrade: websocket. ";
-                   $array =  "";
-                   $this->ModErrorLog("MyWebSocketSever", $text, $array);
-                //Fehler Ausgabe Ende
                 return HTTP_ERROR_CODES::Bad_Request;
             }
-
-
             if (preg_match("/Sec-WebSocket-Version: (.*)\r\n/", $Data, $match)) {
                 if (strpos($match[1], '13') === false) {
                     $this->SendDebug('WRONG Version:', $match[1], 0);
-                    //Fehler Ausgabe
-                      $text = "ReceiveHandshake: WRONG Version. ";
-                      $array =  "";
-                      $this->ModErrorLog("MyWebSocketSever", $text, $array);
-                   //Fehler Ausgabe Ende
                     return HTTP_ERROR_CODES::Not_Acceptable;
                 }
             } else {
-                $this->SendDebug('ReceiveHandshake: MISSING', 'Sec-WebSocket-Version', 0);
-                //Fehler Ausgabe
-                  $text = "MISSING Sec-WebSocket-Version. ";
-                  $array =  "";
-                  $this->ModErrorLog("MyWebSocketSever", $text, $array);
-               //Fehler Ausgabe Ende
+                $this->SendDebug('MISSING', 'Sec-WebSocket-Version', 0);
                 return HTTP_ERROR_CODES::Bad_Request;
             }
-
             if (!preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $Data, $match)) {
-                $this->SendDebug('ReceiveHandshake: MISSING', 'Sec-WebSocket-Key', 0);
-                //Fehler Ausgabe
-                  $text = "MISSING Sec-WebSocket-Key. ";
-                  $array =  "";
-                  $this->ModErrorLog("MyWebSocketSever", $text, $array);
-               //Fehler Ausgabe Ende
+                $this->SendDebug('MISSING', 'Sec-WebSocket-Key', 0);
                 return HTTP_ERROR_CODES::Bad_Request;
             }
-
             return true;
         }
         $this->SendDebug('Invalid HTTP-Request', $Data, 0);
-            //Fehler Ausgabe
-              $text = "ReceiveHandshake: Invalid HTTP-Request. ";
-              $array =  "";
-              $this->ModErrorLog("MyWebSocketSever", $text, $array);
-           //Fehler Ausgabe Ende
         return HTTP_ERROR_CODES::Bad_Request;
     }
 
@@ -644,8 +550,7 @@ class MyWebsocketServer extends IPSModule
     private function SendHandshake(int $Code, string $Data, Websocket_Client $Client)
     {
         preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $Data, $match);
-        $SendKey = base64_encode(sha1($match[1] . "258EAFA5-E914-47DA-95CA-C5AB0DC85B11", true));
-
+        $SendKey = base64_encode(sha1($match[1] . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
         $Header[] = 'HTTP/1.1 ' . HTTP_ERROR_CODES::ToString($Code);
         if ($Code == HTTP_ERROR_CODES::Unauthorized) {
             $Header[] = 'WWW-Authenticate: Basic';
@@ -659,12 +564,11 @@ class MyWebsocketServer extends IPSModule
             $Header[] = "\r\n";
             $SendHeader = implode("\r\n", $Header);
         } else {
-            $Header[] = "Content-Length:" . strlen(HTTP_ERROR_CODES::ToString($Code));
+            $Header[] = 'Content-Length:' . strlen(HTTP_ERROR_CODES::ToString($Code));
             $Header[] = "\r\n";
             $SendHeader = implode("\r\n", $Header) . HTTP_ERROR_CODES::ToString($Code);
         }
-
-        $this->SendDebug("SendHandshake " . $Client->ClientIP . ':' . $Client->ClientPort, $SendHeader, 0);
+        $this->SendDebug('SendHandshake ' . $Client->ClientIP . ':' . $Client->ClientPort, $SendHeader, 0);
         $SendData = $this->MakeJSON($Client, $SendHeader);
         if ($SendData) {
             $this->SendDataToParent($SendData);
@@ -681,22 +585,29 @@ class MyWebsocketServer extends IPSModule
      */
     private function MakeJSON(Websocket_Client $Client, string $Data, $UseTLS = true)
     {
-        if ($UseTLS and $Client->UseTLS) {
-            $TLS = $this->{"Multi_TLS_" . $Client->ClientIP . $Client->ClientPort};
-            $this->SendDebug('Send TLS', $Data, 0);
-            try {
-                $Send = $TLS->output($Data)->decode();
-            } catch (Exception $exc) {
-                return false;
+        if ($Type == SocketType::Data) {
+            if ($UseTLS and $Client->UseTLS) {
+                $this->SendDebug('Send TLS', $Data, 0);
+                try {
+                    $this->lock($Client->ClientIP . $Client->ClientPort);
+                    $TLS = $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort};
+                    $Send = $TLS->output($Data)->decode();
+                    $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort} = $TLS;
+                    $this->unlock($Client->ClientIP . $Client->ClientPort);
+                } catch (Exception $exc) {
+                    return false;
+                }
+                $Data = $Send;
             }
-            $this->{"Multi_TLS_" . $Client->ClientIP . $Client->ClientPort} = $TLS;
-            $Data = $Send;
+            $this->SendDebug('Send', $Data, 0);
+        } else {
+            $this->SendDebug('Send', SocketType::ToString($Type), 0);
         }
-        $this->SendDebug('Send', $Data, 0);
-        $SendData['DataID'] = "{C8792760-65CF-4C53-B5C7-A30FCC84FEFE}";
+        $SendData['DataID'] = '{C8792760-65CF-4C53-B5C7-A30FCC84FEFE}';
         $SendData['Buffer'] = utf8_encode($Data);
         $SendData['ClientIP'] = $Client->ClientIP;
         $SendData['ClientPort'] = $Client->ClientPort;
+        $SendData['Type'] = $Type;
         return json_encode($SendData);
     }
 
@@ -718,6 +629,7 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('Receive', 'Client send stream close !', 0);
                 $Client->State = WebSocketState::CloseReceived;
                 $this->SendDisconnect($Client);
+                $this->SendDataToChilds('', $Client); // RAW Childs
                 return;
             case WebSocketOPCode::text:
             case WebSocketOPCode::binary:
@@ -730,12 +642,17 @@ class MyWebsocketServer extends IPSModule
             case WebSocketOPCode::pong:
                 $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = $Frame->Payload;
                 $this->{'WaitForPong' . $Client->ClientIP . $Client->ClientPort} = true;
+                $JSON['DataID'] = '{8F1F6C32-B1AD-4B7F-8DFB-1244A96FCACF}';
+                $JSON['Buffer'] = utf8_encode($Frame->Payload);
+                $JSON['ClientIP'] = $Client->ClientIP;
+                $JSON['ClientPort'] = $Client->ClientPort;
+                $JSON['FrameTyp'] = WebSocketOPCode::pong;
+                $Data = json_encode($JSON);
+                $this->SendDataToChildren($Data);
                 return;
         }
-
         if ($Frame->Fin) {
             $this->SendDataToChilds($Data, $Client); // RAW Childs
-            $this->CommandToServer($Data);
         } else {
             $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $Data;
         }
@@ -748,6 +665,7 @@ class MyWebsocketServer extends IPSModule
      */
     private function SetNextTimer()
     {
+        $this->SetTimerInterval('KeepAlivePing', 0);
         $Clients = $this->Multi_Clients;
         $Client = $Clients->GetNextTimeout($this->PingInterval + 1);
         $this->SendDebug('NextTimeout', $Client, 0);
@@ -755,6 +673,9 @@ class MyWebsocketServer extends IPSModule
             $next = 0;
         } else {
             $next = $Client->Timestamp - time();
+            if ($next == 0) {
+                $next = 0.001;
+            }
             if ($next < 0) {
                 $next = 0;
             }
@@ -782,6 +703,7 @@ class MyWebsocketServer extends IPSModule
      */
     private function DisconnectAllClients()
     {
+        $this->SetTimerInterval('KeepAlivePing', 0);
         $Clients = $this->Multi_Clients;
         foreach ($Clients->GetClients() as $Client) {
             $this->SendDisconnect($Client);
@@ -812,12 +734,14 @@ class MyWebsocketServer extends IPSModule
             $this->Multi_Clients = $Clients;
             $this->Send("", WebSocketOPCode::close, $Client);
             $ret = $this->WaitForClose($Client);
+            $this->CloseConnection($Client);
         }
 
-        $this->RemoveClient($Client);
-        $Clients = $this->Multi_Clients;
-        $Clients->Remove($Client);
-        $this->Multi_Clients = $Clients;
+        $this->RemoveOneClient($Client);
+        //entfernt 3.1.2020
+        //$Clients = $this->Multi_Clients;
+        //$Clients->Remove($Client);
+        //$this->Multi_Clients = $Clients;
 
         return $ret;
     }
@@ -831,7 +755,15 @@ class MyWebsocketServer extends IPSModule
             
     }
     
-    
+    private function RemoveOneClient(Websocket_Client $Client)
+    {
+        $this->ClearClientBuffer($Client);
+        $Clients = $this->Multi_Clients;
+        $Clients->Remove($Client);
+        $this->Multi_Clients = $Clients;
+        $this->SetNextTimer();
+    }
+
     /**
      * Leert die ClientListe und alle entsprechenden Buffer der Clients.
      *
@@ -841,26 +773,25 @@ class MyWebsocketServer extends IPSModule
     {
         $Clients = $this->Multi_Clients;
         foreach ($Clients->GetClients() as $Client) {
-            $this->RemoveClient($Client);
+            $this->ClearClientBuffer($Client);
         }
         $this->Multi_Clients = new WebSocket_ClientList();
     }
 
     /**
      * Leert die entsprechenden Buffer eines Clients.
-     * b
-     * @access private
+     *
      * @param Websocket_Client $Client Der zu löschende Client.
      */
-    private function RemoveClient(Websocket_Client $Client)
+    private function ClearClientBuffer(Websocket_Client $Client)
     {
-        $this->SetBuffer('OpCode' . $Client->ClientIP . $Client->ClientPort, "");
-        $this->SetBuffer('Buffer' . $Client->ClientIP . $Client->ClientPort, "");
-        $this->SetBuffer('Pong' . $Client->ClientIP . $Client->ClientPort, "");
-        $this->SetBuffer('WaitForPong' . $Client->ClientIP . $Client->ClientPort, "");
-        $this->SetBuffer('WaitForClose' . $Client->ClientIP . $Client->ClientPort, "");
-        $this->{"Multi_TLS_" . $Client->ClientIP . $Client->ClientPort} = "";
-        $this->SetBuffer("BufferListe_Multi_TLS_" . $Client->ClientIP . $Client->ClientPort, "");
+        $this->SetBuffer('OpCode' . $Client->ClientIP . $Client->ClientPort, '');
+        $this->SetBuffer('Buffer' . $Client->ClientIP . $Client->ClientPort, '');
+        $this->SetBuffer('Pong' . $Client->ClientIP . $Client->ClientPort, '');
+        $this->SetBuffer('WaitForPong' . $Client->ClientIP . $Client->ClientPort, '');
+        $this->SetBuffer('WaitForClose' . $Client->ClientIP . $Client->ClientPort, '');
+        $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort} = '';
+        $this->SetBuffer('BufferListe_Multi_TLS_' . $Client->ClientIP . $Client->ClientPort, '');
     }
 
     /**
@@ -937,6 +868,16 @@ class MyWebsocketServer extends IPSModule
     public function ForwardData($JSONString)
     {
         $Data = json_decode($JSONString);
+        if ($Data->DataID == '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}') {
+            $this->SendDebug('Forward Broadcast', utf8_decode($Data->Buffer), 0);
+            $Clients = $this->Multi_Clients;
+            foreach ($Clients as $Client) {
+                $Data->FrameTyp = $this->{'OpCode' . $Client->ClientIP . $Client->ClientPort};
+                $Data->Fin = true;
+                $this->Send(utf8_decode($Data->Buffer), $Data->FrameTyp, $Client, $Data->Fin);
+            }
+            return true;
+        }
         $Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($Data->ClientIP, $Data->ClientPort));
         if ($Client === false) {
             trigger_error($this->Translate('Unknow client') . ': ' . $Data->ClientIP . ':' . $Data->ClientPort, E_USER_NOTICE);
@@ -946,9 +887,8 @@ class MyWebsocketServer extends IPSModule
             trigger_error($this->Translate('Client not connected') . ': ' . $Data->ClientIP . ':' . $Data->ClientPort, E_USER_NOTICE);
             return false;
         }
-        $this->SendDebug("Forward", utf8_decode($Data->Buffer), 0);
-
-        if ($Data->DataID == "{714B71FB-3D11-41D1-AFAC-E06F1E983E09}") {
+        $this->SendDebug('Forward', utf8_decode($Data->Buffer), 0);
+        if ($Data->DataID == '{714B71FB-3D11-41D1-AFAC-E06F1E983E09}') {
             if ($Data->FrameTyp == WebSocketOPCode::close) {
                 return $this->SendDisconnect($Client);
             }
@@ -959,11 +899,16 @@ class MyWebsocketServer extends IPSModule
                 trigger_error($this->Translate('FrameTyp invalid') . ': ' . $Data->ClientIP . ':' . $Data->ClientPort, E_USER_NOTICE);
                 return false;
             }
-        } else {
+        } else { //{C8792760-65CF-4C53-B5C7-A30FCC84FEFE}
+            if (property_exists($Data, 'Type')) {
+                if ($Data->Type == 2) {
+                    return $this->SendDisconnect($Client);
+                }
+            }
+            //Type fehlt
             $Data->FrameTyp = $this->{'OpCode' . $Client->ClientIP . $Client->ClientPort};
             $Data->Fin = true;
         }
-
         $this->Send(utf8_decode($Data->Buffer), $Data->FrameTyp, $Client, $Data->Fin);
         return true;
     }
@@ -981,13 +926,194 @@ class MyWebsocketServer extends IPSModule
         $JSON['Buffer'] = utf8_encode($RawData);
         $JSON['ClientIP'] = $Client->ClientIP;
         $JSON['ClientPort'] = $Client->ClientPort;
+        $JSON['Type'] = 0; // Data
+        if ($Client->State == WebSocketState::Connected) {
+            $JSON['Type'] = 1; // Connected
+        }
+        if ($Client->State == WebSocketState::CloseReceived) {
+            $JSON['Type'] = 2; // Disconnected
+        }
         $Data = json_encode($JSON);
         $this->SendDataToChildren($Data);
-
         $JSON['DataID'] = '{8F1F6C32-B1AD-4B7F-8DFB-1244A96FCACF}';
         $JSON['FrameTyp'] = $this->{'OpCode' . $Client->ClientIP . $Client->ClientPort};
+        if ($Client->State == WebSocketState::HandshakeReceived) {
+            $JSON['FrameTyp'] = WebSocketOPCode::continuation; // Connected
+        }
+        if ($Client->State == WebSocketState::CloseReceived) {
+            $JSON['FrameTyp'] = WebSocketOPCode::close; // Disconnected
+        }
         $Data = json_encode($JSON);
         $this->SendDataToChildren($Data);
+    }
+
+    private function SplitTLSFrames(string &$Payload)
+    {
+        $Frames = [];
+        while (strlen($Payload) > 0) {
+            $len = unpack('n', substr($Payload, 3, 2))[1] + 5;
+            if (strlen($Payload) >= $len) {
+                $this->SendDebug('Receive TLS Frame', substr($Payload, 0, $len), 0);
+                $Frames[] = substr($Payload, 0, $len);
+                $Payload = substr($Payload, $len);
+            } else {
+                break;
+            }
+        }
+        return $Frames;
+    }
+    private function ProcessIncomingData(Websocket_Client &$Client, string $Payload)
+    {
+        $this->SendDebug('Receive ' . $Client->ClientIP . ':' . $Client->ClientPort, $Payload, 0);
+        if ($Client->State == WebSocketState::init) { //new
+            if ($this->UseTLS and ( (ord($Payload[0]) >= 0x14) && (ord($Payload[0]) <= 0x18) && (ord($Payload[1]) == 0x03))) { //valid header wenn TLS is active
+                $Client->State = WebSocketState::TLSisReceived;
+                $Client->UseTLS = true;
+                $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} = '';
+                $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = '';
+                // TLS Config
+                $TLSconfig = \PTLS\TLSContext::getServerConfig([
+                            'key_pair_files' => [
+                                'cert' => [$this->CertData],
+                                'key'  => [$this->KeyData, $this->KeyPassword]
+                            ]
+                ]);
+                $this->SendDebug('NEW TLSContex', '', 0);
+                //$this->lock($Client->ClientIP . $Client->ClientPort);
+                $this->lock($Client->ClientIP . $Client->ClientPort);
+                $TLS = \PTLS\TLSContext::createTLS($TLSconfig);
+            }
+            if ($this->UsePlain and ( preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Payload, $match))) { //valid header wenn Plain is active
+                $Client->State = WebSocketState::HandshakeReceived;
+                $Client->UseTLS = false;
+                $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = '';
+            }
+        } else {
+            if ($Client->UseTLS) {
+                $this->SendDebug('OLD TLSContex', '', 0);
+                $this->lock($Client->ClientIP . $Client->ClientPort);
+                $TLS = $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort};
+            }
+        }
+        if ($Client->UseTLS) {
+            $Payload = $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} .= $Payload;
+            if ((ord($Payload[0]) >= 0x14) && (ord($Payload[0]) <= 0x18) && (ord($Payload[1]) == 0x03)) {
+                $TLSFrames = $this->SplitTLSFrames($Payload);
+                $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} = $Payload;
+                $Payload = '';
+                foreach ($TLSFrames as $TLSFrame) {
+                    $this->SendDebug('TLS Frame', $TLSFrame, 0);
+                    if ($Client->State != WebSocketState::TLSisReceived) {
+                        $TLS->encode($TLSFrame);
+                        $Payload .= $TLS->input();
+                        continue;
+                    }
+                    if ($Client->State == WebSocketState::TLSisReceived) {
+                        try {
+                            $TLS->encode($TLSFrame);
+                        } catch (\PTLS\Exceptions\TLSAlertException $e) {
+                            if (strlen($out = $e->decode())) {
+                                $this->SendDebug('Send TLS Handshake error', $out, 0);
+                                $SendData = $this->MakeJSON($Client, $out, false);
+                                if ($SendData) {
+                                    $this->SendDataToParent($SendData);
+                                }
+                            }
+                            $this->SendDebug('Send TLS Handshake error', $e->getMessage(), 0);
+                            trigger_error($e->getMessage(), E_USER_NOTICE);
+                            $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort} = '';
+                            $this->unlock($Client->ClientIP . $Client->ClientPort);
+                            $this->CloseConnection($Client);
+                            return;
+                        } catch (\PTLS\Exceptions\TLSException $e) {
+                            $this->SendDebug('Send TLS Handshake error', $e->getMessage(), 0);
+                            trigger_error($e->getMessage(), E_USER_NOTICE);
+                            $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort} = '';
+                            $this->unlock($Client->ClientIP . $Client->ClientPort);
+                            $this->CloseConnection($Client);
+                            return;
+                        }
+                        try {
+                            $out = $TLS->decode();
+                        } catch (\PTLS\Exceptions\TLSException $e) {
+                            trigger_error($e->getMessage(), E_USER_NOTICE);
+                            $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort} = '';
+                            $this->unlock($Client->ClientIP . $Client->ClientPort);
+                            $this->CloseConnection($Client);
+                            return;
+                        }
+                        if (strlen($out)) {
+                            $this->SendDebug('Send TLS Handshake', $out, 0);
+                            $SendData = $this->MakeJSON($Client, $out, false);
+                            if ($SendData) {
+                                $this->SendDataToParent($SendData);
+                            }
+                        }
+                        if ($TLS->isHandshaked()) {
+                            $Client->State = WebSocketState::HandshakeReceived;
+                            $this->SendDebug('TLS ProtocolVersion', $TLS->getDebug()->getProtocolVersion(), 0);
+                            $UsingCipherSuite = explode("\n", $TLS->getDebug()->getUsingCipherSuite());
+                            unset($UsingCipherSuite[0]);
+                            foreach ($UsingCipherSuite as $Line) {
+                                $this->SendDebug(trim(substr($Line, 0, 14)), trim(substr($Line, 15)), 0);
+                            }
+                        }
+                    }
+                }
+                $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort} = $TLS;
+                $this->unlock($Client->ClientIP . $Client->ClientPort);
+            } else { // Anfang (inkl. Buffer) paßt nicht
+                $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} = '';
+                $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort} = '';
+                $this->unlock($Client->ClientIP . $Client->ClientPort);
+                $this->CloseConnection($Client);
+                return; // nix sichern
+            }
+        }
+        if (strlen($Payload) == 0) {
+            return;
+        }
+        if ($Client->State == WebSocketState::HandshakeReceived) {
+            $NewData = $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} . $Payload;
+            $CheckData = $this->ReceiveHandshake($NewData);
+            if ($CheckData === true) { // Daten komplett und heil.
+                $this->SendHandshake(HTTP_ERROR_CODES::Web_Socket_Protocol_Handshake, $NewData, $Client); //Handshake senden
+                $this->SendDebug('SUCCESSFULLY CONNECT', $Client, 0);
+                $this->SendDataToChilds('', $Client);
+                $Client->State = WebSocketState::Connected; // jetzt verbunden
+                $Client->Timestamp = time() + $this->ReadPropertyInteger('Interval');
+            } elseif ($CheckData === false) { // Daten nicht komplett, buffern.
+                $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $CheckData;
+            } else { // Daten komplett, aber defekt.
+                $this->SendHandshake($CheckData, $NewData, $Client);
+                $this->CloseConnection($Client);
+            }
+        } elseif ($Client->State == WebSocketState::Connected) { // bekannt und verbunden
+            $NewData = $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} . $Payload;
+            $this->SendDebug('ReceivePacket ' . $Client->ClientIP . $Client->ClientPort, $NewData, 1);
+            while (true) {
+                if (strlen($NewData) < 2) {
+                    break;
+                }
+                $Frame = new WebSocketFrame($NewData);
+                if ($NewData == $Frame->Tail) {
+                    break;
+                }
+                $NewData = $Frame->Tail;
+                $Frame->Tail = null;
+                $this->DecodeFrame($Frame, $Client);
+                $Client->Timestamp = time() + $this->ReadPropertyInteger('Interval');
+            }
+            $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $NewData;
+        } elseif ($Client->State == WebSocketState::CloseSend) {
+            $this->SendDebug('Receive', 'client answer server stream close !', 0);
+            $this->{'WaitForClose' . $Client->ClientIP . $Client->ClientPort} = true;
+        }
+    }
+    private function CloseConnection(Websocket_Client $Client)
+    {
+        $SendSocketClose = $this->MakeJSON($Client, '', false, SocketType::Disconnected);
+        $this->SendDataToParent($SendSocketClose);
     }
 
     ################## DATAPOINTS PARENT
@@ -1001,206 +1127,52 @@ class MyWebsocketServer extends IPSModule
     public function ReceiveData($JSONString)
     {
         $data = json_decode($JSONString);
-            
         unset($data->DataID);
-        $this->SendDebug('incoming Data ', $data, 0);
-        //prüfen ob daten im Buffer vorhanden - nur dann weitergabe
-        if($data->Buffer == false){
-            $this->SendDebug('incoming Data ', "keine Daten im Buffer vorhanden.", 0);
-        }else{
-            $Data = utf8_decode($data->Buffer);
-            $this->SendDebug("Erstes Data Byte", ord($Data[0]), 0);
-            $this->SendDebug("Zweites Data Byte", ord($Data[1]), 0);
-            $this->SendDebug("Fuenftes Data Byte", ord($Data[5]), 0);
-            $Clients = $this->Multi_Clients;
-            $Client = $Clients->GetByIpPort(new Websocket_Client($data->ClientIP, $data->ClientPort));
-
-            $this->SendDebug("Client der Daten sendet: ", $Client,0); //added 2.1.2020
-
-    //        if (($Client === false) or ( preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Data, $match)) or ( (ord($Data[0]) >= 0x14) && (ord($Data[0]) <= 0x18) && (ord($Data[1]) == 0x03) && (ord($Data[5]) == 0x01)))
-            if (($Client === false) or (preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Data, $match)) or ((ord($Data[0]) == 0x16) && (ord($Data[1]) == 0x03) && (ord($Data[5]) == 0x01))) { // neu oder neu verbunden!
-                if ($this->NoNewClients) { //Server start neu... keine neuen Verbindungen annehmen.
-                    return;
-                }
-
-                $this->SendDebug(($Client ? "RECONNECT" : "NEW") . ' CLIENT', $Data, 0);
-
-                if ($this->UseTLS and ((ord($Data[0]) >= 0x14) && (ord($Data[0]) <= 0x18) && (ord($Data[1]) == 0x03))) { //valid header wenn TLS is active
-                    $Client = new Websocket_Client($data->ClientIP, $data->ClientPort, WebSocketState::TLSisReceived, true);
+        //$this->SendDebug('incoming', $data, 0);
+        $Payload = utf8_decode($data->Buffer);
+        $Clients = $this->Multi_Clients;
+        $IncomingClient = new Websocket_Client($data->ClientIP, $data->ClientPort, WebSocketState::init);
+        $Client = $Clients->GetByIpPort($IncomingClient);
+        $this->SendDebug(($Client ? 'OLD' : 'NEW') . ' CLIENT', SocketType::ToString($data->Type), 0);
+        switch ($data->Type) {
+            case 0: /* Data */
+                if ($Client === false) {
+                    $this->SendDebug('no Connection for Data found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
+                    $this->CloseConnection($IncomingClient);
+                } else {
+                    $this->ProcessIncomingData($Client, $Payload);
                     $Clients->Update($Client);
-                    $this->Multi_Clients = $Clients;
-                    $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} = "";
-                    $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = "";
-                    // TLS Config
-                    $TLSconfig = TLSContext::getServerConfig([
-                                'key_pair_files' => [
-                                    'cert' => [$this->CertData],
-                                    'key' => [$this->KeyData, $this->KeyPassword]
-                                ]
-                    ]);
-                    $TLS = TLSContext::createTLS($TLSconfig);
                 }
-
-                if ($this->UsePlain and (preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Data, $match))) { //valid header wenn Plain is active
-                    $Client = new Websocket_Client($data->ClientIP, $data->ClientPort);
-                    $Clients->Update($Client);
-                    $this->Multi_Clients = $Clients;
-                    $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = "";
-                }
-                if ($Client === false) { // Paket verwerfen, da Daten nicht zum Protocol passen.
-                    $this->SendDebug("Client Status: ", "Client muss neu gestartet werden",0);   //added 2.1.2020
-                    return;
-                }
-            }
-            // Client jetzt bekannt.
-            
-          
-            
-
-            if ($Client->UseTLS) { // TLS Daten
-                $Data = $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} .= $Data;
-                if (!isset($TLS)) {
-                    $TLS = $this->{"Multi_TLS_" . $Client->ClientIP . $Client->ClientPort};
-                }
-
-                if ((ord($Data[0]) >= 0x14) && (ord($Data[0]) <= 0x18) && (ord($Data[1]) == 0x03)) {
-                    if (($Client->State == WebSocketState::TLSisSend) or ($Client->State == WebSocketState::TLSisReceived)) {
-                        $this->SendDebug('Get TLS Handshake', $Data, 0);
-                        try {
-                            $TLS->encode($Data);
-                        } catch (TLSAlertException $e) {
-                            if (strlen($out = $e->decode())) {
-                                $this->SendDebug('Send TLS Handshake error', $out, 0);
-                                $SendData = $this->MakeJSON($Client, $out, false);
-                                if ($SendData) {
-                                    $this->SendDataToParent($SendData);
-                                }
-                            }
-                            $this->SendDebug('Send TLS Handshake error', $e->getMessage(), 0);
-                            trigger_error($e->getMessage(), E_USER_NOTICE);
-                            return false; //durch return wird weder BufferTLS noch Client Objekt behalten !
-                        } catch (\PTLS\Exceptions\TLSException $e) {
-                            $this->SendDebug('Send TLS Handshake error', $e->getMessage(), 0);
-                            trigger_error($e->getMessage(), E_USER_NOTICE);
-                            return false; //durch return wird weder BufferTLS noch Client Objekt behalten !
-                        }
-
-                        try {
-                            $out = $TLS->decode();
-                        } catch (\PTLS\Exceptions\TLSException $e) {
-                            trigger_error($e->getMessage(), E_USER_NOTICE);
-                            return false; //durch return wird weder BufferTLS noch Client Objekt behalten !
-                        }
-
-                        if (strlen($out)) {
-                            $this->SendDebug('Send TLS Handshake', $out, 0);
-                            $SendData = $this->MakeJSON($Client, $out, false);
-                            if ($SendData) {
-                                $this->SendDataToParent($SendData);
-                            }
-                        } else {
-                            $this->SendDebug('Send TLS EMPTY', $out, 0);
-                        }
-                        if ($TLS->isHandshaked()) {
-                            $Client->State = WebSocketState::HandshakeReceived;
-                            $this->SendDebug('TLS ProtocolVersion', $TLS->getDebug()->getProtocolVersion(), 0);
-                            $UsingCipherSuite = explode("\n", $TLS->getDebug()->getUsingCipherSuite());
-                            unset($UsingCipherSuite[0]);
-                            foreach ($UsingCipherSuite as $Line) {
-                                $this->SendDebug(trim(substr($Line, 0, 14)), trim(substr($Line, 15)), 0);
-                            }
-                        }
-                        $Clients = $this->Multi_Clients;
-                        $Clients->Update($Client);
-                        $this->Multi_Clients = $Clients;
-                        $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} = "";
-                        $this->{"Multi_TLS_" . $Client->ClientIP . $Client->ClientPort} = $TLS;
-                        return;
-                    }
-
-                    $TLSData = $Data;
-                    $Data = "";
-                    while (strlen($TLSData) > 0) {
-                        $len = unpack("n", substr($TLSData, 3, 2))[1] + 5;
-                        if (strlen($TLSData) >= $len) {
-                            $Part = substr($TLSData, 0, $len);
-                            $TLSData = substr($TLSData, $len);
-
-
-                            $this->SendDebug('Receive TLS Frame', $Part, 0);
-                            $TLS->encode($Part);
-                            $Data .= $TLS->input();
-                        } else {
-                            break;
-                        }
-                    }
-                    $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} = $TLSData;
-                    $this->{"Multi_TLS_" . $Client->ClientIP . $Client->ClientPort} = $TLS;
-
-                    if (strlen($TLSData) > 0) {
-                        $this->SendDebug('Receive TLS Part', $TLSData, 0);
-                    }
-                } else { // Anfang (inkl. Buffer) paßt nicht
-                    $this->{'BufferTLS' . $Client->ClientIP . $Client->ClientPort} = "";
-                    return; // nix sichern
-                }
-            }
-
-            if ($Client->State == WebSocketState::HandshakeReceived) {
-                $NewData = $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} . $Data;
-                $CheckData = $this->ReceiveHandshake($NewData);
-                if ($CheckData === true) { // Daten komplett und heil.
-                    $Client->State = WebSocketState::Connected; // jetzt verbunden
-                    $Client->Timestamp = time() + $this->ReadPropertyInteger("Interval");
-                    $Clients->Update($Client);
-                    $this->Multi_Clients = $Clients;
-                    $this->SendHandshake(101, $NewData, $Client); //Handshake senden
-                    $this->SendDebug('SUCCESSFULLY CONNECT', $Client, 0);
-                    $this->SetNextTimer();
+                break;
+            case 1: /* Connected */
+                if (!$this->NoNewClients) {
+                    $this->SendDebug('new Connection', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
+                    $this->ClearClientBuffer($IncomingClient);
+                    $Clients->Update($IncomingClient);
+                    //added 3.1.2020
                     //nach Handshake alle Daten von Server abrufen
                     $ID_InitData = $this->GetIDForIdent("DataSendToClient");
                     $this->SendText( getvalue($ID_InitData));
-                } elseif ($CheckData === false) { // Daten nicht komplett, buffern.
-                    $this->Multi_Clients = $Clients;
-                    $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $CheckData;
-                } else { // Daten komplett, aber defekt.
-                    $this->SendHandshake($CheckData, $NewData, $Client);
-                    //$Clients->Remove($Client);
-                    $this->Multi_Clients = $Clients;
-                    //$this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = "";
                 }
-            } elseif ($Client->State == WebSocketState::Connected) { // bekannt und verbunden
-                $Client->Timestamp = time() + $this->ReadPropertyInteger("Interval");
-                $Clients->Update($Client);
-                $this->Multi_Clients = $Clients;
-                $NewData = $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} . $Data;
-                $this->SendDebug('ReceivePacket ' . $Client->ClientIP . $Client->ClientPort, $NewData, 1);
-                while (true) {
-                    if (strlen($NewData) < 2) {
-                        break;
-                    }
-                    $Frame = new WebSocketFrame($NewData);
-                    if ($NewData == $Frame->Tail) {
-                        break;
-                    }
-                    $NewData = $Frame->Tail;
-                    $Frame->Tail = null;
-                    $this->DecodeFrame($Frame, $Client);
-                    $this->SetNextTimer();
+                break;
+            case 2: /* Disconnected */
+                if ($Client === false) {
+                    $this->SendDebug('no Connection to disconnect found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
+                } else {
+                    $Clients->Remove($Client);
+                    $this->ClearClientBuffer($Client);
                 }
-                $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $NewData;
-                
-                $Clients = $this->Multi_Clients->GetClients();
-                // Array neu indizieren
-                $Clients =array_values($Clients);
-                $this->writeClients($Clients);// Clients in variable schreiben
-                
-            } elseif ($Client->State == WebSocketState::CloseSend) {
-                $this->SendDebug('Receive', 'client answer server stream close !', 0);
-                $this->{'WaitForClose' . $Client->ClientIP . $Client->ClientPort} = true;
-            }
+                break;
         }
+        $this->Multi_Clients = $Clients;
+        $this->SetNextTimer();
     }
+
+
+
+
+
+
 
     ################## PUBLIC
     //-----------------------------------------------------------------------------
@@ -1270,31 +1242,18 @@ class MyWebsocketServer extends IPSModule
     public function KeepAlive()
     {
         $this->SendDebug('KeepAlive', 'start', 0);
-        //removed by TB 20.10.2019 weil kein Aliveping gestezt wurde bei abgeschaltetem oder abgewürgtem Client
-        //$this->SetTimerInterval('KeepAlivePing', 0);
+        $this->SetTimerInterval('KeepAlivePing', 0);
         $Client = true;
-        
-            $Clients = $this->Multi_Clients->GetClients();
-            $i=0;
-            $this->SendDebug('Keep Alive: '  , $Clients, 0);
-
-
         while ($Client) {
             $Clients = $this->Multi_Clients;
-
             $Client = $Clients->GetNextTimeout(1);
             if ($Client === false) {
                 break;
             }
-            if (@$this->SendPing($Client->ClientIP, $Client->ClientPort, "") === false) {
-                $this->SendDebug('TIMEOUT ' . $Client->ClientIP . ':' . $Client->ClientPort, "Ping timeout", 0);
-                //Fehler Ausgabe
-                   $text = "KeepAlive: Ping timeout. Client will beremoved.";
-                   $array =  $ClientIP . ':' . $ClientPort;
-                   $this->ModErrorLog("MyWebSocketSever", $text, $array);
-               //Fehler Ausgabe Ende 
-                $Clients->Remove($Client);
-                $this->Multi_Clients = $Clients;
+            if (@$this->SendPing($Client->ClientIP, $Client->ClientPort, '') === false) {
+                $this->SendDebug('TIMEOUT ' . $Client->ClientIP . ':' . $Client->ClientPort, 'Ping timeout', 0);
+                $this->RemoveOneClient($Client);
+                $this->CloseConnection($Client);
             }
         }
         $this->SendDebug('KeepAlive', 'end', 0);
@@ -1314,50 +1273,33 @@ class MyWebsocketServer extends IPSModule
         $Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         if ($Client === false) {
             $this->SendDebug('Unknow client', $ClientIP . ':' . $ClientPort, 0);
-            //Fehler Ausgabe
-                $text = "SendPing: Unknow client. ";
-                $array =  $ClientIP . ':' . $ClientPort;
-                $this->ModErrorLog("MyWebSocketSever", $text, $array);
-            //Fehler Ausgabe Ende 
             trigger_error($this->Translate('Unknow client') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
             return false;
         }
         if ($Client->State != WebSocketState::Connected) {
             $this->SendDebug('Client not connected', $ClientIP . ':' . $ClientPort, 0);
-            //Fehler Ausgabe
-                $text = "SendPing: Client not connected. ";
-                $array =  $ClientIP . ':' . $ClientPort;
-                $this->ModErrorLog("MyWebSocketSever", $text, $array);
-            //Fehler Ausgabe Ende 
             trigger_error($this->Translate('Client not connected') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
             return false;
         }
         $this->SendDebug('Send Ping' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
         $this->Send($Text, WebSocketOPCode::ping, $Client);
         $Result = $this->WaitForPong($Client);
-        $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = "";
+        $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = '';
         if ($Result === false) {
-            $this->SendDebug('Timeout ' . $Client->ClientIP . ':' . $Client->ClientPort, "", 0);
-            //Fehler Ausgabe
-                $text = "SendPing: Timeout, no pong received. Client will beremoved.";
-                $array =  $ClientIP . ':' . $ClientPort;
-                $this->ModErrorLog("MyWebSocketSever", $text, $array);
-            //Fehler Ausgabe Ende 
+            $this->SendDebug('Timeout ' . $Client->ClientIP . ':' . $Client->ClientPort, '', 0);
             trigger_error($this->Translate('Timeout'), E_USER_NOTICE);
+            $this->RemoveOneClient($Client);
+            $this->CloseConnection($Client);
             return false;
         }
         if ($Result !== $Text) {
             $this->SendDebug('Error in Pong ' . $Client->ClientIP . ':' . $Client->ClientPort, $Result, 0);
-            //Fehler Ausgabe
-                $text = "SendPing: Error in Pong. Client will beremoved.";
-                $array =  $ClientIP . ':' . $ClientPort;
-                $this->ModErrorLog("MyWebSocketSever", $text, $array);
-            //Fehler Ausgabe Ende 
             trigger_error($this->Translate('Wrong pong received'), E_USER_NOTICE);
-            $this->Multi_Clients->Remove($Client);
-             return false;
+            $this->SendDisconnect($Client);
+            return false;
         }
         return true;
+ 
     }
     
     
@@ -1423,7 +1365,7 @@ class MyWebsocketServer extends IPSModule
                     //TB 21.10.2019 ergänzt entferne Client wenn nicht verbunden
                     $this->SendDebug('Entferne Client da nicht verbunden: ', $ClientIP . ':' . $ClientPort, 0);
                    
-                    $this->RemoveClient($Client); //added 2.1.2020
+                     
                     $this->Multi_Clients->Remove($Client);
                     $x = $this->Multi_Clients->GetClients();
 
