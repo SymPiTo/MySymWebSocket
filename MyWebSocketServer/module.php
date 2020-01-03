@@ -1203,8 +1203,26 @@ class MyWebsocketServer extends IPSModule
     }
 
     ################## PUBLIC
-    public function CommandToServer(string $Data)
-    {
+    //-----------------------------------------------------------------------------
+    /* Function: CommandToServer
+    ...............................................................................
+    Beschreibung: Daten vom Client werden in Befehle umgesetz und ausgeführt.
+        setvalue()      => setvalue(data[0], data[1])
+        IPS_Runscript() => IPS_RunScript($Data[0])
+        command()       => führt das script CommandFromClient aus. (verlinkt im Formular)
+        func();         => führt eine Funktion eines Moduls aus     
+                        => call_user_func_array($MyFunktion, $param);
+    ...............................................................................
+    Parameters: 
+        setvalue(id,param2)
+        IPS_Runscript(id)
+        command(sender,command,value)
+        func(STV_setChannelbyName, 44308, param as array)
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function CommandToServer(string $Data){
         $this->SendDebug('Received following Data from Client', $Data, 0); 
         if(substr($Data, 0, 8) == 'setvalue'){
            $Data = explode(",", substr($Data, 9, strlen($Data)-10));
