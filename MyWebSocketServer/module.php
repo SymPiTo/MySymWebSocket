@@ -1515,7 +1515,7 @@ class MyWebsocketServer extends IPSModule
                     //Daten holen die bereits gesendet wurden
                     $dataOld = getvalue($this->GetIDForIdent("DataSendToClient"));  
                     $dataOldHash = md5($dataOld);
-                    $this->SendDebug("OldHash: ",$dataOldHash, 0);
+                    //$this->SendDebug("OldHash: ",$dataOldHash, 0);
                     $IPSVariablesjson = getvalue($this->GetIDForIdent("IpsSendVars"));
                     $IPSVariables = json_decode($IPSVariablesjson);
                     //$this->SendDebug('Event Variable', $IPSVariables, 0);
@@ -1541,11 +1541,12 @@ class MyWebsocketServer extends IPSModule
                     //json_encode$c);
                     $json = json_encode($c);
                     $dataNewHash = md5($json);
-                    $this->SendDebug("NewHash: ",$dataNewHash, 0);
+                    //$this->SendDebug("NewHash: ",$dataNewHash, 0);
                     //Daten nur senden wenn Änderung erkannt wurde
                     if($dataNewHash != $dataOldHash){
                         $this->SendText($json);
                         //zum sichtbar machen
+                        $this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
                         setvalue($this->GetIDForIdent("DataSendToClient"), $json);
                     }
                     //Semaphore wieder freigeben!
