@@ -583,7 +583,7 @@ class MyWebsocketServer extends IPSModule
      * @param type $UseTLS Bei false wird TLS nicht benutzt, auch wenn der Client dies erwartet.
      * @return boolean|string Der JSON-String zum versand an den IO, im Fehlerfall false.
      */
-    private function MakeJSON(Websocket_Client $Client, string $Data, int $Type = SocketType::Data)
+    private function MakeJSON(Websocket_Client $Client, string $Data, $UseTLS = true, int $Type = SocketType::Data)
     {
         if ($Type == SocketType::Data) {
             if ($UseTLS and $Client->UseTLS) {
