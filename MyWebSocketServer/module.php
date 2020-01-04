@@ -1538,7 +1538,7 @@ class MyWebsocketServer extends IPSModule
                             
                         }
                         catch (Exception $e) {
-                            $varid = $this->getvalue("dummyID")->ID;
+                            $varid = $this->GetIDForIdent("dummyID");
                             $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
                             $this->SetValue("Message", "Variable fehlt");
                         }
