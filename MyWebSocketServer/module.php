@@ -1040,7 +1040,7 @@ class MyWebsocketServer extends IPSModule
 
     ################## DATAPOINTS PARENT
     /**
-     * Sendet die Rohdaten an die Childs.
+     * Sendet die Rohdaten an die Clients
      *
      * @access private
      * @param string $RawData Die Nutzdaten.
@@ -1541,11 +1541,15 @@ class MyWebsocketServer extends IPSModule
                         $this->setvalue("DataSendToClient", $json);
                     }
                     else{
+                        $this->SendText($json);
                         $this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
                         $this->setvalue("DataSendToClient", $json); 
                     }
                     //Semaphore wieder freigeben!
                    // IPS_SemaphoreLeave("sendIPSVars");
+
+                   $this->SetTimerInterval("UpdateVars", 1000);
+
                      $this->SendDebug('Semaphore', "Ende", 0);
                 //}
                 //else
