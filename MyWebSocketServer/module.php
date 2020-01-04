@@ -1516,7 +1516,7 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	public function sendIPSVars(){
-                if (IPS_SemaphoreEnter("sendIPSVars", 500)) {
+                if (IPS_SemaphoreEnter("sendIPSVars", 1000)) {
                       // ...Kritischer Codeabschnitt
                     //Daten holen die bereits gesendet wurden
                     $dataOld = $this->getvalue("DataSendToClient");  
