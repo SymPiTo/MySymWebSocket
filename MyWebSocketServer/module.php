@@ -1089,15 +1089,6 @@ class MyWebsocketServer extends IPSModule
                 $Client->State = WebSocketState::Connected; // jetzt verbunden
                 $Client->Timestamp = time() + $this->ReadPropertyInteger('Interval');
 
-
-                //added 4.1.2020
-                    //nach Handshake Initial alle Daten von Server abrufen und an alle Clients senden
-                    $this->sendIPSVars();
-                    // und Sende Timer starten
-                    $this->SetTimerInterval("Update", $this->ReadPropertyInteger("UpdateInterval"));
-
-
-
             } elseif ($CheckData === false) { // Daten nicht komplett, buffern.
                 $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $CheckData;
             } else { // Daten komplett, aber defekt.
@@ -1166,7 +1157,17 @@ class MyWebsocketServer extends IPSModule
                     $this->ClearClientBuffer($IncomingClient);
                     $Clients->Update($IncomingClient);
 
+               
+
                 //added 4.1.2020
+                    //nach Handshake Initial alle Daten von Server abrufen und an alle Clients senden
+                    $this->SendDebug("Info", "sende Initial Variablen an alle Clients", 0);
+                    $this->sendIPSVars();
+                    // und Sende Timer starten
+                    $this->SendDebug("Info", "starte Update Timer", 0);
+                    $this->SetTimerInterval("Update", $this->ReadPropertyInteger("UpdateInterval"));
+ 
+                    //added 4.1.2020
                     //alle verbundenen Clients in Variable schreiben
                     $cl = $Clients->GetClients();
                     //$this->SendDebug("Verbundene Clients", $cl, 0);
@@ -1590,11 +1591,11 @@ class MyWebsocketServer extends IPSModule
                         $this->SendText($json);
                         //zum sichtbar machen
                         $this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
-                        setvalue($this->GetIDForIdent("DataSendToClient"), $json);
+                        $this->setvalue("DataSendToClient", $json);
                     }
                     else{
                         $this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
-                        setvalue($this->GetIDForIdent("DataSendToClient"), $json); 
+                        $this->setvalue("DataSendToClient", $json); 
                     }
                     //Semaphore wieder freigeben!
                    // IPS_SemaphoreLeave("sendIPSVars");
