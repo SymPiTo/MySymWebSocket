@@ -1233,7 +1233,9 @@ class MyWebsocketServer extends IPSModule
             }
             if (@$this->SendPing($Client->ClientIP, $Client->ClientPort, '') === false) {
                 $this->SendDebug('TIMEOUT ' . $Client->ClientIP . ':' . $Client->ClientPort, 'Ping timeout', 0);
+                $this->SendDebug("sendPing Ergebnis: ", "entferne Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
                 $this->RemoveOneClient($Client);
+                $this->SendDebug("sendPing Ergebnis: ", "Schliesse Verbindung zu Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
                 $this->CloseConnection($Client);
             }
         }
@@ -1287,6 +1289,7 @@ class MyWebsocketServer extends IPSModule
         public function SendTextToClient(string $ClientIP, string $ClientPort, string $Text)
     {
         $Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
+        /*
         if ($Client === false) {
             $this->SendDebug('Unknow client', $ClientIP . ':' . $ClientPort, 0);
             //Fehler Ausgabe
@@ -1297,6 +1300,8 @@ class MyWebsocketServer extends IPSModule
             trigger_error($this->Translate('Unknow client') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
             return false;
         }
+        */
+        /*
         if ($Client->State != WebSocketState::Connected) {
             $this->SendDebug('Client not connected', $ClientIP . ':' . $ClientPort, 0);
             //Fehler Ausgabe
@@ -1307,6 +1312,7 @@ class MyWebsocketServer extends IPSModule
             trigger_error($this->Translate('Client not connected') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
             return false;
         }
+        */
         $this->SendDebug('Send Text Message to Client' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
         $this->Send($Text, WebSocketOPCode::text, $Client);
 
@@ -1559,7 +1565,7 @@ class MyWebsocketServer extends IPSModule
 
                   
 
-                     $this->SendDebug('Semaphore', "Ende", 0);
+                    // $this->SendDebug('Semaphore', "Ende", 0);
                 //}
                 //else
                 //{
