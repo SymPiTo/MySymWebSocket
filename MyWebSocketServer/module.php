@@ -99,6 +99,9 @@ class MyWebsocketServer extends IPSModule
         $variablenID = $this->RegisterVariableString("Message", "Meldung"); 
         IPS_SetInfo ($variablenID, "WSS"); 
 
+        $this->RegisterVariableString("dummyID", "DummyID", "", 0);
+        $this->setvalue("dummyID", "XXXX");
+        
         //Status Variablen für Server
         $variablenID = $this->RegisterVariableBoolean("active", "WSS_active", "~Switch");
         IPS_SetInfo ($variablenID, "WSS"); 
@@ -1535,7 +1538,7 @@ class MyWebsocketServer extends IPSModule
                             
                         }
                         catch (Exception $e) {
-                            $varid = "56321";
+                            $varid = $getvalue("dummyID")->ID;
                             $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
                             $this->SetValue("Message", "Variable fehlt");
                         }
@@ -1575,8 +1578,9 @@ class MyWebsocketServer extends IPSModule
                     }
                 else
                 {
-                    // ...Keine ausführung Möglich. Ein anderes Skript nutzt den "KritischenPunkt" 
-                    // für länger als 1 Sekunde, sodass unsere Wartezeit überschritten wird.
+                    $this->SendDebug("Semaphore","Keine Ausführung Möglich. Ein anderes Skript nutzt den KritischenPunkt.",0);
+                    // ...Keine Ausführung Möglich. Ein anderes Skript nutzt den "KritischenPunkt" 
+                    // für länger als 0,5 Sekunde, sodass unsere Wartezeit überschritten wird.
                 }
         } 
 
