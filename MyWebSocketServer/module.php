@@ -1155,13 +1155,18 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug('new Connection', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
                     $this->ClearClientBuffer($IncomingClient);
                     $Clients->Update($IncomingClient);
-                    //added 3.1.2020
+                    //added 4.1.2020
+                    //alle verbundenen Clients in Variable schreiben
+                    $cl = $Clients->GetClients();
+                    $this->SendDebug("Verbundene Clients", $cl[0]->ClientIP, 0);
+
                     //nach Handshake alle Daten von Server abrufen
+
+
                     $ID_InitData = $this->GetIDForIdent("DataSendToClient");
                     $this->SendText( getvalue($ID_InitData));
                    // addded 4.1.2020
-                    $a = $Clients->GetClients();
-                    $this->SendDebug("Verbundene Clients", $a,0);
+
                 }
                 break;
             case 2: /* Disconnected */
