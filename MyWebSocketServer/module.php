@@ -1691,25 +1691,26 @@ class MyWebsocketServer extends IPSModule
         Protected function writeClients($list){ 
             //CLients in 4 Variable schreiben
             $this->SendDebug("dfksglkgjsjgskl",$list,0);
-         
+            $n = 0;
             setValue($this->GetIDForIdent("Client1"),'');   
             setValue($this->GetIDForIdent("Client2"),'');    
             setValue($this->GetIDForIdent("Client3"),'');    
             setValue($this->GetIDForIdent("Client4"),'');   
             foreach ($list as $key => $value) {
-                $this->SendDebug("LIST-Eintag: ",$key,0);
-                if($key == 0){
+                
+                if($n == 0){
                     $this->setValue("Client1", $value);
                 }
-                elseif($key == 1){
+                elseif($n == 1){
                     $this->setValue("Client2", $value);
                 }
-                elseif($key == 2){
+                elseif($n == 2){
                     $this->setValue("Client3", $value);
                 }
-                elseif($key == 3){
+                elseif($n == 3){
                     $this->setValue("Client4", $value);
                 }  
+                $n = $n + 1;
             }
                       
           
