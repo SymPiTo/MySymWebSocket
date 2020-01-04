@@ -1529,7 +1529,7 @@ class MyWebsocketServer extends IPSModule
               
                         try {
                             if(!getvalue($varid)){
-                                throw new Exception('Variable mit ID '.$IPSVariable.'ist nicht vorhanden.');  
+                                throw new Exception('Variable mit ID '.$varid.'ist nicht vorhanden.');  
                             }
                         
                             
