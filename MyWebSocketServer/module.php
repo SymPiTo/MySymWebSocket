@@ -1165,12 +1165,13 @@ class MyWebsocketServer extends IPSModule
                     $this->sendIPSVars();
                     // und Sende Timer starten
                     $this->SendDebug("Info", "starte Update Timer", 0);
-                    $this->SetTimerInterval("Update", $this->ReadPropertyInteger("UpdateInterval"));
+                    $this->SetTimerInterval("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"));
  
                     //added 4.1.2020
+
                     //alle verbundenen Clients in Variable schreiben
                     $cl = $Clients->GetClients();
-                    //$this->SendDebug("Verbundene Clients", $cl, 0);
+                     $this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
                     foreach ($cl as $key => $value) {
                         //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
                         $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
