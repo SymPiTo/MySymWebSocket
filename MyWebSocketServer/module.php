@@ -115,8 +115,8 @@ class MyWebsocketServer extends IPSModule
         //$this->RegisterPropertyString("IPSVars", "[]");
         
         // Timer erstellen zum senden der Variablen
-        //$this->RegisterTimer("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"), 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
-        $this->RegisterTimer("UpdateVars", 0, 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
+         $this->RegisterTimer("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"), 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
+        
     }
 
     /**
