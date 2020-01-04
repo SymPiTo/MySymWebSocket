@@ -1,3 +1,7 @@
 {
-    "elements": []
+    "elements": [{
+        "name": "Open",
+        "type": "CheckBox",
+        "caption": "Activate WebSocketServer"
+    }]
 }
