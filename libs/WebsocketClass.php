@@ -389,10 +389,10 @@ class WebSocket_ClientList
      */
     public function Remove(Websocket_Client $Client)
     {
-         SendDebug("Remove: ", "starte Remove von: ". $Client->ClientIP.":".$Client->ClientPort, 0);
+         
         if (isset($this->Items[$Client->ClientIP . $Client->ClientPort])) {
             unset($this->Items[$Client->ClientIP . $Client->ClientPort]);
-            SendDebug("Remove: ", "entferne Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
+             
             // array neu indizieren und gelöschte vollständig entfernen 29.11.2019 TB
             $this->Items = array_values($this->Items);
              
