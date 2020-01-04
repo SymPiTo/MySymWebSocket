@@ -353,6 +353,7 @@ class Websocket_Client
  */
 class WebSocket_ClientList
 {
+    use MyDebugHelper;
 
     /**
      * Array mit allen Items.
