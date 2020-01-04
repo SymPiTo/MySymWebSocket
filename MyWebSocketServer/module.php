@@ -115,8 +115,8 @@ class MyWebsocketServer extends IPSModule
         //$this->RegisterPropertyString("IPSVars", "[]");
         
         // Timer erstellen zum senden der Variablen
-         $this->RegisterTimer("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"), 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
-         $this->RegisterTimer('TT', 0, 'MyWSS_testtimer($_IPS[\'TARGET\']);');
+         $this->RegisterTimer("UpdateVars", 0 , 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
+       
     }
 
     /**
@@ -208,7 +208,7 @@ class MyWebsocketServer extends IPSModule
         setvalue($this->GetIDForIdent("active"),$this->ReadPropertyBoolean("Open"));
         if($this->ReadPropertyBoolean("Open")){
             $this->SetTimerInterval("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"));
-            $this->SetTimerInterval("TT", 1000);
+            
             $this->SendDebug("START", "Modul ist AKTIV",0);
         }
         else {
@@ -1545,14 +1545,14 @@ class MyWebsocketServer extends IPSModule
                         $this->setvalue("DataSendToClient", $json);
                     }
                     else{
-                        $this->SendText($json);
-                        $this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
-                        $this->setvalue("DataSendToClient", $json); 
+                   
+                        $this->SendDebug("NewHash: ", "keine Datenänderung erkannt", 0);
+                        
                     }
                     //Semaphore wieder freigeben!
                    // IPS_SemaphoreLeave("sendIPSVars");
 
-                   $this->SetTimerInterval("UpdateVars", 1000);
+                  
 
                      $this->SendDebug('Semaphore', "Ende", 0);
                 //}
@@ -1677,10 +1677,7 @@ class MyWebsocketServer extends IPSModule
           
         }
 
-        public function testtimer(){
-            $this->SendDebug("Test", "Testtimer gestartet", 0);
-
-        }
+  
 }
 
 
