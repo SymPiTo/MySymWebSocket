@@ -1088,6 +1088,16 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDataToChilds('', $Client);
                 $Client->State = WebSocketState::Connected; // jetzt verbunden
                 $Client->Timestamp = time() + $this->ReadPropertyInteger('Interval');
+
+
+                //added 4.1.2020
+                    //nach Handshake Initial alle Daten von Server abrufen und an alle Clients senden
+                    $this->sendIPSVars();
+                    // und Sende Timer starten
+                    $this->SetTimerInterval("Update", $this->ReadPropertyInteger("UpdateInterval"));
+
+
+
             } elseif ($CheckData === false) { // Daten nicht komplett, buffern.
                 $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $CheckData;
             } else { // Daten komplett, aber defekt.
@@ -1156,7 +1166,7 @@ class MyWebsocketServer extends IPSModule
                     $this->ClearClientBuffer($IncomingClient);
                     $Clients->Update($IncomingClient);
 
-                    //added 4.1.2020
+                //added 4.1.2020
                     //alle verbundenen Clients in Variable schreiben
                     $cl = $Clients->GetClients();
                     //$this->SendDebug("Verbundene Clients", $cl, 0);
@@ -1165,12 +1175,6 @@ class MyWebsocketServer extends IPSModule
                         $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
                     }
                     $this->writeClients($liste);
-                    
-                    //nach Handshake Initial alle Daten von Server abrufen und an alle Clients senden
-                    $this->sendIPSVars();
-
-                    // und Sende Timer starten
-                    $this->SetTimerInterval("Update", $this->ReadPropertyInteger("UpdateInterval"));
                   
 
                 }
