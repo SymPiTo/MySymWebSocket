@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../libs/NetworkTraits.php");
+ 
 
 /* * @addtogroup network
  * @{
@@ -353,7 +353,7 @@ class Websocket_Client
  */
 class WebSocket_ClientList
 {
-    use MyDebugHelper;
+     
 
     /**
      * Array mit allen Items.
@@ -389,13 +389,13 @@ class WebSocket_ClientList
      */
     public function Remove(Websocket_Client $Client)
     {
-        $this->SendDebug("Remove: ", "starte Remove von: ". $Client->ClientIP.":".$Client->ClientPort, 0);
+         SendDebug("Remove: ", "starte Remove von: ". $Client->ClientIP.":".$Client->ClientPort, 0);
         if (isset($this->Items[$Client->ClientIP . $Client->ClientPort])) {
             unset($this->Items[$Client->ClientIP . $Client->ClientPort]);
-            $this->SendDebug("Remove: ", "entferne Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
+            SendDebug("Remove: ", "entferne Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
             // array neu indizieren und gelöschte vollständig entfernen 29.11.2019 TB
             $this->Items = array_values($this->Items);
-            $this->SendDebug("Remove: ", "neu sortierte ClientListe: ". $this->Items, 0);
+             
         }
     }
 
