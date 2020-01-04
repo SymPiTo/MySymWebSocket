@@ -1160,7 +1160,7 @@ class MyWebsocketServer extends IPSModule
                     $ID_InitData = $this->GetIDForIdent("DataSendToClient");
                     $this->SendText( getvalue($ID_InitData));
                    
-                    $this->writeClients($Clients);// Clients in variable schreiben
+                    
                 }
                 break;
             case 2: /* Disconnected */
