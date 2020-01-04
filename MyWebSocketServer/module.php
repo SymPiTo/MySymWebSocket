@@ -1330,8 +1330,11 @@ class MyWebsocketServer extends IPSModule
            // $this->SendDebug('Client Liste =' , $Clients, 0);
 
             foreach ($Clients as $Client) {
+
+                /*
                  $ClientIP = $Client->ClientIP ;
                 $ClientPort = $Client->ClientPort;
+
                 if ($Client === false) {
                     //Fehler Ausgabe
                         $text = "SendText: Client not known. ";
@@ -1367,6 +1370,10 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug('Textlänge Message: ' , strlen($Text), 0);
                     $this->Send($Text, WebSocketOPCode::text, $Client);
                 }
+                */
+                $this->SendDebug('Send Text Message to Multi-Client' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
+                $this->SendDebug('Textlänge Message: ' , strlen($Text), 0);
+                $this->Send($Text, WebSocketOPCode::text, $Client);
             }
             return true;
         }
