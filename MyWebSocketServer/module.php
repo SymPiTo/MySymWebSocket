@@ -1161,10 +1161,10 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug("Verbundene Clients", $cl, 0);
                     foreach ($cl as $key => $value) {
                         //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
-                        $liste[$key] =  $value->ClientIP.":";
+                        $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
                     }
                     $this->writeClients($liste);
-                    $this->SendDebug("dfksglkgjsjgskl",$liste,0);
+                    
                     //nach Handshake alle Daten von Server abrufen
 
 
@@ -1690,31 +1690,21 @@ class MyWebsocketServer extends IPSModule
         //////////////////////////////////////////////////////////////////////////////*/
         Protected function writeClients($list){ 
             //CLients in 4 Variable schreiben
-            
-            $anz = count($list);
+            $this->SendDebug("dfksglkgjsjgskl",$liste,0);
+         
             setValue($this->GetIDForIdent("Client1"),'');   
             setValue($this->GetIDForIdent("Client2"),'');    
             setValue($this->GetIDForIdent("Client3"),'');    
             setValue($this->GetIDForIdent("Client4"),'');   
-            $i = 0;
-            foreach ($list as $Client) {
-                $i++;
-                //verbundene Client Adressen in Variale schreiben
-                switch ($i){
-                    case 1:
-                        setValue($this->GetIDForIdent("Client1"),$Client->ClientIP . ':' . $Client->ClientPort);
-                        break;
-                    case 2: 
-                        setValue($this->GetIDForIdent("Client2"),$Client->ClientIP . ':' . $Client->ClientPort);
-                        break;
-                    case 3:
-                        setValue($this->GetIDForIdent("Client3"),$Client->ClientIP . ':' . $Client->ClientPort);
-                        break;
-                    case 4:
-                        setValue($this->GetIDForIdent("Client4"),$Client->ClientIP . ':' . $Client->ClientPort);
-                    break;   
-                }
-            }
+ 
+                        $this->setValue("Client1", $Client[0]);
+                
+                        $this->setValue("Client2", $Client[1]);
+                 
+                        $this->setValue("Client3", $Client[2]);
+                 
+                        $this->setValue("Client4", $Client[3]);
+          
         }
 }
 
