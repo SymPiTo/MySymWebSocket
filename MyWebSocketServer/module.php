@@ -1697,6 +1697,7 @@ class MyWebsocketServer extends IPSModule
             setValue($this->GetIDForIdent("Client3"),'');    
             setValue($this->GetIDForIdent("Client4"),'');   
             foreach ($list as $key => $value) {
+                $this->SendDebug("LIST-Eintag: ",$value,0);
                 if($key == 0){
                     $this->setValue("Client1", $value);
                 }
