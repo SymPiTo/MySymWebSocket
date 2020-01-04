@@ -769,6 +769,8 @@ class MyWebsocketServer extends IPSModule
     {
         $this->ClearClientBuffer($Client);
         $Clients = $this->Multi_Clients;
+        $this->SendDebug("RemoveOneClient: ", "entferne Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
+
         $Clients->Remove($Client);
         $this->Multi_Clients = $Clients;
         $this->SetNextTimer();
