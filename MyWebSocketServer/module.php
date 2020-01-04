@@ -1160,8 +1160,10 @@ class MyWebsocketServer extends IPSModule
                     $cl = $Clients->GetClients();
                     $this->SendDebug("Verbundene Clients", $cl, 0);
                     foreach ($cl as $key => $value) {
-                        $this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
+                        //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
+                        $liste[$key] = $value->ClientIP.":".$value->ClientPort;
                     }
+                    $this->writeClients($liste);
                     //nach Handshake alle Daten von Server abrufen
 
 
