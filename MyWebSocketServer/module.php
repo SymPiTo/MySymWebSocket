@@ -1161,7 +1161,7 @@ class MyWebsocketServer extends IPSModule
                     $this->SendText( getvalue($ID_InitData));
                    // addded 4.1.2020
                     $a = $Clients->GetClients();
-                    $this->SendDebug("Verbundene Clients", $a,0)
+                    $this->SendDebug("Verbundene Clients", $a,0);
                 }
                 break;
             case 2: /* Disconnected */
