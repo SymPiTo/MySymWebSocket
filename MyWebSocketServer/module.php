@@ -1159,8 +1159,9 @@ class MyWebsocketServer extends IPSModule
                     //nach Handshake alle Daten von Server abrufen
                     $ID_InitData = $this->GetIDForIdent("DataSendToClient");
                     $this->SendText( getvalue($ID_InitData));
-                   
-                    
+                   // addded 4.1.2020
+                    $a = $Clients->GetClients();
+                    $this->SendDebug("Verbundene Clients", $a,0)
                 }
                 break;
             case 2: /* Disconnected */
