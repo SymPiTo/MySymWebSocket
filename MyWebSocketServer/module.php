@@ -773,6 +773,18 @@ class MyWebsocketServer extends IPSModule
 
         $Clients->Remove($Client);
         $this->Multi_Clients = $Clients;
+        // ----------------------------------------
+                    //added 4.1.2020
+
+                    //alle verbundenen Clients in Variable schreiben
+                     
+                     //$this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
+                    foreach ($Clients as $key => $value) {
+                        //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
+                        $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
+                    }
+                    $this->writeClients($liste);
+        // --------------------------------------------------------------------
         $this->SetNextTimer();
     }
 
