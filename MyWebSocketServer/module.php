@@ -1007,6 +1007,17 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDataToChilds('', $Client);
                 $Client->State = WebSocketState::Connected; // jetzt verbunden
                 $Client->Timestamp = time() + $this->ReadPropertyInteger('Interval');
+                // ----------------------------------------------------------------------
+                //  4.1.2020  added
+                // Client ist nun verbunden - Es werden Initial die Werte geschrieben und der Update Timer gesetzt
+                
+                    //nach Handshake Initial alle Daten von Server abrufen und an alle Clients senden
+                    $this->SendDebug("Info", "sende Initial Variablen an alle Clients", 0);
+                    $this->sendIPSVars();
+                    // und Sende Timer starten
+                    $this->SendDebug("Info", "starte Update Timer", 0);
+                    $this->SetTimerInterval("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"));
+                //------------------------------------------------------------------
 
             } elseif ($CheckData === false) { // Daten nicht komplett, buffern.
                 $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $CheckData;
@@ -1109,13 +1120,7 @@ class MyWebsocketServer extends IPSModule
 
                
 
-                //added 4.1.2020
-                    //nach Handshake Initial alle Daten von Server abrufen und an alle Clients senden
-                    $this->SendDebug("Info", "sende Initial Variablen an alle Clients", 0);
-                    //$this->sendIPSVars();
-                    // und Sende Timer starten
-                    $this->SendDebug("Info", "starte Update Timer", 0);
-                    $this->SetTimerInterval("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"));
+
  
                     //added 4.1.2020
 
@@ -1546,7 +1551,7 @@ class MyWebsocketServer extends IPSModule
                     }
                     else{
                    
-                        $this->SendDebug("NewHash: ", "keine Datenänderung erkannt", 0);
+                        //$this->SendDebug("NewHash: ", "keine Datenänderung erkannt", 0);
                         
                     }
                     //Semaphore wieder freigeben!
