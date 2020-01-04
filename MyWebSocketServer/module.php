@@ -96,7 +96,9 @@ class MyWebsocketServer extends IPSModule
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID = $this->RegisterVariableString("Client4", "connected Client 4"); 
         IPS_SetInfo ($variablenID, "WSS"); 
-        
+        $variablenID = $this->RegisterVariableString("Message", "Meldung"); 
+        IPS_SetInfo ($variablenID, "WSS"); 
+
         //Status Variablen für Server
         $variablenID = $this->RegisterVariableBoolean("active", "WSS_active", "~Switch");
         IPS_SetInfo ($variablenID, "WSS"); 
@@ -1511,18 +1513,30 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	public function sendIPSVars(){
-                if (IPS_SemaphoreEnter("sendIPSVars", 5000)) {
+                if (IPS_SemaphoreEnter("sendIPSVars", 500)) {
                       // ...Kritischer Codeabschnitt
                     //Daten holen die bereits gesendet wurden
-                    $dataOld = getvalue($this->GetIDForIdent("DataSendToClient"));  
+                    $dataOld = $this->getvalue("DataSendToClient");  
                     $dataOldHash = md5($dataOld);
                     //$this->SendDebug("OldHash: ",$dataOldHash, 0);
-                    $IPSVariablesjson = getvalue($this->GetIDForIdent("IpsSendVars"));
+                    $IPSVariablesjson = $this->getvalue("IpsSendVars");
                     $IPSVariables = json_decode($IPSVariablesjson);
                     //$this->SendDebug('Event Variable', $IPSVariables, 0);
                     foreach($IPSVariables as $IPSVariable) {
-                        $varid = $IPSVariable->ID;
-                        $data['ID'.$varid] = getvalue($varid);
+                        try {
+                            $varid = $IPSVariable->ID;
+                            if($varid === NULL){
+                                throw new Exception('Variable mit ID '.$IPSVariable.'ist nicht vorhanden.');
+                            }
+                            
+                        } catch (Exception $e) {
+                            $varid = "56321";
+                            $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
+                        }
+                        finally{
+                            $data['ID'.$varid] = getvalue($varid);
+                        }
+
                     }
                                 $a = getvalue(11938);
                                 $b = date('m/d/Y H:i:s', $a);
