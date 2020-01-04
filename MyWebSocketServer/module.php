@@ -1576,6 +1576,10 @@ class MyWebsocketServer extends IPSModule
                         $this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
                         setvalue($this->GetIDForIdent("DataSendToClient"), $json);
                     }
+                    else{
+                        $this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
+                        setvalue($this->GetIDForIdent("DataSendToClient"), $json); 
+                    }
                     //Semaphore wieder freigeben!
                      IPS_SemaphoreLeave("sendIPSVars");
                     }
