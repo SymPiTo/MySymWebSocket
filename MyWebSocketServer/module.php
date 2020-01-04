@@ -1524,6 +1524,7 @@ class MyWebsocketServer extends IPSModule
                     //$this->SendDebug('Event Variable', $IPSVariables, 0);
                     foreach($IPSVariables as $IPSVariable) {
                         try {
+                            
                             if($IPSVariable->ID){
                                 $varid = $IPSVariable->ID;
                             }
@@ -1534,6 +1535,7 @@ class MyWebsocketServer extends IPSModule
                         } catch (Exception $e) {
                             $varid = "56321";
                             $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
+                            $this->SetValue("Message", "Variable fehlt");
                         }
                         finally{
                             $data['ID'.$varid] = getvalue($varid);
