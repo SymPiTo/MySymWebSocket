@@ -1108,7 +1108,7 @@ class MyWebsocketServer extends IPSModule
                 //added 4.1.2020
                     //nach Handshake Initial alle Daten von Server abrufen und an alle Clients senden
                     $this->SendDebug("Info", "sende Initial Variablen an alle Clients", 0);
-                    $this->sendIPSVars();
+                    //$this->sendIPSVars();
                     // und Sende Timer starten
                     $this->SendDebug("Info", "starte Update Timer", 0);
                     $this->SetTimerInterval("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"));
