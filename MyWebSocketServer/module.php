@@ -1158,7 +1158,7 @@ class MyWebsocketServer extends IPSModule
                     //added 4.1.2020
                     //alle verbundenen Clients in Variable schreiben
                     $cl = $Clients->GetClients();
-                    $this->SendDebug("Verbundene Clients", $cl, 0);
+                    //$this->SendDebug("Verbundene Clients", $cl, 0);
                     foreach ($cl as $key => $value) {
                         //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
                         $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
@@ -1182,6 +1182,8 @@ class MyWebsocketServer extends IPSModule
                     $this->ClearClientBuffer($Client);
                 }
                 break;
+            default;
+                $this->SendDebug('Client wurde neu gestartet.', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);     
         }
         $this->Multi_Clients = $Clients;
         $this->SetNextTimer();
@@ -1690,7 +1692,7 @@ class MyWebsocketServer extends IPSModule
         //////////////////////////////////////////////////////////////////////////////*/
         Protected function writeClients($list){ 
             //CLients in 4 Variable schreiben
-            $this->SendDebug("dfksglkgjsjgskl",$list,0);
+             
             $n = 0;
             setValue($this->GetIDForIdent("Client1"),'');   
             setValue($this->GetIDForIdent("Client2"),'');    
