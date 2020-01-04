@@ -867,6 +867,7 @@ class MyWebsocketServer extends IPSModule
 
 
 
+
     private function SplitTLSFrames(string &$Payload)
     {
         $Frames = [];
@@ -1038,6 +1039,46 @@ class MyWebsocketServer extends IPSModule
     }
 
     ################## DATAPOINTS PARENT
+    /**
+     * Interne Funktion des SDK. Nimmt Daten von Childs (HTML Client) entgegen und sendet Diese weiter.
+     *
+     * @access public
+     * @param string $JSONString
+     * @result bool true wenn Daten gesendet werden konnten, sonst false.
+     */
+    public function ForwardData($JSONString)
+    {
+        $Data = json_decode($JSONString);
+        $Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($Data->ClientIP, $Data->ClientPort));
+        if ($Client === false) {
+            trigger_error($this->Translate('Unknow client') . ': ' . $Data->ClientIP . ':' . $Data->ClientPort, E_USER_NOTICE);
+            return false;
+        }
+        if ($Client->State != WebSocketState::Connected) {
+            trigger_error($this->Translate('Client not connected') . ': ' . $Data->ClientIP . ':' . $Data->ClientPort, E_USER_NOTICE);
+            return false;
+        }
+        $this->SendDebug("Forward", utf8_decode($Data->Buffer), 0);
+
+        if ($Data->DataID == "{714B71FB-3D11-41D1-AFAC-E06F1E983E09}") {
+            if ($Data->FrameTyp == WebSocketOPCode::close) {
+                return $this->SendDisconnect($Client);
+            }
+            if ($Data->FrameTyp == WebSocketOPCode::ping) {
+                return $this->SendPing($Client->ClientIP, $Client->ClientPort, utf8_decode($Data->Buffer));
+            }
+            if (($Data->FrameTyp < 0) || ($Data->FrameTyp > 2)) {
+                trigger_error($this->Translate('FrameTyp invalid') . ': ' . $Data->ClientIP . ':' . $Data->ClientPort, E_USER_NOTICE);
+                return false;
+            }
+        } else {
+            $Data->FrameTyp = $this->{'OpCode' . $Client->ClientIP . $Client->ClientPort};
+            $Data->Fin = true;
+        }
+
+        $this->Send(utf8_decode($Data->Buffer), $Data->FrameTyp, $Client, $Data->Fin);
+        return true;
+    }
 
     /**
      * Empfängt Daten vom Parent.
