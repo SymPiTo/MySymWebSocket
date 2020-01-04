@@ -394,7 +394,7 @@ class WebSocket_ClientList
             unset($this->Items[$Client->ClientIP . $Client->ClientPort]);
              
             // array neu indizieren und gelöschte vollständig entfernen 29.11.2019 TB
-            $this->Items = array_values($this->Items);
+            //$this->Items = array_values($this->Items);
              
         }
     }
