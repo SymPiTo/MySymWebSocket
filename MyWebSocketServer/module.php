@@ -1524,8 +1524,10 @@ class MyWebsocketServer extends IPSModule
                     //$this->SendDebug('Event Variable', $IPSVariables, 0);
                     foreach($IPSVariables as $IPSVariable) {
                         try {
-                            $varid = $IPSVariable->ID;
-                            if(!$varid){
+                            if($IPSVariable->ID){
+                                $varid = $IPSVariable->ID;
+                            }
+                            else{
                                 throw new Exception('Variable mit ID '.$IPSVariable.'ist nicht vorhanden.');
                             }
                             
