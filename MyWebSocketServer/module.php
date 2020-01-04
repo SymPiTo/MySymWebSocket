@@ -1519,9 +1519,9 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	public function sendIPSVars(){
-                if (IPS_SemaphoreEnter("sendIPSVars", 1000)) {
+               // if (IPS_SemaphoreEnter("sendIPSVars", 1000)) {
                       // ...Kritischer Codeabschnitt
-                      $this->SendDebug('Semaphore', "Start", 0);
+                   //   $this->SendDebug('Semaphore', "Start", 0);
                     //Daten holen die bereits gesendet wurden
                     $dataOld = $this->getvalue("DataSendToClient");  
                     $dataOldHash = md5($dataOld);
@@ -1582,15 +1582,15 @@ class MyWebsocketServer extends IPSModule
                         setvalue($this->GetIDForIdent("DataSendToClient"), $json); 
                     }
                     //Semaphore wieder freigeben!
-                     IPS_SemaphoreLeave("sendIPSVars");
+                   // IPS_SemaphoreLeave("sendIPSVars");
                      $this->SendDebug('Semaphore', "Ende", 0);
-                    }
-                else
-                {
-                    $this->SendDebug("Semaphore","Keine Ausführung Möglich. Ein anderes Skript nutzt den KritischenPunkt.",0);
+                //}
+                //else
+                //{
+                  //  $this->SendDebug("Semaphore","Keine Ausführung Möglich. Ein anderes Skript nutzt den KritischenPunkt.",0);
                     // ...Keine Ausführung Möglich. Ein anderes Skript nutzt den "KritischenPunkt" 
                     // für länger als 0,5 Sekunde, sodass unsere Wartezeit überschritten wird.
-                }
+                //}
         } 
 
         
