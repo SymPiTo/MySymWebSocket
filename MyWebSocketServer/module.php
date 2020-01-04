@@ -1521,6 +1521,7 @@ class MyWebsocketServer extends IPSModule
 	public function sendIPSVars(){
                 if (IPS_SemaphoreEnter("sendIPSVars", 1000)) {
                       // ...Kritischer Codeabschnitt
+                      $this->SendDebug('Semaphore', "Start", 0);
                     //Daten holen die bereits gesendet wurden
                     $dataOld = $this->getvalue("DataSendToClient");  
                     $dataOldHash = md5($dataOld);
@@ -1582,6 +1583,7 @@ class MyWebsocketServer extends IPSModule
                     }
                     //Semaphore wieder freigeben!
                      IPS_SemaphoreLeave("sendIPSVars");
+                     $this->SendDebug('Semaphore', "Ende", 0);
                     }
                 else
                 {
