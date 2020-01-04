@@ -1696,14 +1696,21 @@ class MyWebsocketServer extends IPSModule
             setValue($this->GetIDForIdent("Client2"),'');    
             setValue($this->GetIDForIdent("Client3"),'');    
             setValue($this->GetIDForIdent("Client4"),'');   
- 
-                        $this->setValue("Client1", $list[0]);
-                
-                        $this->setValue("Client2", $list[1]);
-                 
-                        $this->setValue("Client3", $list[2]);
-                 
-                        $this->setValue("Client4", $list[3]);
+            foreach ($list as $key => $value) {
+                if($key == 0){
+                    $this->setValue("Client1", $value);
+                }
+                elseif($key == 1){
+                    $this->setValue("Client2", $value);
+                }
+                elseif($key == 2){
+                    $this->setValue("Client3", $value);
+                }
+                elseif($key == 3){
+                    $this->setValue("Client4", $value);
+                }  
+            }
+                      
           
         }
 }
