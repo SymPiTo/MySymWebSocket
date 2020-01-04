@@ -377,7 +377,7 @@ class WebSocket_ClientList
     public function Update(Websocket_Client $Client)
     {
         $this->Items[$Client->ClientIP . $Client->ClientPort] = $Client;
-        sevalue(26402, $this->Items[0]);
+        setvalue(26402, $this->Items[0]);
     }
 
     /**
