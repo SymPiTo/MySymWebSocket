@@ -114,9 +114,9 @@ class MyWebsocketServer extends IPSModule
         // $IPSVars = json_decode($this->ReadPropertyString("IPSVars"));
         //$this->RegisterPropertyString("IPSVars", "[]");
         
-        // Timer erstellen
-        $this->RegisterTimer("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"), 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
-        
+        // Timer erstellen zum senden der Variablen
+        //$this->RegisterTimer("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"), 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
+        $this->RegisterTimer("UpdateVars", 0, 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
     }
 
     /**
@@ -1155,6 +1155,7 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug('new Connection', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
                     $this->ClearClientBuffer($IncomingClient);
                     $Clients->Update($IncomingClient);
+
                     //added 4.1.2020
                     //alle verbundenen Clients in Variable schreiben
                     $cl = $Clients->GetClients();
@@ -1165,12 +1166,12 @@ class MyWebsocketServer extends IPSModule
                     }
                     $this->writeClients($liste);
                     
-                    //nach Handshake alle Daten von Server abrufen
+                    //nach Handshake Initial alle Daten von Server abrufen und an alle Clients senden
+                    $this->sendIPSVars();
 
-
-                    $ID_InitData = $this->GetIDForIdent("DataSendToClient");
-                    $this->SendText( getvalue($ID_InitData));
-                   // addded 4.1.2020
+                    // und Sende Timer starten
+                    $this->SetTimerInterval("Update", $this->ReadPropertyInteger("UpdateInterval"));
+                  
 
                 }
                 break;
@@ -1182,8 +1183,6 @@ class MyWebsocketServer extends IPSModule
                     $this->ClearClientBuffer($Client);
                 }
                 break;
-            default;
-                $this->SendDebug('Client wurde neu gestartet.', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);     
         }
         $this->Multi_Clients = $Clients;
         $this->SetNextTimer();
