@@ -1158,7 +1158,7 @@ class MyWebsocketServer extends IPSModule
                     //added 4.1.2020
                     //alle verbundenen Clients in Variable schreiben
                     $cl = $Clients->GetClients();
-                    $this->SendDebug("Verbundene Clients", $cl->ClientIP[0], 0);
+                    $this->SendDebug("Verbundene Clients", $cl->ClientIP, 0);
 
                     //nach Handshake alle Daten von Server abrufen
 
