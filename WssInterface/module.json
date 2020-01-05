@@ -4,8 +4,8 @@
     "type": 3,
     "vendor": "PiTo",
     "aliases": ["WebSocket-Interface"],
-    "parentRequirements": ["{BC49DE11-24CA-484D-85AE-9B6F24D89321}", "{714B71FB-3D11-41D1-AFAC-E06F1E983E09}"],
+    "parentRequirements": ["{7A1272A4-CBDB-46EF-BFC6-DCF4A53D2FC7}"],
     "childRequirements": [],
-    "implemented": ["{C51A4B94-8195-4673-B78D-04D91D52D2DD}", "{8F1F6C32-B1AD-4B7F-8DFB-1244A96FCACF}"],
+    "implemented": ["{7A1272A4-CBDB-46EF-BFC6-DCF4A53D2FC7}"],
     "prefix": "WSTest"
 }
