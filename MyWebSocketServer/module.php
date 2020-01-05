@@ -636,7 +636,8 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('Receive', 'Client send stream close !', 0);
                 $Client->State = WebSocketState::CloseReceived;
                 $this->SendDisconnect($Client);
-                $this->SendDataToChilds('', $Client); // RAW Childs
+                // wird nicht beötigt, da keine Daten weitergegeben werden 5.1.2020
+                // $this->SendDataToChilds('', $Client); // RAW Childs
                 return;
             case WebSocketOPCode::text:
             case WebSocketOPCode::binary:
@@ -659,7 +660,8 @@ class MyWebsocketServer extends IPSModule
                 return;
         }
         if ($Frame->Fin) {
-            $this->SendDataToChilds($Data, $Client); // RAW Childs
+            // wird nicht benötigt, da keine Daten weitergegeben werden an andere Module 5.1.20202
+            //$this->SendDataToChilds($Data, $Client); // RAW Childs
             //gesendete Daten vom Client werden ausgewertet
             $this->SendDebug("received Data: ",$Data, 0);
             $this->CommandToServer($Data);
@@ -1018,7 +1020,8 @@ class MyWebsocketServer extends IPSModule
             if ($CheckData === true) { // Daten komplett und heil.
                 $this->SendHandshake(HTTP_ERROR_CODES::Web_Socket_Protocol_Handshake, $NewData, $Client); //Handshake senden
                 $this->SendDebug('SUCCESSFULLY CONNECT', $Client, 0);
-                $this->SendDataToChilds('', $Client);
+                // wird nicht benötigt, da keine Daten an  andere Module weitergegeben werden 5.1 2020
+                //$this->SendDataToChilds('', $Client);
                 $Client->State = WebSocketState::Connected; // jetzt verbunden
                 $Client->Timestamp = time() + $this->ReadPropertyInteger('Interval');
                 // ----------------------------------------------------------------------
@@ -1069,14 +1072,15 @@ class MyWebsocketServer extends IPSModule
 
     ################## DATAPOINTS PARENT
     /**
-     * Sendet die Rohdaten an die Clients
-     *
+     * Sendet die Rohdaten an untergeordnetet Module
+     * Wird nicht benötigt 5.1.2020
      * @access private
      * @param string $RawData Die Nutzdaten.
      * @param Websocket_Client $Client Der Client von welchem die Daten empfangen wurden.
      */
     private function SendDataToChilds(string $RawData, Websocket_Client $Client)
     {
+        /* wird nicht beötigt, da keine Daten weitergegeben werden
         $JSON['DataID'] = '{7A1272A4-CBDB-46EF-BFC6-DCF4A53D2FC7}'; //ServerSocket Receive
         $JSON['Buffer'] = utf8_encode($RawData);
         $JSON['ClientIP'] = $Client->ClientIP;
@@ -1088,6 +1092,7 @@ class MyWebsocketServer extends IPSModule
         $JSON['FrameTyp'] = $this->{'OpCode' . $Client->ClientIP . $Client->ClientPort};
         $Data = json_encode($JSON);
         $this->SendDataToChildren($Data);
+        */
     }
 
 
