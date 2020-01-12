@@ -1202,7 +1202,7 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
         }
         if(substr($Data, 0, 13) == 'IPS_RunScript'){
-           $Data = substr($Data, 14, strlen($Data)-15);
+           $Data = substr($Data, 14, strlen($Data)-14);
            SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
            $Daten = explode(",",$Data);
             IPS_RunScript($Daten[0]);
