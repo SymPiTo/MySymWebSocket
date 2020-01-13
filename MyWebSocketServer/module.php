@@ -785,7 +785,10 @@ class MyWebsocketServer extends IPSModule
                         //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
                         $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
                     }
-                    $this->writeClients($liste);
+                    if (!empty($arr){
+                        $this->writeClients($liste);
+                    }
+                    
         // --------------------------------------------------------------------
         $this->SetNextTimer();
     }
