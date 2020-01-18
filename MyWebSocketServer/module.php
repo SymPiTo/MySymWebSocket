@@ -1397,7 +1397,9 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('Send Text Message to Multi-Client' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
                 $this->SendDebug('Textlänge Message: ' , strlen($Text), 0);
                 $this->SendDebug('Status des Multi-Client' ,  WebSocketState::Connected , 0);
-                $this->Send($Text, WebSocketOPCode::text, $Client);
+                if(WebSocketState::Connected == 3){
+                    $this->Send($Text, WebSocketOPCode::text, $Client);
+                }
             }
             return true;
         }
