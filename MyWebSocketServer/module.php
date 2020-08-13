@@ -1560,7 +1560,7 @@ class MyWebsocketServer extends IPSModule
                             $this->SetValue("Message", "Variable fehlt");
                         }
                         finally{
-                            n = ++n;
+                            $n = ++$n;
                             if(n<300){
                                 $data0['ID'.$varid] = getvalue($varid);
                             }
