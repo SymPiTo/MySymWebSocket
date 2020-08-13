@@ -1579,7 +1579,7 @@ class MyWebsocketServer extends IPSModule
                                 //Daten Array aufteilen wenn >65536
                                 //Daten die gesendet werden dürfen 65536 Zeichen nicht überschreiten
                                 $dataPaket = array_chunk($data, 10);
-                                $this->SendDebug('updateIPSvalues', $dataPake[0]], 0);
+                                $this->SendDebug('updateIPSvalues', $dataPaket[0], 0);
 
                     $paket['PaketNr'] = 1;
                      
