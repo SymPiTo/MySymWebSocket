@@ -1576,9 +1576,13 @@ class MyWebsocketServer extends IPSModule
                                 $m = substr($b,14,2);
                                 $data['ID57942'] = $h.':'.$m;	
 
-                    $reply = 	array();
+                                //Daten Array aufteilen wenn >65536
+                                //Daten die gesendet werden dürfen 65536 Zeichen nicht überschreiten
+                                $dataPaket = array_chunk($data, 65536);
+
+                    $paket['PaketNr'] = 1;
                     //$this->SendDebug('updateIPSvalues', $data, 0);
-                    $c =array($data, $reply);
+                    $c =array($dataPaket[0], $paket);
                     //json_encode$c);
                     $json = json_encode($c);
                     $dataNewHash = md5($json);
@@ -1589,6 +1593,12 @@ class MyWebsocketServer extends IPSModule
                         //zum sichtbar machen
                         $this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
                         $this->setvalue("DataSendToClient", $json);
+                    }
+                    if($dataPaket[1]){
+                        $paket['PaketNr'] = 2;
+                        $c = array($dataPaket[1], $paket);
+                        $json = json_encode($c);
+                        $this->SendText($json);
                     }
                     else{
                    
