@@ -1560,7 +1560,14 @@ class MyWebsocketServer extends IPSModule
                             $this->SetValue("Message", "Variable fehlt");
                         }
                         finally{
-                            $data['ID'.$varid] = getvalue($varid);
+                            n = ++n;
+                            if(n<300){
+                                $data0['ID'.$varid] = getvalue($varid);
+                            }
+                            elseif(n>300){
+                                $data1['ID'.$varid] = getvalue($varid);
+                            }
+                            
                         }
 
                     }
@@ -1568,22 +1575,22 @@ class MyWebsocketServer extends IPSModule
                                 $b = date('m/d/Y H:i:s', $a);
                                 $h = substr($b,11,2);
                                 $m = substr($b,14,2);
-                                $data['ID11938'] = $h.':'.$m;
+                                $data0['ID11938'] = $h.':'.$m;
 
                                 $a = getvalue(57942);
                                 $b = date('m/d/Y H:i:s', $a);
                                 $h = substr($b,11,2);
                                 $m = substr($b,14,2);
-                                $data['ID57942'] = $h.':'.$m;	
+                                $data0['ID57942'] = $h.':'.$m;	
 
                                 //Daten Array aufteilen wenn >65536
                                 //Daten die gesendet werden dürfen 65536 Zeichen nicht überschreiten
-                                $dataPaket = array_splice($data, 1, 10, true);
-                                $this->SendDebug('updateIPSvalues', $dataPaket[0], 0);
+                                 
+                                
 
                     $paket['PaketNr'] = 1;
                      
-                    $c =array($dataPaket[0], $paket);
+                    $c =array($data0, $paket);
                     //json_encode$c);
                     $json = json_encode($c);
                     $dataNewHash = md5($json);
@@ -1596,10 +1603,10 @@ class MyWebsocketServer extends IPSModule
                         $this->setvalue("DataSendToClient", $json);
                    // }
                    IPS_Sleep(100);
-                    if (array_key_exists('1', $dataPaket)) {
+                    if (exist($data1)) {
                          
                         $paket['PaketNr'] = 2;
-                        $c = array($dataPaket[1], $paket);
+                        $c = array($data1, $paket);
                         $json = json_encode($c);
                         $this->SendText($json);
                     }
