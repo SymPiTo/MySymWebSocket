@@ -1565,7 +1565,7 @@ class MyWebsocketServer extends IPSModule
                             if($n<300){
                                 $data0['ID'.$varid] = getvalue($varid);
                             }
-                            elseif($n>300){
+                            elseif($n>299){
                                 $data1['ID'.$varid] = getvalue($varid);
                             }
                             
