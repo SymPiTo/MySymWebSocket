@@ -1605,17 +1605,17 @@ class MyWebsocketServer extends IPSModule
                    // }
                    IPS_Sleep(100);
                     
-                    if (array_key_exists('0', $data1)){
+                   // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
                         $c = array($data1, $paket);
                         $json = json_encode($c);
                         $this->SendText($json);
                     }
-                    else{
+                 //   else{
                    
                         //$this->SendDebug("NewHash: ", "keine Datenänderung erkannt", 0);
                         
-                    }
+                  /  }
                     //Semaphore wieder freigeben!
                    // IPS_SemaphoreLeave("sendIPSVars");
 
