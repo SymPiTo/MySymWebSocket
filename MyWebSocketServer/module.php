@@ -1542,6 +1542,7 @@ class MyWebsocketServer extends IPSModule
                     $IPSVariablesjson = $this->getvalue("IpsSendVars");
                     $IPSVariables = json_decode($IPSVariablesjson);
                     //$this->SendDebug('Event Variable', $IPSVariables, 0);
+                    $n = 0;
                     foreach($IPSVariables as $IPSVariable) {
 
                         $varid = $IPSVariable->ID;
@@ -1560,7 +1561,7 @@ class MyWebsocketServer extends IPSModule
                             $this->SetValue("Message", "Variable fehlt");
                         }
                         finally{
-                            $n = ++$n;
+                            $n = $n + 1;
                             if(n<300){
                                 $data0['ID'.$varid] = getvalue($varid);
                             }
