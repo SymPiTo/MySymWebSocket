@@ -1604,8 +1604,8 @@ class MyWebsocketServer extends IPSModule
                         $this->setvalue("DataSendToClient", $json);
                    // }
                    IPS_Sleep(100);
-                    if (exist($data1)) {
-                         
+                    
+                    if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
                         $c = array($data1, $paket);
                         $json = json_encode($c);
