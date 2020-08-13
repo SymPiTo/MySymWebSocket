@@ -1594,7 +1594,8 @@ class MyWebsocketServer extends IPSModule
                         $this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
                         $this->setvalue("DataSendToClient", $json);
                     }
-                    if($dataPaket[1]){
+                    if (array_key_exists('1', $dataPaket)) {
+                         
                         $paket['PaketNr'] = 2;
                         $c = array($dataPaket[1], $paket);
                         $json = json_encode($c);
