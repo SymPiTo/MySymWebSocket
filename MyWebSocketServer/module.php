@@ -1610,12 +1610,12 @@ class MyWebsocketServer extends IPSModule
                         $c = array($data1, $paket);
                         $json = json_encode($c);
                         $this->SendText($json);
-                    }
+                   // }
                  //   else{
                    
                         //$this->SendDebug("NewHash: ", "keine Datenänderung erkannt", 0);
                         
-                  /  }
+                  //  }
                     //Semaphore wieder freigeben!
                    // IPS_SemaphoreLeave("sendIPSVars");
 
