@@ -578,6 +578,7 @@ class MyWebsocketServer extends IPSModule
         $this->SendDebug('SendHandshake ' . $Client->ClientIP . ':' . $Client->ClientPort, $SendHeader, 0);
         $SendData = $this->MakeJSON($Client, $SendHeader);
         if ($SendData) {
+            //Daten an I/O Schnittstelle senden
             $this->SendDataToParent($SendData);
         }
     }
@@ -1122,6 +1123,7 @@ class MyWebsocketServer extends IPSModule
         $Payload = utf8_decode($data->Buffer);
         $Clients = $this->Multi_Clients;
         $IncomingClient = new Websocket_Client($data->ClientIP, $data->ClientPort, WebSocketState::init);
+        //prüfen ob Client schon in Clients - Liste
         $Client = $Clients->GetByIpPort($IncomingClient);
         $this->SendDebug(($Client ? 'OLD' : 'NEW') . ' CLIENT', SocketType::ToString($data->Type), 0);
         switch ($data->Type) {
