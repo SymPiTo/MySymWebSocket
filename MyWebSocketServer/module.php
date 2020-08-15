@@ -1213,6 +1213,10 @@ class MyWebsocketServer extends IPSModule
             IPS_RunScript($Daten[0]);
             $this->SendDebug('extrahierte Werte sind = ', $Daten[0], 0);
         }
+        if(substr($Data, 0, 9 )== "AuthToken"){
+            SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
+            IPS_RunScript($this->ReadPropertyInteger('IDcommand'));
+        }
         if(substr($Data, 0, 7) == 'command'){
            $Data = substr($Data, 8, strlen($Data)-9);
            SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
