@@ -664,7 +664,7 @@ class MyWebsocketServer extends IPSModule
             // wird nicht benötigt, da keine Daten weitergegeben werden an andere Module 5.1.20202
             //$this->SendDataToChilds($Data, $Client); // RAW Childs
             //gesendete Daten vom Client werden ausgewertet
-            $this->SendDebug("received Data: ",$Data, 0);
+            //$this->SendDebug("received Data: ",$Data, 0);
             $this->CommandToServer($Data);
         } else {
             $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $Data;
@@ -909,7 +909,7 @@ class MyWebsocketServer extends IPSModule
     }
     private function ProcessIncomingData(Websocket_Client &$Client, string $Payload)
     {
-        $this->SendDebug('Receive ' . $Client->ClientIP . ':' . $Client->ClientPort, $Payload, 0);
+        //$this->SendDebug('Receive ' . $Client->ClientIP . ':' . $Client->ClientPort, $Payload, 0);
         if ($Client->State == WebSocketState::init) { //new
             if ($this->UseTLS and ( (ord($Payload[0]) >= 0x14) && (ord($Payload[0]) <= 0x18) && (ord($Payload[1]) == 0x03))) { //valid header wenn TLS is active
                 $Client->State = WebSocketState::TLSisReceived;
