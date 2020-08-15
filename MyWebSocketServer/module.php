@@ -1201,6 +1201,9 @@ class MyWebsocketServer extends IPSModule
     ------------------------------------------------------------------------------  */
     public function CommandToServer(string $Data){
         $this->SendDebug('Received following Data from Client', $Data, 0); 
+ 
+
+
         if(substr($Data, 0, 8) == 'setvalue'){
            $Data = explode(",", substr($Data, 9, strlen($Data)-10));
             setvalue($Data[0],$Data[1]);
@@ -1213,10 +1216,7 @@ class MyWebsocketServer extends IPSModule
             IPS_RunScript($Daten[0]);
             $this->SendDebug('extrahierte Werte sind = ', $Daten[0], 0);
         }
-        if(substr($Data, 0, 9 )== "AuthToken"){
-            SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
-            IPS_RunScript($this->ReadPropertyInteger('IDcommand'));
-        }
+
         if(substr($Data, 0, 7) == 'command'){
            $Data = substr($Data, 8, strlen($Data)-9);
            SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
