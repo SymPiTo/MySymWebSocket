@@ -365,7 +365,7 @@ class MyWebsocketServer extends IPSModule
      * @param string $basedir Der Speicherort der Zertifikate.
      * @return boolean True bei Erflog, sonst false
      */
-    private function CreateNewCert(string $basedir)
+    public function CreateNewCert(string $basedir)
     {
         $CN = 'IPSymcon';
         $EMAIL = IPS_GetLicensee();
