@@ -495,10 +495,10 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('WAIT', $Data, 0);
                 return false;
             }
-            if(preg_match("/.*[?](.*)/",$match[1], $match)){
-                $this->SendDebug('Receive Handshake KEY', $match, 0);
-                $pos = stripos($match[0], "?");
-                $uri = substr($match[0], 0, $pos);
+            if(preg_match("/.*[?](.*)/",$match[1], $keymatch)){
+                $this->SendDebug('Receive Handshake KEY', $keymatch, 0);
+                $pos = stripos($keymatch[0], "?");
+                $uri = substr($keymatch[0], 0, $pos);
             }
             else{
                 $uri =  $match[1];
