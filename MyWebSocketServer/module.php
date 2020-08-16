@@ -488,7 +488,7 @@ class MyWebsocketServer extends IPSModule
     private function ReceiveHandshake(string $Data)
     {
         $this->SendDebug('Receive Handshake', $Data, 0);
-        if (preg_match("/^GET ?(.*) HTTP\/1.1\r\n/", $Data, $match)) {
+        if (preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Data, $match)) {
             if (substr($Data, -4) != "\r\n\r\n") {
                 $this->SendDebug('WAIT', $Data, 0);
                 return false;
@@ -928,7 +928,7 @@ class MyWebsocketServer extends IPSModule
                 $this->lock($Client->ClientIP . $Client->ClientPort);
                 $TLS = \PTLS\TLSContext::createTLS($TLSconfig);
             }
-            if ($this->UsePlain and ( preg_match("/^GET ?(.*)HTTP\/1.1\r\n/", $Payload, $match))) { //valid header wenn Plain is active
+            if ($this->UsePlain and ( preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Payload, $match))) { //valid header wenn Plain is active
                 $Client->State = WebSocketState::HandshakeReceived;
                 $this->SendDebug('Receive'.'Handshake Receives',$match, 0);
                 $Client->UseTLS = false;
