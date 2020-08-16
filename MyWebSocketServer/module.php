@@ -928,7 +928,7 @@ class MyWebsocketServer extends IPSModule
                 $this->lock($Client->ClientIP . $Client->ClientPort);
                 $TLS = \PTLS\TLSContext::createTLS($TLSconfig);
             }
-            if ($this->UsePlain and ( preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Payload, $match))) { //valid header wenn Plain is active
+            if ($this->UsePlain and ( preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Payload, $match) or preg_match("/^GET ?([^?#]*) HTTP\/1.1\r\n/", $Payload, $match))) { //valid header wenn Plain is active
                 $Client->State = WebSocketState::HandshakeReceived;
                 $Client->UseTLS = false;
                 $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = '';
