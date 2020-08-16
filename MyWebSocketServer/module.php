@@ -498,7 +498,7 @@ class MyWebsocketServer extends IPSModule
             if(preg_match("/.*[?](.*)/",$match[1], $match)){
                 $this->SendDebug('Receive Handshake KEY', $match, 0);
                 $pos = stripos($match[0], "?");
-                $uri = substr($match[1], 0, $pos);
+                $uri = substr($match[0], 0, $pos);
             }
             else{
                 $uri =  $match[1];
