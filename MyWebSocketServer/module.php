@@ -496,7 +496,7 @@ class MyWebsocketServer extends IPSModule
                 return false;
             }
             $pos = stripos($match[1], "?");
-            $uri = substr($match[1], $pos);
+            $uri = substr($match[1], 0, $pos);
             $this->SendDebug('Receive Handshake URI', $uri, 0);
             if ($uri != trim($this->ReadPropertyString('URI'))) {
                 $this->SendDebug('Wrong URI requested', $Data, 0);
