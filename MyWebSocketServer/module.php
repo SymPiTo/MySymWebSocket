@@ -485,11 +485,11 @@ class MyWebsocketServer extends IPSModule
      * @param string $Data Die Daten des Clients.
      * @return boolean|HTTP_ERROR_CODES True bei Erfolg, HTTP_ERROR_CODES bei Fehler, false wenn nicht genug Daten.
      */
-    
+
     private function ReceiveHandshake(string $Data)
     {
         $this->SendDebug('Receive Handshake', $Data, 0);
-        if (preg_match("/^GET( ?) (.*) HTTP\/1.1\r\n/", $Data, $match)) {
+        if (preg_match("/^GET ? (.*) (HTTP\/1.1\r\n)/", $Data, $match)) {
             $this->SendDebug('Receive Handshake', $match, 0);
             if (substr($Data, -4) != "\r\n\r\n") {
                 $this->SendDebug('WAIT', $Data, 0);
