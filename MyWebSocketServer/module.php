@@ -485,7 +485,6 @@ class MyWebsocketServer extends IPSModule
      * @param string $Data Die Daten des Clients.
      * @return boolean|HTTP_ERROR_CODES True bei Erfolg, HTTP_ERROR_CODES bei Fehler, false wenn nicht genug Daten.
      */
-
     private function ReceiveHandshake(string $Data)
     {
         $this->SendDebug('Receive Handshake', $Data, 0);
