@@ -500,6 +500,7 @@ class MyWebsocketServer extends IPSModule
             if(preg_match("/.*[?](.*)/",$match[1], $keymatch)){
                 $this->SendDebug('Receive Handshake token', $keymatch, 0);
                 $token =  explode("=", $keymatch[1]);
+                $this->SendDebug('Receive Handshake token', $token, 0);
                 if($token != "tboercskten"){
                     return HTTP_ERROR_CODES::Unauthorized;
                 }
