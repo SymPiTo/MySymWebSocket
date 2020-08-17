@@ -496,6 +496,18 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('WAIT', $Data, 0);
                 return false;
             }
+            //authentification token prüfen
+            if(preg_match("/.*[?](.*)/",$match[1], $keymatch)){
+                $token =  explode("=", $keymatch[1]);
+                if($token != "tboercskten"){
+                    return HTTP_ERROR_CODES::Unauthorized;
+                }
+                
+            }
+            else{
+                //auth Token nicht vorhanden
+                return HTTP_ERROR_CODES::Not_Found;
+            }
             if(preg_match("/.*[?](.*)/",$match[1], $keymatch)){
                 $this->SendDebug('Receive Handshake KEY', $keymatch, 0);
                 $pos = stripos($keymatch[0], "?");
