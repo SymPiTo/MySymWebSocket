@@ -504,6 +504,9 @@ class MyWebsocketServer extends IPSModule
                 if($token[1] != "tboercskten"){
                     return HTTP_ERROR_CODES::Unauthorized;
                 }
+                else{
+                    $this->SendDebug('Auth Token', "accepted", 0);
+                }
                 
             }
             else{
