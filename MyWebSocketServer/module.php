@@ -127,8 +127,6 @@ class MyWebsocketServer extends IPSModule
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         $this->SendDebug('Messagesink:'.$SenderID, $Message, 0);
-        $this->SendDebug('Messagesink:VM_UPDATE', VM_UPDATE, 0);
-        
         switch ($Message) {
             case IPS_KERNELMESSAGE:
                 if ($Data[0] != KR_READY) {
@@ -159,7 +157,7 @@ class MyWebsocketServer extends IPSModule
                 }
                 break;
             case VM_UPDATE:
-                //VM_UPDATE
+                //VM_UPDATE - EventVariable wird über "WSS1" registriert
                 $this->SendDebug('VM_UPDATE', $SenderID, 0);
                 // Variablen Änderung erkannt -> Daten holen und an Clients senden
             
@@ -235,8 +233,8 @@ class MyWebsocketServer extends IPSModule
         $this->RegisterMessage($this->InstanceID, FM_CONNECT);
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
 
-        //Event Variable definieren
-        $this->RegisterMessage(13996, VM_UPDATE); // incommng call
+        //Event Variable definieren - wird über Eintrag in INFO = WSS1 automatisch registriert
+        //$this->RegisterMessage(13996, VM_UPDATE); // incommng call
 
         if (IPS_GetKernelRunlevel() <> KR_READY) {
             return;
