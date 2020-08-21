@@ -126,7 +126,9 @@ class MyWebsocketServer extends IPSModule
      */
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
-        $this->SendDebug('VMessagesink:'.$SenderID, $Message, 0);
+        $this->SendDebug('Messagesink:'.$SenderID, $Message, 0);
+        $this->SendDebug('Messagesink:VM_UPDATE', VM_UPDATE, 0);
+        
         switch ($Message) {
             case IPS_KERNELMESSAGE:
                 if ($Data[0] != KR_READY) {
