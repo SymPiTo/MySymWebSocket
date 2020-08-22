@@ -816,9 +816,9 @@ class MyWebsocketServer extends IPSModule
 
                     //alle verbundenen Clients in Variable schreiben
                     $cl = $Clients->GetClients();
-                     $this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
+                    $this->SendDebug("Verbundener Client", $cl, 0);
                     foreach ($cl as $key => $value) {
-                        $this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
+                        $this->SendDebug("Verbundene Clients:".$key, $value->ClientIP, 0);
                         $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
                     }
                     if (!empty($arr)){
