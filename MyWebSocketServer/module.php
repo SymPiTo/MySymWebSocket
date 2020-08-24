@@ -1789,7 +1789,7 @@ class MyWebsocketServer extends IPSModule
         }
         Protected function unWriteClient($clientIP_Port){ 
             //CLients in 4 Variable schreiben
-            $value = $Client->ClientIP.":".$Client->ClientPort;
+            $value = $clientIP_Port->ClientIP.":".$clientIP_Port->ClientPort;
             $this->SendDebug("unWrite del", $value, 0);
             if($this->getvalue("Client1") == $value){
                 setValue($this->GetIDForIdent("Client1"),'');
