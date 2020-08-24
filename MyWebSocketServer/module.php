@@ -1202,6 +1202,8 @@ class MyWebsocketServer extends IPSModule
                 } else {
                     $Clients->Remove($Client);
                     $this->ClearClientBuffer($Client);
+                    $this->SendDebug('unWrite', $Client->ClientIP, $Client->ClientPort, 0);
+                    $this->unWriteClient($client);
                 }
                 break;
         }
@@ -1785,7 +1787,22 @@ class MyWebsocketServer extends IPSModule
                       
           
         }
-
+        Protected function unWriteClient($clientIP_Port){ 
+            //CLients in 4 Variable schreiben
+            $value = $Client->ClientIP.":".$Client->ClientPort;
+            if($this->getvalue("Client1") == $value){
+                setValue($this->GetIDForIdent("Client1"),'');
+            }
+            if($this->getvalue("Client1") == $value){
+                setValue($this->GetIDForIdent("Client2"),''); 
+            }
+            if($this->getvalue("Client1") == $value){
+                setValue($this->GetIDForIdent("Client3"),'');
+            }
+            if($this->getvalue("Client1") == $value){
+                setValue($this->GetIDForIdent("Client4"),''); 
+            }     
+        }
   
 }
 
