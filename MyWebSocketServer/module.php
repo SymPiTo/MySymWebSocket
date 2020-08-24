@@ -1202,7 +1202,7 @@ class MyWebsocketServer extends IPSModule
                 } else {
                     $Clients->Remove($Client);
                     $this->ClearClientBuffer($Client);
-                    $this->SendDebug('unWrite', $Client->ClientIP, $Client->ClientPort, 0);
+                    $this->SendDebug('unWrite', $Client->ClientIP.":".$Client->ClientPort, 0);
                     $this->unWriteClient($client);
                 }
                 break;
