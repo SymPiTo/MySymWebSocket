@@ -1656,9 +1656,33 @@ class MyWebsocketServer extends IPSModule
                         $paket['PaketNr'] = 2;
                         $c2 = array($data1, $paket);
                         $this->SendDebug("PAKET C 2:" , $c2, 0);
-                        $json2 = json_encode($c2);
+                        $json2 = json_encode($c2, JSON_THROW_ON_ERROR);
+                        switch(json_last_error()) {
+                            case JSON_ERROR_NONE:
+                                $fehler = ' - Keine Fehler';
+                            break;
+                            case JSON_ERROR_DEPTH:
+                                $fehler = ' - Maximale Stacktiefe überschritten';
+                            break;
+                            case JSON_ERROR_STATE_MISMATCH:
+                                $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
+                            break;
+                            case JSON_ERROR_CTRL_CHAR:
+                                $fehler = ' - Unerwartetes Steuerzeichen gefunden';
+                            break;
+                            case JSON_ERROR_SYNTAX:
+                                $fehler = ' - Syntaxfehler, ungültiges JSON';
+                            break;
+                            case JSON_ERROR_UTF8:
+                                $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
+                            break;
+                            default:
+                            $fehler = ' - Unbekannter Fehler';
+                            break;
+                        }
+
                         $this->SendText($json2);
-                        $this->SendDebug("PAKET 2:".$AnzahlVars." - ", $json2, 0);
+                        $this->SendDebug("PAKET 2:".$fehler." - ", $json2, 0);
                    // }
                  //   else{
                    
