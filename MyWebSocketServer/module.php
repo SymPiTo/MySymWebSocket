@@ -1688,12 +1688,13 @@ class MyWebsocketServer extends IPSModule
                          }
                          else{
                             $this->SendDebug("PAKETJSON2:",$json2, 0);
+                            $this->SendText($json2);
                          }
 
                         // 
                         
                         
-                        //$this->SendText($json2);
+                         
                         
                    // }
                  //   else{
