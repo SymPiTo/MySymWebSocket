@@ -1617,8 +1617,8 @@ class MyWebsocketServer extends IPSModule
                         }
 
                     }
-                    $this->SendDebug('DATA0', $data0, 0);
-                    $this->SendDebug('DATA1', $data1, 0);
+                    //$this->SendDebug('DATA0', $data0, 0);
+                    //$this->SendDebug('DATA1', $data1, 0);
 
                                 $a = getvalue(11938);
                                 $b = date('m/d/Y H:i:s', $a);
@@ -1648,14 +1648,14 @@ class MyWebsocketServer extends IPSModule
                     //if($dataNewHash != $dataOldHash){
                         $this->SendText($json1);
                         //zum sichtbar machen
-                        $this->SendDebug("PAKET 1:".$AnzahlVars." - ", $json1, 0);
+                        $this->SendDebug("PAKET1:".$AnzahlVars." - ", $json1, 0);
                         $this->setvalue("DataSendToClient", $json1);
                    IPS_Sleep(100);
                     
                    // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
                         $c2 = array($data1, $paket);
-                        $this->SendDebug("PAKET C 2:" , $c2, 0);
+                        //$this->SendDebug("PAKET C 2:" , $c2, 0);
                         $json2 = json_encode($c2, JSON_THROW_ON_ERROR);
                         switch(json_last_error()) {
                             case JSON_ERROR_NONE:
@@ -1680,9 +1680,9 @@ class MyWebsocketServer extends IPSModule
                             $fehler = ' - Unbekannter Fehler';
                             break;
                         }
-
-                        $this->SendText($json2);
                         $this->SendDebug("PAKET 2:".$fehler." - ", $json2, 0);
+                        $this->SendText($json2);
+                        
                    // }
                  //   else{
                    
