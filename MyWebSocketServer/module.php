@@ -1617,6 +1617,9 @@ class MyWebsocketServer extends IPSModule
                         }
 
                     }
+                    $this->SendDebug('DATA0', $data0, 0);
+                    $this->SendDebug('DATA1', $data1, 0);
+                    
                                 $a = getvalue(11938);
                                 $b = date('m/d/Y H:i:s', $a);
                                 $h = substr($b,11,2);
