@@ -1686,7 +1686,7 @@ class MyWebsocketServer extends IPSModule
                             }
                          }
 
-                        $json2 = json_encode($c2, JSON_THROW_ON_ERROR);
+                   
                         
                         $this->SendDebug("PAKET2:".$fehler, 0);
                         $this->SendText($json2);
