@@ -1644,15 +1644,16 @@ class MyWebsocketServer extends IPSModule
                     //if($dataNewHash != $dataOldHash){
                         $this->SendText($json);
                         //zum sichtbar machen
-                        //$this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
+                        $this->SendDebug("PAKET 1: ", $json, 0);
                         $this->setvalue("DataSendToClient", $json);
-                   IPS_Sleep(500);
+                   IPS_Sleep(100);
                     
                    // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
                         $c = array($data1, $paket);
                         $json = json_encode($c);
                         $this->SendText($json);
+                        $this->SendDebug("PAKET 2: ", $json, 0);
                    // }
                  //   else{
                    
