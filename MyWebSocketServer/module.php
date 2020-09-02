@@ -1646,8 +1646,7 @@ class MyWebsocketServer extends IPSModule
                         //zum sichtbar machen
                         //$this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
                         $this->setvalue("DataSendToClient", $json);
-                   // }
-                   //PS_Sleep(20);
+                   IPS_Sleep(500);
                     
                    // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
