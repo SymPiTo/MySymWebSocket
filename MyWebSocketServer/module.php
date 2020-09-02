@@ -1684,16 +1684,16 @@ class MyWebsocketServer extends IPSModule
                                 $fehler = ' - Unbekannter Fehler';
                                 break;
                             }
-                            $this->SendDebug("PAKET2:",$fehler, 0);
+                            $this->SendDebug("PAKET2Fehler:",$fehler, 0);
                          }
                          else{
-                            $this->SendDebug("PAKET2:",$err, 0);
+                            $this->SendDebug("PAKET2KeinFEhler:",$err, 0);
                          }
 
-                         
+                         $this->SendDebug("PAKETJSON2:",$json2, 0);
                         
                         
-                        $this->SendText($json2);
+                        //$this->SendText($json2);
                         
                    // }
                  //   else{
