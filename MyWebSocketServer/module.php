@@ -1690,7 +1690,7 @@ class MyWebsocketServer extends IPSModule
                             $this->SendDebug("PAKET2KeinFEhler:",$err, 0);
                          }
 
-                         $this->SendDebug("PAKETJSON2:",$json2, 0);
+                        // $this->SendDebug("PAKETJSON2:",$json2, 0);
                         
                         
                         //$this->SendText($json2);
