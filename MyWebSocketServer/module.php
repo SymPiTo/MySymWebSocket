@@ -1655,7 +1655,7 @@ class MyWebsocketServer extends IPSModule
                    // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
                         $c2 = array($data1, $paket);
-                        $this->SendDebug("PAKET C 2:" , $json1, 0);
+                        $this->SendDebug("PAKET C 2:" , $c2, 0);
                         $json2 = json_encode($c2);
                         $this->SendText($json2);
                         $this->SendDebug("PAKET 2:".$AnzahlVars." - ", $json2, 0);
