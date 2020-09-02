@@ -1602,7 +1602,7 @@ class MyWebsocketServer extends IPSModule
                         catch (Exception $e) {
                             $varid = $this->GetIDForIdent("dummyID");
                             $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
-                            $this->SetValue("Message", "Variable fehlt");
+                            $this->SetValue("Message", "Variable fehlt:".$varid);
                         }
                         finally{
                             $n = $n + 1;
@@ -1647,7 +1647,7 @@ class MyWebsocketServer extends IPSModule
                         //$this->SendDebug("NewHash: ", "Datenänderung erkannt", 0);
                         $this->setvalue("DataSendToClient", $json);
                    // }
-                   IPS_Sleep(100);
+                   //PS_Sleep(20);
                     
                    // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
