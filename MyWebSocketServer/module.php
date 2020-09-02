@@ -1619,7 +1619,7 @@ class MyWebsocketServer extends IPSModule
                     }
                     $this->SendDebug('DATA0', $data0, 0);
                     $this->SendDebug('DATA1', $data1, 0);
-                    
+
                                 $a = getvalue(11938);
                                 $b = date('m/d/Y H:i:s', $a);
                                 $h = substr($b,11,2);
@@ -1639,25 +1639,25 @@ class MyWebsocketServer extends IPSModule
 
                     $paket['PaketNr'] = 1;
                      
-                    $c =array($data0, $paket);
+                    $c1 =array($data0, $paket);
                     //json_encode$c);
-                    $json = json_encode($c);
-                    $dataNewHash = md5($json);
+                    $json1 = json_encode($c1);
+                    $dataNewHash = md5($json1);
                     //$this->SendDebug("NewHash: ",$dataNewHash, 0);
                     //Daten nur senden wenn Änderung erkannt wurde
                     //if($dataNewHash != $dataOldHash){
-                        $this->SendText($json);
+                        $this->SendText($json1);
                         //zum sichtbar machen
                         $this->SendDebug("PAKET 1:".$AnzahlVars." - ", $json, 0);
-                        $this->setvalue("DataSendToClient", $json);
+                        $this->setvalue("DataSendToClient", $json1);
                    IPS_Sleep(100);
                     
                    // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
-                        $c = array($data1, $paket);
-                        $json = json_encode($c);
-                        $this->SendText($json);
-                        $this->SendDebug("PAKET 2:".$AnzahlVars." - ", $json, 0);
+                        $c2 = array($data1, $paket);
+                        $json2 = json_encode($c2);
+                        $this->SendText($json2);
+                        $this->SendDebug("PAKET 2:".$AnzahlVars." - ", $json2, 0);
                    // }
                  //   else{
                    
