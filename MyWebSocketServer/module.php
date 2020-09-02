@@ -1585,6 +1585,7 @@ class MyWebsocketServer extends IPSModule
                     //$this->SendDebug("OldHash: ",$dataOldHash, 0);
                     $IPSVariablesjson = $this->getvalue("IpsSendVars");
                     $IPSVariables = json_decode($IPSVariablesjson);
+                    $AnzahlVars = count($IPSVariables);
                     //$this->SendDebug('Event Variable', $IPSVariables, 0);
                     $n = 0;
                     foreach($IPSVariables as $IPSVariable) {
@@ -1644,7 +1645,7 @@ class MyWebsocketServer extends IPSModule
                     //if($dataNewHash != $dataOldHash){
                         $this->SendText($json);
                         //zum sichtbar machen
-                        $this->SendDebug("PAKET 1: ", $json, 0);
+                        $this->SendDebug("PAKET 1:".$AnzahlVars." - ", $json, 0);
                         $this->setvalue("DataSendToClient", $json);
                    IPS_Sleep(100);
                     
@@ -1653,7 +1654,7 @@ class MyWebsocketServer extends IPSModule
                         $c = array($data1, $paket);
                         $json = json_encode($c);
                         $this->SendText($json);
-                        $this->SendDebug("PAKET 2: ", $json, 0);
+                        $this->SendDebug("PAKET 2:".$AnzahlVars." - ", $json, 0);
                    // }
                  //   else{
                    
