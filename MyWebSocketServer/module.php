@@ -1648,7 +1648,7 @@ class MyWebsocketServer extends IPSModule
                     //if($dataNewHash != $dataOldHash){
                         $this->SendText($json1);
                         //zum sichtbar machen
-                        $this->SendDebug("PAKET1:".$AnzahlVars." - ", $json1, 0);
+                        //$this->SendDebug("PAKET1:".$AnzahlVars." - ", $json1, 0);
                         $this->setvalue("DataSendToClient", $json1);
                    IPS_Sleep(100);
                     
