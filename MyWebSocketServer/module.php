@@ -1689,11 +1689,11 @@ class MyWebsocketServer extends IPSModule
                         //$this->SendDebug("PAKET1:".$AnzahlVars." - ", $json1, 0);
                         
                    //IPS_Sleep(100);
-                if($AnzahlVars > 199){ 
+            if($AnzahlVars > 199){ 
                     //prüfen ob Daten sich geändert haben
                     $dataNewHash = md5($data1);
                     $dataOldHash = $hashcode->hc1;
-                    if($dataNewHash !== $dataOldHash){
+                if($dataNewHash !== $dataOldHash){
                     
                         $paket['PaketNr'] = 2;
                         $c2 = array($data1, $paket);
@@ -1738,6 +1738,7 @@ class MyWebsocketServer extends IPSModule
                     }
                     $hashcode->hc1 = md5($data1);
                 }
+            }
     }
           
                         
