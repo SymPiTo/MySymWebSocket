@@ -1630,8 +1630,8 @@ class MyWebsocketServer extends IPSModule
                                 //Daten Array aufteilen wenn >65536
                                 //Daten die gesendet werden dürfen 65536 Zeichen nicht überschreiten
                                  
-                                
-
+                //Senden der Daten Pakete
+                if($AnzahlVars > 0){                
                     $paket['PaketNr'] = 1;
                     $c1 =array($data0, $paket);
                     try {
@@ -1670,7 +1670,7 @@ class MyWebsocketServer extends IPSModule
                         $this->setvalue("DataSendToClient", "Paket 1");
                         $this->SendText($json1);
                     }
-                    
+                }    
                     //$this->SendDebug("NewHash: ",$dataNewHash, 0);
                     //Daten nur senden wenn Änderung erkannt wurde
                     //if($dataNewHash != $dataOldHash){
@@ -1678,8 +1678,8 @@ class MyWebsocketServer extends IPSModule
                         //zum sichtbar machen
                         //$this->SendDebug("PAKET1:".$AnzahlVars." - ", $json1, 0);
                         
-                   IPS_Sleep(100);
-                    
+                   //IPS_Sleep(100);
+                if($AnzahlVars > 199){ 
                    // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
                         $c2 = array($data1, $paket);
@@ -1722,6 +1722,7 @@ class MyWebsocketServer extends IPSModule
                         $this->setvalue("DataSendToClient", "Paket 2");
                         $this->SendText($json2);
                     }
+                }
     }
           
                         
