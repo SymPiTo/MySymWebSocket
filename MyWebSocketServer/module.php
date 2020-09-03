@@ -1685,69 +1685,47 @@ class MyWebsocketServer extends IPSModule
                         $c2 = array($data1, $paket);
                         $this->SendDebug("PAKET 2:" , "versuche Paket 2 zu senden.", 0);
 
-                        try {
-                            $json2 = json_encode($c2, JSON_INVALID_UTF8_IGNORE);
-                            $this->SendDebug("JSON2 - Paket 2", $json2, 0);
-                            $this->SendDebug("JSON2 - Paket 2", json_last_error(), 0);
-                        } 
-                        catch (JsonException $err2) { }
-                            if (json_last_error() !== JSON_ERROR_NONE) {
-                                switch(json_last_error()) {
-                                    case JSON_ERROR_NONE:
-                                        $fehler = ' - Keine Fehler';
-                                    break;
-                                    case JSON_ERROR_DEPTH:
-                                        $fehler = ' - Maximale Stacktiefe überschritten';
-                                    break;
-                                    case JSON_ERROR_STATE_MISMATCH:
-                                        $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
-                                    break;
-                                    case JSON_ERROR_CTRL_CHAR:
-                                        $fehler = ' - Unerwartetes Steuerzeichen gefunden';
-                                    break;
-                                    case JSON_ERROR_SYNTAX:
-                                        $fehler = ' - Syntaxfehler, ungültiges JSON';
-                                    break;
-                                    case JSON_ERROR_UTF8:
-                                        $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
-                                    break;
-                                    default:
-                                    $fehler = ' - Unbekannter Fehler';
-                                    break;
-                                }
-                                $this->SendDebug("PAKET2Fehler:",$fehler, 0);
-                            }
-                            else{
-                                $this->SendDebug("PAKETJSON2:", "sende Paket 2", 0);
-                                $this->setvalue("DataSendToClient", "Paket 2");
-                                $this->SendText($json2);
-                            }
+                    try {
+                        $json2 = json_encode($c2, JSON_INVALID_UTF8_IGNORE);
+                        $this->SendDebug("JSON2 - Paket 2", $json2, 0);
+                        $this->SendDebug("JSON2 - Paket 2", json_last_error(), 0);
+                    } 
+                    catch (JsonException $err2) { }
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        switch(json_last_error()) {
+                            case JSON_ERROR_NONE:
+                                $fehler = ' - Keine Fehler';
+                                break;
+                            case JSON_ERROR_DEPTH:
+                                $fehler = ' - Maximale Stacktiefe überschritten';
+                                break;
+                            case JSON_ERROR_STATE_MISMATCH:
+                                $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
+                                break;
+                            case JSON_ERROR_CTRL_CHAR:
+                                $fehler = ' - Unerwartetes Steuerzeichen gefunden';
+                                break;
+                            case JSON_ERROR_SYNTAX:
+                                $fehler = ' - Syntaxfehler, ungültiges JSON';
+                                break;
+                            case JSON_ERROR_UTF8:
+                                $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
+                                break;
+                            default:
+                                $fehler = ' - Unbekannter Fehler';
+                                break;
                         }
+                        $this->SendDebug("PAKET2Fehler:",$fehler, 0);
+                    }
+                    else{
+                        $this->SendDebug("PAKETJSON2:", "sende Paket 2", 0);
+                        $this->setvalue("DataSendToClient", "Paket 2");
+                        $this->SendText($json2);
+                    }
+    }
           
                         
-                        
-                         
-                        
-                   // }
-                 //   else{
-                   
-                        //$this->SendDebug("NewHash: ", "keine Datenänderung erkannt", 0);
-                        
-                  //  }
-                    //Semaphore wieder freigeben!
-                   // IPS_SemaphoreLeave("sendIPSVars");
-
-                  
-
-                    // $this->SendDebug('Semaphore', "Ende", 0);
-                //}
-                //else
-                //{
-                  //  $this->SendDebug("Semaphore","Keine Ausführung Möglich. Ein anderes Skript nutzt den KritischenPunkt.",0);
-                    // ...Keine Ausführung Möglich. Ein anderes Skript nutzt den "KritischenPunkt" 
-                    // für länger als 0,5 Sekunde, sodass unsere Wartezeit überschritten wird.
-                //}
-        } 
+                
 
         
         
