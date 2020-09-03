@@ -1636,6 +1636,7 @@ class MyWebsocketServer extends IPSModule
                     $c1 =array($data0, $paket);
                     try {
                         $json1 = json_encode($c1);
+                        $this->SendDebug("JSON1 - Paket 1", json_last_error(), 0);
                     } catch (JsonException $err) { }
                     if (json_last_error() !== JSON_ERROR_NONE) {
                         switch(json_last_error()) {
@@ -1677,7 +1678,7 @@ class MyWebsocketServer extends IPSModule
                         //zum sichtbar machen
                         //$this->SendDebug("PAKET1:".$AnzahlVars." - ", $json1, 0);
                         
-                   IPS_Sleep(150);
+                   IPS_Sleep(100);
                     
                    // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
