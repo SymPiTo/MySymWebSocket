@@ -62,6 +62,9 @@ class MyWebsocketServer extends IPSModule
     public function Create()
     {
         parent::Create();
+        $this->hashcode = new MyBufferHelper;
+        $hashcode->hc0 = "";
+        $hashcode->hc1 = "";
         //create server Socket if not exist
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
@@ -1631,45 +1634,52 @@ class MyWebsocketServer extends IPSModule
                                 //Daten die gesendet werden dürfen 65536 Zeichen nicht überschreiten
                                  
                 //Senden der Daten Pakete
-                if($AnzahlVars > 0){                
-                    $paket['PaketNr'] = 1;
-                    $c1 =array($data0, $paket);
-                    try {
-                        $json1 = json_encode($c1);
-                        $this->SendDebug("JSON1 - Paket 1", json_last_error(), 0);
-                    } catch (JsonException $err) { }
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        switch(json_last_error()) {
-                            case JSON_ERROR_NONE:
-                                $fehler = ' - Keine Fehler';
-                            break;
-                            case JSON_ERROR_DEPTH:
-                                $fehler = ' - Maximale Stacktiefe überschritten';
-                            break;
-                            case JSON_ERROR_STATE_MISMATCH:
-                                $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
-                            break;
-                            case JSON_ERROR_CTRL_CHAR:
-                                $fehler = ' - Unerwartetes Steuerzeichen gefunden';
-                            break;
-                            case JSON_ERROR_SYNTAX:
-                                $fehler = ' - Syntaxfehler, ungültiges JSON';
-                            break;
-                            case JSON_ERROR_UTF8:
-                                $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
-                            break;
-                            default:
-                            $fehler = ' - Unbekannter Fehler';
-                            break;
+                if($AnzahlVars > 0){     
+                    //prüfen ob Daten sich geändert haben
+                    $dataNewHash = md5($data0);
+                    $dataOldHash = $hashcode->hc0;
+                    if($dataNewHash !== $dataOldHash){
+                        $paket['PaketNr'] = 1;
+                        $c1 =array($data0, $paket);
+                        try {
+                            $json1 = json_encode($c1);
+                            $this->SendDebug("JSON1 - Paket 1", json_last_error(), 0);
+                        } catch (JsonException $err) { }
+                        if (json_last_error() !== JSON_ERROR_NONE) {
+                            switch(json_last_error()) {
+                                case JSON_ERROR_NONE:
+                                    $fehler = ' - Keine Fehler';
+                                break;
+                                case JSON_ERROR_DEPTH:
+                                    $fehler = ' - Maximale Stacktiefe überschritten';
+                                break;
+                                case JSON_ERROR_STATE_MISMATCH:
+                                    $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
+                                break;
+                                case JSON_ERROR_CTRL_CHAR:
+                                    $fehler = ' - Unerwartetes Steuerzeichen gefunden';
+                                break;
+                                case JSON_ERROR_SYNTAX:
+                                    $fehler = ' - Syntaxfehler, ungültiges JSON';
+                                break;
+                                case JSON_ERROR_UTF8:
+                                    $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
+                                break;
+                                default:
+                                $fehler = ' - Unbekannter Fehler';
+                                break;
+                            }
+                            $this->SendDebug("PAKET2Fehler:",$fehler, 0);
                         }
-                        $this->SendDebug("PAKET2Fehler:",$fehler, 0);
+                        else{
+                            $dataNewHash = md5($json1);
+                            $this->SendDebug("PAKETJSON1:","sende Paket 1", 0);
+                            $this->setvalue("DataSendToClient", "Paket 1");
+                            $this->SendText($json1);
+                        }
+                        $hashcode->hc0 = md5($data0);
                     }
-                    else{
-                        $dataNewHash = md5($json1);
-                        $this->SendDebug("PAKETJSON1:","sende Paket 1", 0);
-                        $this->setvalue("DataSendToClient", "Paket 1");
-                        $this->SendText($json1);
-                    }
+
                 }    
                     //$this->SendDebug("NewHash: ",$dataNewHash, 0);
                     //Daten nur senden wenn Änderung erkannt wurde
@@ -1680,7 +1690,11 @@ class MyWebsocketServer extends IPSModule
                         
                    //IPS_Sleep(100);
                 if($AnzahlVars > 199){ 
-                   // if (array_key_exists('0', $data1)){
+                    //prüfen ob Daten sich geändert haben
+                    $dataNewHash = md5($data1);
+                    $dataOldHash = $hashcode->hc1;
+                    if($dataNewHash !== $dataOldHash){
+                    
                         $paket['PaketNr'] = 2;
                         $c2 = array($data1, $paket);
                         $this->SendDebug("PAKET 2:" , "versuche Paket 2 zu senden.", 0);
@@ -1722,6 +1736,7 @@ class MyWebsocketServer extends IPSModule
                         $this->setvalue("DataSendToClient", "Paket 2");
                         $this->SendText($json2);
                     }
+                    $hashcode->hc1 = md5($data1);
                 }
     }
           

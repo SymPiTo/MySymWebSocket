@@ -310,6 +310,10 @@ trait InstanceStatus
 
 /**
  * Trait welcher Objekt-Eigenschaften in den Instance-Buffer schreiben und lesen kann.
+ *  Anwendung:
+ *  $a = new MyBufferHelper;
+ *  $a->height = 45  (value 45 in permanente Variable height schreiben)
+ *  echo $a->height; (value von permanenter Varable height lesen.)
  */
 trait MyBufferHelper
 {
