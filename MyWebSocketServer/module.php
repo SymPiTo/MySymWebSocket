@@ -62,9 +62,9 @@ class MyWebsocketServer extends IPSModule
     public function Create()
     {
         parent::Create();
-        $this->hashcode = new MyBufferHelper;
-        $hashcode->hc0 = "";
-        $hashcode->hc1 = "";
+         
+        $this->SetBuffer("hc0", "");
+        $this->SetBuffer("hc1", "");
         //create server Socket if not exist
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
@@ -1637,7 +1637,7 @@ class MyWebsocketServer extends IPSModule
                 if($AnzahlVars > 0){     
                     //prüfen ob Daten sich geändert haben
                     $dataNewHash = md5($data0);
-                    $dataOldHash = $hashcode->hc0;
+                    $dataOldHash = $this->GetBuffer(hc0);
                     if($dataNewHash !== $dataOldHash){
                         $paket['PaketNr'] = 1;
                         $c1 =array($data0, $paket);
@@ -1677,7 +1677,7 @@ class MyWebsocketServer extends IPSModule
                             $this->setvalue("DataSendToClient", "Paket 1");
                             $this->SendText($json1);
                         }
-                        $hashcode->hc0 = md5($data0);
+                        $this->SetBuffer(hc0, md5($data0));
                     }
 
                 }    
@@ -1692,7 +1692,7 @@ class MyWebsocketServer extends IPSModule
             if($AnzahlVars > 199){ 
                     //prüfen ob Daten sich geändert haben
                     $dataNewHash = md5($data1);
-                    $dataOldHash = $hashcode->hc1;
+                    $dataOldHash = $this->GetBuffer(hc1);
                 if($dataNewHash !== $dataOldHash){
                     
                         $paket['PaketNr'] = 2;
@@ -1736,7 +1736,7 @@ class MyWebsocketServer extends IPSModule
                         $this->setvalue("DataSendToClient", "Paket 2");
                         $this->SendText($json2);
                     }
-                    $hashcode->hc1 = md5($data1);
+                    $this->SetBuffer(hc1, md5($data1));
                 }
             }
     }
