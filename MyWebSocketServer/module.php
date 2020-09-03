@@ -1686,8 +1686,9 @@ class MyWebsocketServer extends IPSModule
 
                         try {
                             $json2 = json_encode($c2, JSON_INVALID_UTF8_IGNORE);
+                            $this->SendDebug("JSON2 - Paket 2", $json2, 0);
                         } 
-                        catch (JsonException $err) { 
+                        catch (JsonException $err2) { 
                             if (json_last_error() !== JSON_ERROR_NONE) {
                                 switch(json_last_error()) {
                                     case JSON_ERROR_NONE:
