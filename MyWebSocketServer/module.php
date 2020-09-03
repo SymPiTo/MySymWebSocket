@@ -1670,7 +1670,7 @@ class MyWebsocketServer extends IPSModule
                     }
                     else{
                         $dataNewHash = md5($json1);
-                        //$this->SendDebug("PAKETJSON2:",$json2, 0);
+                        $this->SendDebug("PAKETJSON1:","sende Paket 2", 0);
                         $this->setvalue("DataSendToClient", "Paket1");
                         $this->SendText($json1);
                     }
@@ -1720,7 +1720,7 @@ class MyWebsocketServer extends IPSModule
                                 $this->SendDebug("PAKET2Fehler:",$fehler, 0);
                             }
                             else{
-                                //$this->SendDebug("PAKETJSON2:",$json2, 0);
+                                $this->SendDebug("PAKETJSON2:", "sende Paket 2", 0);
                                 $this->setvalue("DataSendToClient", "Paket2");
                                 $this->SendText($json2);
                             }
