@@ -1690,7 +1690,7 @@ class MyWebsocketServer extends IPSModule
                             $this->SendDebug("JSON2 - Paket 2", $json2, 0);
                             $this->SendDebug("JSON2 - Paket 2", json_last_error(), 0);
                         } 
-                        catch (JsonException $err2) { 
+                        catch (JsonException $err2) { }
                             if (json_last_error() !== JSON_ERROR_NONE) {
                                 switch(json_last_error()) {
                                     case JSON_ERROR_NONE:
