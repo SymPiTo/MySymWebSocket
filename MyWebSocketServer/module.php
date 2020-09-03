@@ -1579,13 +1579,6 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	public function sendIPSVars(){
-               // if (IPS_SemaphoreEnter("sendIPSVars", 1000)) {
-                      // ...Kritischer Codeabschnitt
-                   //   $this->SendDebug('Semaphore', "Start", 0);
-                    //Daten holen die bereits gesendet wurden
-                    $dataOld = $this->getvalue("DataSendToClient");  
-                    $dataOldHash = md5($dataOld);
-                    //$this->SendDebug("OldHash: ",$dataOldHash, 0);
                     $IPSVariablesjson = $this->getvalue("IpsSendVars");
                     $IPSVariables = json_decode($IPSVariablesjson);
                     $AnzahlVars = count($IPSVariables);
@@ -1636,7 +1629,7 @@ class MyWebsocketServer extends IPSModule
                 //Senden der Daten Pakete
                 if($AnzahlVars > 0){     
                     //prüfen ob Daten sich geändert haben
-                    $dataNewHash = md5($data0);
+                    $dataNewHash = md5(serialize($data0));
                     $dataOldHash = $this->GetBuffer("hc0");
                     if($dataNewHash !== $dataOldHash){
                         $paket['PaketNr'] = 1;
@@ -1677,7 +1670,7 @@ class MyWebsocketServer extends IPSModule
                             $this->setvalue("DataSendToClient", "Paket 1");
                             $this->SendText($json1);
                         }
-                        $this->SetBuffer("hc0", md5($data0));
+                        $this->SetBuffer("hc0", $dataNewHash);
                     }
 
                 }    
@@ -1691,7 +1684,7 @@ class MyWebsocketServer extends IPSModule
                    //IPS_Sleep(100);
             if($AnzahlVars > 199){ 
                     //prüfen ob Daten sich geändert haben
-                    $dataNewHash = md5($data1);
+                    $dataNewHash = md5(serialize($data1));
                     $dataOldHash = $this->GetBuffer("hc1");
                 if($dataNewHash !== $dataOldHash){
                     
@@ -1736,7 +1729,7 @@ class MyWebsocketServer extends IPSModule
                         $this->setvalue("DataSendToClient", "Paket 2");
                         $this->SendText($json2);
                     }
-                    $this->SetBuffer("hc1", md5($data1));
+                    $this->SetBuffer("hc1", $dataNewHash);
                 }
             }
     }
