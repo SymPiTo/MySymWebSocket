@@ -1677,7 +1677,7 @@ class MyWebsocketServer extends IPSModule
                         //zum sichtbar machen
                         //$this->SendDebug("PAKET1:".$AnzahlVars." - ", $json1, 0);
                         
-                   IPS_Sleep(50);
+                   IPS_Sleep(150);
                     
                    // if (array_key_exists('0', $data1)){
                         $paket['PaketNr'] = 2;
