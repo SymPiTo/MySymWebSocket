@@ -70,6 +70,7 @@ class MyWebsocketServer extends IPSModule
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
         $this->RegisterPropertyBoolean("Open", false);
+        $this->RegisterPropertyBoolean("ErrLog", true);
         $this->RegisterPropertyInteger("UpdateInterval", 5000);
         $this->RegisterPropertyInteger("IDcommand", 0);
         $this->RegisterPropertyInteger("Port", 8080);
@@ -130,6 +131,15 @@ class MyWebsocketServer extends IPSModule
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         $this->SendDebug('Messagesink:'.$SenderID, $Message, 0);
+        /*registrierte IPS Meldungen
+            IPS_KERNELMESSAGE       wird nicht verwendet da nur für alte Version
+            IPS_KERNELSTARTED       10001	Wird nach KR_READY gesendet und synchron abgearbeitet
+            IPS_KERNELSHUTDOWN      10002	Wir vor KR_UNINIT gesendet und synchron abgearbeitet
+            FM_DISCONNECT           11102	Instanz wurde getrennt
+            FM_CONNECT              11101	Instanz wurde verbunden
+            IM_CHANGESTATUS         10506	Einstellungen haben sich geändert
+            VM_UPDATE               10603	Variable wurde aktualisiert
+        */
         switch ($Message) {
             case IPS_KERNELMESSAGE:
                 if ($Data[0] != KR_READY) {
@@ -1149,7 +1159,7 @@ class MyWebsocketServer extends IPSModule
  
 
     /**
-     * Empfängt Daten vom Parent.
+     * Empfängt Daten vom Parent ServerSocket I/O port9000.
      *
      * @access public
      * @param string $JSONString Das empfangene JSON-kodierte Objekt vom Parent.
@@ -1328,11 +1338,13 @@ class MyWebsocketServer extends IPSModule
         if ($Client === false) {
             $this->SendDebug('Unknow client', $ClientIP . ':' . $ClientPort, 0);
             trigger_error($this->Translate('Unknow client') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
+            $this->ModErrorLog("WebSocketServer", "SendPing", "Unknow client");
             return false;
         }
         if ($Client->State != WebSocketState::Connected) {
             $this->SendDebug('Client not connected', $ClientIP . ':' . $ClientPort, 0);
             trigger_error($this->Translate('Client not connected') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
+            $this->ModErrorLog("WebSocketServer", "SendPing", "'Client not connected");
             return false;
         }
         $this->SendDebug('Send Ping' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
@@ -1341,6 +1353,7 @@ class MyWebsocketServer extends IPSModule
         $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = '';
         if ($Result === false) {
             $this->SendDebug('Timeout ' . $Client->ClientIP . ':' . $Client->ClientPort, '', 0);
+            $this->ModErrorLog("WebsocketServer", "Receive of Pong from Client failed", $Result);
             trigger_error($this->Translate('Timeout'), E_USER_NOTICE);
             $this->RemoveOneClient($Client);
             $this->CloseConnection($Client);
@@ -1348,6 +1361,7 @@ class MyWebsocketServer extends IPSModule
         }
         if ($Result !== $Text) {
             $this->SendDebug('Error in Pong ' . $Client->ClientIP . ':' . $Client->ClientPort, $Result, 0);
+            $this->ModErrorLog("WebsocketServer", "Wrong pong received from Client failed", $Result);
             trigger_error($this->Translate('Wrong pong received'), E_USER_NOTICE);
             $this->SendDisconnect($Client);
             return false;

@@ -1,176 +1,174 @@
 {
-    "elements":
-            [ {
-                    "name": "Open",
-                    "type": "CheckBox",
-                    "caption": "Activate WebSocketServer"
-                },
-                {   "type": "NumberSpinner", 
-                    "name": "UpdateInterval",    
-                    "caption": "UpdateInterval", 
-                    "suffix": "milisekunden"
-                },
-                {
-                    "type": "Label",
-                    "label": "--------------------------------------------------"
-                }, 
-                {   "type": "SelectScript", 
-                    "name": "IDcommand", 
-                    "caption": "Target Script called by Client send data to server." },
-                {
-                    "name": "Port",
-                    "type": "NumberSpinner",
-                    "caption": "Port"
-                },
-                {
-                    "name": "URI",
-                    "type": "ValidationTextBox",
-                    "caption": "URI"
-                }, 
-                {
-                    "name": "Interval",
-                    "type": "NumberSpinner",
-                    "caption": "Timeout"
-                }, 
-                {
-                    "type": "Label",
-                    "label": "Caution: Only use TLS with authentication if the port is accessible externally!"
-                }, 
-                {
-                    "type": "Select",
-                    "name": "Mode",
-                    "caption": "Mode",
-                    "options": [
-                        {
-                            "label": "no TLS",
-                            "value": [
-                                {
-                                    "name": "TLS",
-                                    "value": false
-                                },
-                                {
-                                    "name": "Plain",
-                                    "value": true
-                                }
-                            ]
+    "elements": [{
+            "name": "Open",
+            "type": "CheckBox",
+            "caption": "Activate WebSocketServer"
+        },
+        {
+            "type": "NumberSpinner",
+            "name": "UpdateInterval",
+            "caption": "UpdateInterval",
+            "suffix": "milisekunden"
+        },
+        {
+            "name": "ErrLog",
+            "type": "CheckBox",
+            "caption": "Activate Error Logging"
+        },
+        {
+            "type": "Label",
+            "label": "--------------------------------------------------"
+        },
+        {
+            "type": "SelectScript",
+            "name": "IDcommand",
+            "caption": "Target Script called by Client send data to server."
+        },
+        {
+            "name": "Port",
+            "type": "NumberSpinner",
+            "caption": "Port"
+        },
+        {
+            "name": "URI",
+            "type": "ValidationTextBox",
+            "caption": "URI"
+        },
+        {
+            "name": "Interval",
+            "type": "NumberSpinner",
+            "caption": "Timeout"
+        },
+        {
+            "type": "Label",
+            "label": "Caution: Only use TLS with authentication if the port is accessible externally!"
+        },
+        {
+            "type": "Select",
+            "name": "Mode",
+            "caption": "Mode",
+            "options": [{
+                    "label": "no TLS",
+                    "value": [{
+                            "name": "TLS",
+                            "value": false
                         },
                         {
-                            "label": "both",
-                            "value": [
-                                {
-                                    "name": "TLS",
-                                    "value": true
-                                },
-                                {
-                                    "name": "Plain",
-                                    "value": true
-                                }
-                            ]
-                        },
-                        {
-                            "label": "only TLS",
-                            "value": [
-                                {
-                                    "name": "TLS",
-                                    "value": true
-                                },
-                                {
-                                    "name": "Plain",
-                                    "value": false
-                                }
-                            ]
+                            "name": "Plain",
+                            "value": true
                         }
                     ]
-                }, 
-                {
-                    "type": "Label",
-                    "label": "--------------------------------------------------"
-                }, 
-                {
-                    "type": "Label",
-                    "label": "Optional Certificate:"
-                }, 
-                {
-                    "name": "CertFile",
-                    "type": "SelectFile",
-                    "extensions": ".pem,.crt,.cer",
-                    "caption": "Certificate"
-                }, 
-                {
-                    "name": "KeyFile",
-                    "type": "SelectFile",
-                    "extensions": ".pem,.key",
-                    "caption": "Private key"
                 },
                 {
-                    "name": "KeyPassword",
-                    "type": "PasswordTextBox",
-                    "caption": "Passphrase(optional)"
-                }, 
-                {
-                    "type": "Label",
-                    "label": "--------------------------------------------------"
-                }, 
-                {
-                    "type": "Label",
-                    "label": "Optional HTTP Basic-Authentication:"
+                    "label": "both",
+                    "value": [{
+                            "name": "TLS",
+                            "value": true
+                        },
+                        {
+                            "name": "Plain",
+                            "value": true
+                        }
+                    ]
                 },
                 {
-                    "name": "BasisAuth",
-                    "type": "CheckBox",
-                    "caption": "Active"
-                },
-                {
-                    "name": "Username",
-                    "type": "ValidationTextBox",
-                    "caption": "Username"
-                },
-                {
-                    "name": "Password",
-                    "type": "PasswordTextBox",
-                    "caption": "Password"
-                }
-
-            ],
-    "actions":
-    [
-                    { 
-                            "type": "Button", 
-                            "caption": "Create WSS-Variable and Messages", 
-                            "onClick": "MyWSS_RegisterIPSMessages($id);" 
-                    }
-    ],
-    "status":
-            [
-                {
-                    "code": 101,
-                    "icon": "inactive",
-                    "caption": "Instance wird erstellt"
-                },
-                {
-                    "code": 102,
-                    "icon": "active",
-                    "caption": "Interface open"
-                },
-                {
-                    "code": 104,
-                    "icon": "inactive",
-                    "caption": "Interface closed"
-                },
-                {
-                    "code": 201,
-                    "icon": "error",
-                    "caption": "Certificate or key missing or not found"
-                },
-                {
-                    "code": 202,
-                    "icon": "error",
-                    "caption": "Port invalid"
-                },
-                {
-                    "code": 204,
-                    "icon": "error",
-                    "caption": "Ping interval to small"
+                    "label": "only TLS",
+                    "value": [{
+                            "name": "TLS",
+                            "value": true
+                        },
+                        {
+                            "name": "Plain",
+                            "value": false
+                        }
+                    ]
                 }
             ]
+        },
+        {
+            "type": "Label",
+            "label": "--------------------------------------------------"
+        },
+        {
+            "type": "Label",
+            "label": "Optional Certificate:"
+        },
+        {
+            "name": "CertFile",
+            "type": "SelectFile",
+            "extensions": ".pem,.crt,.cer",
+            "caption": "Certificate"
+        },
+        {
+            "name": "KeyFile",
+            "type": "SelectFile",
+            "extensions": ".pem,.key",
+            "caption": "Private key"
+        },
+        {
+            "name": "KeyPassword",
+            "type": "PasswordTextBox",
+            "caption": "Passphrase(optional)"
+        },
+        {
+            "type": "Label",
+            "label": "--------------------------------------------------"
+        },
+        {
+            "type": "Label",
+            "label": "Optional HTTP Basic-Authentication:"
+        },
+        {
+            "name": "BasisAuth",
+            "type": "CheckBox",
+            "caption": "Active"
+        },
+        {
+            "name": "Username",
+            "type": "ValidationTextBox",
+            "caption": "Username"
+        },
+        {
+            "name": "Password",
+            "type": "PasswordTextBox",
+            "caption": "Password"
+        }
+
+    ],
+    "actions": [{
+        "type": "Button",
+        "caption": "Create WSS-Variable and Messages",
+        "onClick": "MyWSS_RegisterIPSMessages($id);"
+    }],
+    "status": [{
+            "code": 101,
+            "icon": "inactive",
+            "caption": "Instance wird erstellt"
+        },
+        {
+            "code": 102,
+            "icon": "active",
+            "caption": "Interface open"
+        },
+        {
+            "code": 104,
+            "icon": "inactive",
+            "caption": "Interface closed"
+        },
+        {
+            "code": 201,
+            "icon": "error",
+            "caption": "Certificate or key missing or not found"
+        },
+        {
+            "code": 202,
+            "icon": "error",
+            "caption": "Port invalid"
+        },
+        {
+            "code": 204,
+            "icon": "error",
+            "caption": "Ping interval to small"
+        }
+    ]
 }
