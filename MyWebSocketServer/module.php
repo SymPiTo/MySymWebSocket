@@ -705,7 +705,7 @@ class MyWebsocketServer extends IPSModule
                 $JSON['ClientPort'] = $Client->ClientPort;
                 $JSON['FrameTyp'] = WebSocketOPCode::pong;
                 $Data = json_encode($JSON);
-                $this->SendDataToChildren($Data);
+               // $this->SendDataToChildren($Data); WIRD nicht benötigt da kein Weiterleiten an children  
                 return;
         }
         if ($Frame->Fin) {
@@ -880,15 +880,17 @@ class MyWebsocketServer extends IPSModule
      * @return string|bool Der Payload des Pong, oder im Fehlerfall false.
      */
     private function WaitForPong(Websocket_Client $Client)
+    //Leseversuche von 1500 auf 1000 erhöht
     {
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 1500; $i++) {
             if ($this->{'WaitForPong' . $Client->ClientIP . $Client->ClientPort} === true) {
                 $Payload = $this->{'Pong' . $Client->ClientIP . $Client->ClientPort};
                 $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = "";
                 $this->{'WaitForPong' . $Client->ClientIP . $Client->ClientPort} = false;
+                $this->ModErrorLog("WebsocketServer", "Pong erhalten nach x Versuchen: ", $i);
                 return $Payload;
             }
-            IPS_Sleep(5);
+            IPS_Sleep(5); 
         }
         return false;
     }
