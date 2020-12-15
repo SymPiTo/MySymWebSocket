@@ -1183,6 +1183,7 @@ class MyWebsocketServer extends IPSModule
             case 0: /* Data */
                 if ($Client === false) {
                     $this->SendDebug('no Connection for Data found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
+                    $this->ModErrorLog("WebsocketServer", "Receive Data: ", "no Connection for Data found");
                     $this->CloseConnection($IncomingClient);
                 } else {
                     $this->ProcessIncomingData($Client, $Payload);
@@ -1215,8 +1216,10 @@ class MyWebsocketServer extends IPSModule
                 break;
             case 2: /* Disconnected */
                 if ($Client === false) {
+                    $this->ModErrorLog("WebsocketServer", "Receive Data: ", "no Connection to disconnect found");
                     $this->SendDebug('no Connection to disconnect found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
                 } else {
+                    $this->ModErrorLog("WebsocketServer", "Receive Data: ", "Client send closed");
                     $Clients->Remove($Client);
                     $this->ClearClientBuffer($Client);
                     $this->SendDebug('unWrite', $Client->ClientIP.":".$Client->ClientPort, 0);
