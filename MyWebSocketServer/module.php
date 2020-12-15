@@ -152,11 +152,13 @@ class MyWebsocketServer extends IPSModule
                 $this->DisconnectAllClients();
                 break;
             case FM_DISCONNECT:
+                $this->ModErrorLog("WebsocketServer", "Meldung aus IPS MessageSInk: ", "Socket Disconnected");
                 $this->NoNewClients = true;
                 $this->RemoveAllClients();
                 $this->RegisterParent();
                 break;
             case FM_CONNECT:
+                $this->ModErrorLog("WebsocketServer", "Meldung aus IPS MessageSInk: ", "Socket connected");
                 $this->ApplyChanges();
                 break;
             case IM_CHANGESTATUS:
@@ -880,7 +882,7 @@ class MyWebsocketServer extends IPSModule
      * @return string|bool Der Payload des Pong, oder im Fehlerfall false.
      */
     private function WaitForPong(Websocket_Client $Client)
-    //Leseversuche von 1500 auf 1000 erhöht
+    //Leseversuche von 500 auf 1000 erhöht
     {
         for ($i = 0; $i < 1500; $i++) {
             if ($this->{'WaitForPong' . $Client->ClientIP . $Client->ClientPort} === true) {
