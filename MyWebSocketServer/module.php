@@ -1220,10 +1220,12 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug('no Connection to disconnect found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
                 } else {
                     $this->ModErrorLog("WebsocketServer", "Receive Data: ", "Client send closed");
+  /* temporär stillgelegt zum testen                  
                     $Clients->Remove($Client);
                     $this->ClearClientBuffer($Client);
                     $this->SendDebug('unWrite', $Client->ClientIP.":".$Client->ClientPort, 0);
                     $this->unWriteClient($Client->ClientIP.":".$Client->ClientPort);
+    */
                 }
                 break;
         }
@@ -1241,7 +1243,7 @@ class MyWebsocketServer extends IPSModule
     //-----------------------------------------------------------------------------
     /* Function: CommandToServer
     ...............................................................................
-    Beschreibung: Daten vom Client werden in Befehle umgesetz und ausgeführt.
+    Beschreibung: Daten vom Client werden in Befehle umgesetzt und ausgeführt.
         setvalue()      => setvalue(data[0], data[1])
         IPS_Runscript() => IPS_RunScript($Data[0])
         command()       => führt das script CommandFromClient aus. (verlinkt im Formular)
