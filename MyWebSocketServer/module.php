@@ -1220,12 +1220,12 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug('no Connection to disconnect found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
                 } else {
                     $this->ModErrorLog("WebsocketServer", "Receive Data: ", "Client send closed");
-  /* temporär stillgelegt zum testen                  
+  /* temporär stillgelegt zum testen   */               
                     $Clients->Remove($Client);
                     $this->ClearClientBuffer($Client);
                     $this->SendDebug('unWrite', $Client->ClientIP.":".$Client->ClientPort, 0);
                     $this->unWriteClient($Client->ClientIP.":".$Client->ClientPort);
-    */
+    
                 }
                 break;
         }
