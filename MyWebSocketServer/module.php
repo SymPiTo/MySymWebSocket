@@ -1116,7 +1116,7 @@ class MyWebsocketServer extends IPSModule
                 $Client->Timestamp = time() + $this->ReadPropertyInteger('Interval');
             }
             $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = $NewData;
-            $this->ModErrorLog("WebsocketServer", "Decoded Frme: ",  $NewData);
+            $this->ModErrorLog("WebsocketServer", "Decoded Frme: ",  $Frame->Payload);
         } elseif ($Client->State == WebSocketState::CloseSend) {
             $this->SendDebug('Receive', 'client answer server stream close !', 0);
             $this->{'WaitForClose' . $Client->ClientIP . $Client->ClientPort} = true;
