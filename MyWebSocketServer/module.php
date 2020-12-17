@@ -884,12 +884,12 @@ class MyWebsocketServer extends IPSModule
     private function WaitForPong(Websocket_Client $Client)
     //Leseversuche von 500 auf 1000 erhöht
     {
-        for ($i = 0; $i < 1500; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             if ($this->{'WaitForPong' . $Client->ClientIP . $Client->ClientPort} === true) {
                 $Payload = $this->{'Pong' . $Client->ClientIP . $Client->ClientPort};
                 $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = "";
                 $this->{'WaitForPong' . $Client->ClientIP . $Client->ClientPort} = false;
-                $this->ModErrorLog("WebsocketServer", "Pong erhalten nach x Versuchen: ", $i);
+                //$this->ModErrorLog("WebsocketServer", "Pong erhalten nach x Versuchen: ", $i);
                 return $Payload;
             }
             IPS_Sleep(5); 
@@ -1188,6 +1188,7 @@ class MyWebsocketServer extends IPSModule
                 } else {
                     $this->ProcessIncomingData($Client, $Payload);
                     $Clients->Update($Client);
+                    $this->ModErrorLog("WebsocketServer", "Receive Data: ",  $Payload);
                 }
                 break;
             case 1: /* Connected */
@@ -1220,6 +1221,8 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug('no Connection to disconnect found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
                 } else {
                     $this->ModErrorLog("WebsocketServer", "Receive Data: ", "Client send closed");
+                   
+                    $this->ModErrorLog("WebsocketServer", "Receive Data: ",  $Payload);
   /* temporär stillgelegt zum testen   */               
                     $Clients->Remove($Client);
                     $this->ClearClientBuffer($Client);
