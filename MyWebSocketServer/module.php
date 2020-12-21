@@ -925,15 +925,25 @@ class MyWebsocketServer extends IPSModule
      * @param Websocket_Client $Client Der Client an welchen die Daten gesendet werden sollen.
      * @param bool $Fin True wenn Ende von Payload erreicht.
      */
-    private function Send(string $RawData, int $OPCode, Websocket_Client $Client, $Fin = true)
-    {
-        $WSFrame = new WebSocketFrame($OPCode, $RawData);
-        $WSFrame->Fin = $Fin;
-        $Frame = $WSFrame->ToFrame();
-        $this->SendDebug('Send', $WSFrame, 0);
-        $SendData = $this->MakeJSON($Client, $Frame);
-        if ($SendData) {
-            $this->SendDataToParent($SendData);
+    private function Send(string $RawData, int $OPCode, Websocket_Client $Client, $Fin = true){
+        if (IPS_SemaphoreEnter("SemaSend", 5000)){
+            // ...Kritischer Codeabschnitt
+            $WSFrame = new WebSocketFrame($OPCode, $RawData);
+            $WSFrame->Fin = $Fin;
+            $Frame = $WSFrame->ToFrame();
+            $this->SendDebug('Send', $WSFrame, 0);
+            $SendData = $this->MakeJSON($Client, $Frame);
+            if ($SendData) {
+                $this->SendDataToParent($SendData);
+            }
+            //Semaphore wieder freigeben!
+            IPS_SemaphoreLeave("SemaSend");
+        }
+        else
+        {
+            // ...Keine ausführung Möglich. Ein anderes Skript nutzt den "KritischenPunkt" 
+            // für länger als 5 Sekunde, sodass unsere Wartezeit überschritten wird.
+            $this->ModErrorLog("WebSocketServer", "send", 'Send Vorgang wurde länger als 5 Sekunden blockiert');
         }
     }
 
@@ -1012,12 +1022,14 @@ class MyWebsocketServer extends IPSModule
                         } catch (\PTLS\Exceptions\TLSAlertException $e) {
                             if (strlen($out = $e->decode())) {
                                 $this->SendDebug('Send TLS Handshake error', $out, 0);
+                                $this->ModErrorLog("WebSocketServer", "ProcessIncomingData", "Send TLS Handshake error");
                                 $SendData = $this->MakeJSON($Client, $out, false);
                                 if ($SendData) {
                                     $this->SendDataToParent($SendData);
                                 }
                             }
                             $this->SendDebug('Send TLS Handshake error', $e->getMessage(), 0);
+                            $this->ModErrorLog("WebSocketServer", "ProcessIncomingData", 'Send TLS Handshake error'.$e->getMessage());
                             trigger_error($e->getMessage(), E_USER_NOTICE);
                             $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort} = '';
                             $this->unlock($Client->ClientIP . $Client->ClientPort);
@@ -1622,6 +1634,7 @@ class MyWebsocketServer extends IPSModule
                             $varid = $this->GetIDForIdent("dummyID");
                             $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
                             $this->SetValue("Message", "Variable fehlt:".$varid);
+                            $this->ModErrorLog("WebSocketServer", "sendIPSVars", "Variable ".$varid." fehlt.");
                         }
                         finally{
                             $n = $n + 1;
@@ -1689,6 +1702,7 @@ class MyWebsocketServer extends IPSModule
                                 $fehler = ' - Unbekannter Fehler';
                                 break;
                             }
+                            $this->ModErrorLog("WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
                             $this->SendDebug("PAKET2Fehler:",$fehler, 0);
                         }
                         else{
@@ -1750,6 +1764,7 @@ class MyWebsocketServer extends IPSModule
                                 break;
                         }
                         $this->SendDebug("PAKET2Fehler:",$fehler, 0);
+                        $this->ModErrorLog("WebSocketServer", "sendIPSVars-Paket2 Fehler", $fehler);
                     }
                     else{
                         $this->SendDebug("PAKETJSON2:", "sende Paket 2", 0);
