@@ -1491,6 +1491,8 @@ class MyWebsocketServer extends IPSModule
         }
         else{
             return false;
+            //kein Client verbunden
+            $this->ModErrorLog("WebSocketServer", "SendText: ", 'kein Client verbunden.');
         }
     } 
 
@@ -1617,7 +1619,9 @@ class MyWebsocketServer extends IPSModule
         Returns:   
              none
         ------------------------------------------------------------------------------- */
-	public function sendIPSVars(){
+	    public function sendIPSVars(){
+
+
                     $IPSVariablesjson = $this->getvalue("IpsSendVars");
                     $IPSVariables = json_decode($IPSVariablesjson);
                     $AnzahlVars = count($IPSVariables);
