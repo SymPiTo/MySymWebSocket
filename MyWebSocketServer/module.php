@@ -886,7 +886,7 @@ class MyWebsocketServer extends IPSModule
     private function WaitForPong(Websocket_Client $Client)
     //Leseversuche von 500 auf 1000 erhöht
     {
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             if ($this->{'WaitForPong' . $Client->ClientIP . $Client->ClientPort} === true) {
                 $Payload = $this->{'Pong' . $Client->ClientIP . $Client->ClientPort};
                 $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = "";
@@ -1656,13 +1656,13 @@ class MyWebsocketServer extends IPSModule
                     }
                     //$this->SendDebug('DATA0', $data0, 0);
                     //$this->SendDebug('DATA1', $data1, 0);
-
+                                //Sonnenaufgang
                                 $a = getvalue(11938);
                                 $b = date('m/d/Y H:i:s', $a);
                                 $h = substr($b,11,2);
                                 $m = substr($b,14,2);
                                 $data0['ID11938'] = $h.':'.$m;
-
+                                //Sonnenuntergang
                                 $a = getvalue(57942);
                                 $b = date('m/d/Y H:i:s', $a);
                                 $h = substr($b,11,2);
