@@ -1654,7 +1654,7 @@ class MyWebsocketServer extends IPSModule
                     $IPSVariablesjson = $this->getvalue("IpsSendVars");
                     $IPSVariables = json_decode($IPSVariablesjson);
                     $AnzahlVars = count($IPSVariables);
-                    //$this->SendDebug('Event Variable', $IPSVariables, 0);
+                    $this->SendDebug('Anzahl der Variablen', $AnzahlVars, 0);
                     $n = 0;
                     foreach($IPSVariables as $IPSVariable) {
                         $varid = $IPSVariable->ID;
@@ -1709,7 +1709,8 @@ class MyWebsocketServer extends IPSModule
                         $c1 = array($data0, $paket);
                         try {
                             $json1 = json_encode($c1);
-                            $this->SendDebug("JSON1 - Paket 1", json_last_error(), 0);
+                            $this->SendDebug('JSON Paket 1', $json1, 0);
+                            $this->SendDebug("JSON1 - Paket 1 Error", json_last_error(), 0);
                         } catch (JsonException $err) { }
                         if (json_last_error() !== JSON_ERROR_NONE) {
                             switch(json_last_error()) {
@@ -1768,8 +1769,9 @@ class MyWebsocketServer extends IPSModule
 
                     try {
                         $json2 = json_encode($c2, JSON_INVALID_UTF8_IGNORE);
-                        $this->SendDebug("JSON2 - Paket 2", $json2, 0);
-                        $this->SendDebug("JSON2 - Paket 2", json_last_error(), 0);
+                        $this->SendDebug('JSON Paket 2', $json2, 0);
+                         
+                        $this->SendDebug("JSON2 - Paket 2 Error", json_last_error(), 0);
                     } 
                     catch (JsonException $err2) { }
                     if (json_last_error() !== JSON_ERROR_NONE) {
