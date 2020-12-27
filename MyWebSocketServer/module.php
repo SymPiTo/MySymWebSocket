@@ -1451,7 +1451,7 @@ class MyWebsocketServer extends IPSModule
         return true;
     }
     
-        public function SendText(string $Packages)
+        public function SendText(array $Packages)
     {
         //$Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         //$ClientList = $this->Multi_Clients->GetClients();
