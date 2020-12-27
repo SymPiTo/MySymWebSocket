@@ -953,7 +953,8 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('Send', $WSFrame, 0);
             $SendData = $this->MakeJSON($Client, $Frame);
             if ($SendData) {
-                $this->SendDataToParent($SendData);
+                $antwort = $this->SendDataToParent($SendData);
+                $this->SendDebug('SendDataToParent-Antwort: ', $antwort, 0);
             }
             //Semaphore wieder freigeben!
             IPS_SemaphoreLeave("SemaSend");
