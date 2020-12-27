@@ -1742,6 +1742,9 @@ class MyWebsocketServer extends IPSModule
                         }
                         $this->SetBuffer("hc0", $dataNewHash);
                     }
+                    else{
+                        $this->SendDebug("PAKETJSON1:", "Daten haben sich nicht geändert keine Übertragung.", 0);
+                    }
 
                 }    
                     //$this->SendDebug("NewHash: ",$dataNewHash, 0);
@@ -1802,6 +1805,9 @@ class MyWebsocketServer extends IPSModule
                         $this->SendText($json2);
                     }
                     $this->SetBuffer("hc1", $dataNewHash);
+                }
+                else{
+                    $this->SendDebug("PAKETJSON2:", "Daten haben sich nicht geändert keine Übertragung.", 0);
                 }
             }
     }
