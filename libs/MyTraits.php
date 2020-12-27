@@ -10,8 +10,8 @@ trait MyLogger
      * @param WebSocketFrame|mixed $Data Daten für die Ausgabe.
      * @return int $Format Ausgabeformat für Strings.
      */
-        protected function ModErrorLog($ModName, $text, $array){
-        {
+        protected function ModErrorLog($log, $ModName, $text, $array){
+        if($log){
             $path = "/home/pi/pi-share/"; 
             $file=$ModName.".log";
             

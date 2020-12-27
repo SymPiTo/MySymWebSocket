@@ -140,6 +140,7 @@ class MyWebsocketServer extends IPSModule
             IM_CHANGESTATUS         10506	Einstellungen haben sich geändert
             VM_UPDATE               10603	Variable wurde aktualisiert
         */
+        $log = $this->ReadPropertyBoolean("ErrLog");
         switch ($Message) {
             case IPS_KERNELMESSAGE:
                 if ($Data[0] != KR_READY) {
@@ -152,13 +153,13 @@ class MyWebsocketServer extends IPSModule
                 $this->DisconnectAllClients();
                 break;
             case FM_DISCONNECT:
-                $this->ModErrorLog("WebsocketServer", "Meldung aus IPS MessageSInk: ", "Socket Disconnected");
+                $this->ModErrorLog($log, "WebsocketServer", "Meldung aus IPS MessageSInk: ", "Socket Disconnected");
                 $this->NoNewClients = true;
                 $this->RemoveAllClients();
                 $this->RegisterParent();
                 break;
             case FM_CONNECT:
-                $this->ModErrorLog("WebsocketServer", "Meldung aus IPS MessageSInk: ", "Socket connected");
+                $this->ModErrorLog($log, "WebsocketServer", "Meldung aus IPS MessageSInk: ", "Socket connected");
                 $this->ApplyChanges();
                 break;
             case IM_CHANGESTATUS:
@@ -508,6 +509,7 @@ class MyWebsocketServer extends IPSModule
     private function ReceiveHandshake(string $Data)
     {
         $this->SendDebug('Receive Handshake', $Data, 0);
+        $log = $this->ReadPropertyBoolean("ErrLog");
         if (preg_match("/^GET ? (.*) HTTP\/1.1\r\n/", $Data, $match)) {
             $this->SendDebug('Receive Handshake', $match, 0);
 
@@ -522,7 +524,7 @@ class MyWebsocketServer extends IPSModule
                  
                 if($token[1] != "tboercskten"){
                     $this->SendDebug('Auth Token', "not accepted", 0);
-                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Auth Token not accepted.");
+                    $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "Auth Token not accepted.");
                     return HTTP_ERROR_CODES::Unauthorized;
                 }
                 else{
@@ -532,7 +534,7 @@ class MyWebsocketServer extends IPSModule
             }
             else{
                 //auth Token nicht vorhanden
-                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Auth Token not available.");
+                $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "Auth Token not available.");
                 return HTTP_ERROR_CODES::Not_Found;
             }
             if(preg_match("/.*[?](.*)/",$match[1], $keymatch)){
@@ -547,7 +549,7 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('Receive Handshake URI', $uri, 0);
             if ($uri != trim($this->ReadPropertyString('URI'))) {
                 $this->SendDebug('Wrong URI requested', $Data, 0);
-                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", 'Wrong URI requested:'.$Data);
+                $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", 'Wrong URI requested:'.$Data);
                 return HTTP_ERROR_CODES::Not_Found;
             }
             if ($this->ReadPropertyBoolean('BasisAuth')) {
@@ -555,57 +557,57 @@ class MyWebsocketServer extends IPSModule
                 if (preg_match("/Authorization: Basic (.*)\r\n/", $Data, $match)) {
                     if ($match[1] != $realm) {
                         $this->SendDebug('Unauthorized Connection:', base64_decode($match[1]), 0);
-                        $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Unauthorized Connection:");
+                        $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "Unauthorized Connection:");
                         return HTTP_ERROR_CODES::Forbidden;
                     }
                 } else {
                     $this->SendDebug('Authorization missing', '', 0);
-                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Authorization missing:");
+                    $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "Authorization missing:");
                     return HTTP_ERROR_CODES::Unauthorized;
                 }
             }
             if (preg_match("/Connection: (.*)\r\n/", $Data, $match)) {
                 if (strtolower($match[1]) != 'upgrade') {
                     $this->SendDebug('WRONG Connection:', $match[1], 0);
-                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Method_Not_Allowed - WRONG Connection:");
+                    $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "Method_Not_Allowed - WRONG Connection:");
                     return HTTP_ERROR_CODES::Method_Not_Allowed;
                 }
             } else {
                 $this->SendDebug('MISSING', 'Connection: Upgrade', 0);
-                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Bad_Request:");
+                $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "Bad_Request:");
                 return HTTP_ERROR_CODES::Bad_Request;
             }
             if (preg_match("/Upgrade: (.*)\r\n/", $Data, $match)) {
                 if (strtolower($match[1]) != 'websocket') {
                     $this->SendDebug('WRONG Upgrade:', $match[1], 0);
-                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "WRONG Upgrade.");
+                    $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "WRONG Upgrade.");
                     return HTTP_ERROR_CODES::Method_Not_Allowed;
                 }
             } else {
                 $this->SendDebug('MISSING', 'Upgrade: websocket', 0);
-                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "MISSING Upgrade.");
+                $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "MISSING Upgrade.");
                 return HTTP_ERROR_CODES::Bad_Request;
             }
             if (preg_match("/Sec-WebSocket-Version: (.*)\r\n/", $Data, $match)) {
                 if (strpos($match[1], '13') === false) {
                     $this->SendDebug('WRONG Version:', $match[1], 0);
-                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "WRONG Version:".$match[1]);
+                    $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "WRONG Version:".$match[1]);
                     return HTTP_ERROR_CODES::Not_Acceptable;
                 }
             } else {
                 $this->SendDebug('MISSING', 'Sec-WebSocket-Version', 0);
-                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "MISSING Sec-WebSocket-Version");
+                $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "MISSING Sec-WebSocket-Version");
                 return HTTP_ERROR_CODES::Bad_Request;
             }
             if (!preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $Data, $match)) {
                 $this->SendDebug('MISSING', 'Sec-WebSocket-Key', 0);
-                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "MISSING Sec-WebSocket-Key");
+                $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "MISSING Sec-WebSocket-Key");
                 return HTTP_ERROR_CODES::Bad_Request;
             }
             return true;
         }
         $this->SendDebug('Invalid HTTP-Request', $Data, 0);
-        $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Invalid HTTP-Request");
+        $this->ModErrorLog($log, "WebSocketServer", "ReceiveHandshake", "Invalid HTTP-Request");
         return HTTP_ERROR_CODES::Bad_Request;
     }
 
@@ -619,9 +621,10 @@ class MyWebsocketServer extends IPSModule
      */
     private function SendHandshake(int $Code, string $Data, Websocket_Client $Client)
     {
+        $log = $this->ReadPropertyBoolean("ErrLog");
         preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $Data, $match);
-        $this->ModErrorLog("WebSocketServer", "SendHandshake-Data: ", $Data);
-        $this->ModErrorLog("WebSocketServer", "SendHandshake-Match: ", $match);
+        $this->ModErrorLog($log, "WebSocketServer", "SendHandshake-Data: ", $Data);
+        $this->ModErrorLog($log, "WebSocketServer", "SendHandshake-Match: ", $match);
         $SendKey = base64_encode(sha1($match[1] . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
         $Header[] = 'HTTP/1.1 ' . HTTP_ERROR_CODES::ToString($Code);
         if ($Code == HTTP_ERROR_CODES::Unauthorized) {
@@ -904,7 +907,7 @@ class MyWebsocketServer extends IPSModule
                 $Payload = $this->{'Pong' . $Client->ClientIP . $Client->ClientPort};
                 $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = "";
                 $this->{'WaitForPong' . $Client->ClientIP . $Client->ClientPort} = false;
-                //$this->ModErrorLog("WebsocketServer", "Pong erhalten nach x Versuchen: ", $i);
+                //$this->ModErrorLog($log, "WebsocketServer", "Pong erhalten nach x Versuchen: ", $i);
                 return $Payload;
             }
             IPS_Sleep(5); 
@@ -941,6 +944,7 @@ class MyWebsocketServer extends IPSModule
      * @param bool $Fin True wenn Ende von Payload erreicht.
      */
     private function Send(string $RawData, int $OPCode, Websocket_Client $Client, $Fin = true){
+        $log = $this->ReadPropertyBoolean("ErrLog");
         if (IPS_SemaphoreEnter("SemaSend", 5000)){
             // ...Kritischer Codeabschnitt
             $WSFrame = new WebSocketFrame($OPCode, $RawData);
@@ -958,7 +962,7 @@ class MyWebsocketServer extends IPSModule
         {
             // ...Keine ausführung Möglich. Ein anderes Skript nutzt den "KritischenPunkt" 
             // für länger als 5 Sekunde, sodass unsere Wartezeit überschritten wird.
-            $this->ModErrorLog("WebSocketServer", "send", 'Send Vorgang wurde länger als 5 Sekunden blockiert');
+            $this->ModErrorLog($log, "WebSocketServer", "send", 'Send Vorgang wurde länger als 5 Sekunden blockiert');
         }
     }
 
@@ -986,6 +990,7 @@ class MyWebsocketServer extends IPSModule
     }
     private function ProcessIncomingData(Websocket_Client &$Client, string $Payload)
     {
+        $log = $this->ReadPropertyBoolean("ErrLog");
         $this->SendDebug('Receive ' . $Client->ClientIP . ':' . $Client->ClientPort, $Payload, 0);
         if ($Client->State == WebSocketState::init) { //new
             if ($this->UseTLS and ( (ord($Payload[0]) >= 0x14) && (ord($Payload[0]) <= 0x18) && (ord($Payload[1]) == 0x03))) { //valid header wenn TLS is active
@@ -1037,14 +1042,14 @@ class MyWebsocketServer extends IPSModule
                         } catch (\PTLS\Exceptions\TLSAlertException $e) {
                             if (strlen($out = $e->decode())) {
                                 $this->SendDebug('Send TLS Handshake error', $out, 0);
-                                $this->ModErrorLog("WebSocketServer", "ProcessIncomingData", "Send TLS Handshake error");
+                                $this->ModErrorLog($log, "WebSocketServer", "ProcessIncomingData", "Send TLS Handshake error");
                                 $SendData = $this->MakeJSON($Client, $out, false);
                                 if ($SendData) {
                                     $this->SendDataToParent($SendData);
                                 }
                             }
                             $this->SendDebug('Send TLS Handshake error', $e->getMessage(), 0);
-                            $this->ModErrorLog("WebSocketServer", "ProcessIncomingData", 'Send TLS Handshake error'.$e->getMessage());
+                            $this->ModErrorLog($log, "WebSocketServer", "ProcessIncomingData", 'Send TLS Handshake error'.$e->getMessage());
                             trigger_error($e->getMessage(), E_USER_NOTICE);
                             $this->{'Multi_TLS_' . $Client->ClientIP . $Client->ClientPort} = '';
                             $this->unlock($Client->ClientIP . $Client->ClientPort);
@@ -1198,6 +1203,7 @@ class MyWebsocketServer extends IPSModule
      */
     public function ReceiveData($JSONString)
     {
+        $log = $this->ReadPropertyBoolean("ErrLog");
         $data = json_decode($JSONString);
         unset($data->DataID);
         //$this->SendDebug('incoming', $data, 0);
@@ -1211,7 +1217,7 @@ class MyWebsocketServer extends IPSModule
             case 0: /* Data */
                 if ($Client === false) {
                     $this->SendDebug('no Connection for Data found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
-                    $this->ModErrorLog("WebsocketServer", "Receive Data: ", "no Connection for Data found - Verbindung wird geschlossen.");
+                    $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "no Connection for Data found - Verbindung wird geschlossen.");
                     $this->CloseConnection($IncomingClient);
                 } else {
                     $this->ProcessIncomingData($Client, $Payload);
@@ -1245,12 +1251,12 @@ class MyWebsocketServer extends IPSModule
                 break;
             case 2: /* Disconnected */
                 if ($Client === false) {
-                    $this->ModErrorLog("WebsocketServer", "Receive Data: ", "no Connection to disconnect found");
+                    $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "no Connection to disconnect found");
                     $this->SendDebug('no Connection to disconnect found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
                 } else {
-                    $this->ModErrorLog("WebsocketServer", "Receive Data: ", "Client send closed");
+                    $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "Client send closed");
                    
-                    $this->ModErrorLog("WebsocketServer", "Receive Data: ",  $Payload);
+                    $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ",  $Payload);
   /* temporär stillgelegt zum testen   */               
                     $Clients->Remove($Client);
                     $this->ClearClientBuffer($Client);
@@ -1374,17 +1380,18 @@ class MyWebsocketServer extends IPSModule
      */
     public function SendPing(string $ClientIP, string $ClientPort, string $Text)
     {
+        $log = $this->ReadPropertyBoolean("ErrLog");
         $Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         if ($Client === false) {
             $this->SendDebug('Unknow client', $ClientIP . ':' . $ClientPort, 0);
             trigger_error($this->Translate('Unknow client') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
-            $this->ModErrorLog("WebSocketServer", "SendPing", "Unknow client");
+            $this->ModErrorLog($log, "WebSocketServer", "SendPing", "Unknow client");
             return false;
         }
         if ($Client->State != WebSocketState::Connected) {
             $this->SendDebug('Client not connected', $ClientIP . ':' . $ClientPort, 0);
             trigger_error($this->Translate('Client not connected') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
-            $this->ModErrorLog("WebSocketServer", "SendPing", "'Client not connected");
+            $this->ModErrorLog($log, "WebSocketServer", "SendPing", "'Client not connected");
             return false;
         }
         $this->SendDebug('Send Ping' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
@@ -1393,7 +1400,7 @@ class MyWebsocketServer extends IPSModule
         $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = '';
         if ($Result === false) {
             $this->SendDebug('Timeout ' . $Client->ClientIP . ':' . $Client->ClientPort, '', 0);
-            $this->ModErrorLog("WebsocketServer", "Receive of Pong from Client failed", $Result);
+            $this->ModErrorLog($log, "WebsocketServer", "Receive of Pong from Client failed", $Result);
             trigger_error($this->Translate('Timeout'), E_USER_NOTICE);
             $this->RemoveOneClient($Client);
             $this->CloseConnection($Client);
@@ -1401,7 +1408,7 @@ class MyWebsocketServer extends IPSModule
         }
         if ($Result !== $Text) {
             $this->SendDebug('Error in Pong ' . $Client->ClientIP . ':' . $Client->ClientPort, $Result, 0);
-            $this->ModErrorLog("WebsocketServer", "Wrong pong received from Client failed", $Result);
+            $this->ModErrorLog($log, "WebsocketServer", "Wrong pong received from Client failed", $Result);
             trigger_error($this->Translate('Wrong pong received'), E_USER_NOTICE);
             $this->SendDisconnect($Client);
             return false;
@@ -1420,7 +1427,7 @@ class MyWebsocketServer extends IPSModule
             //Fehler Ausgabe
                 $text = "SendTextToClient: Unknow client. ";
                 $array =  $ClientIP . ':' . $ClientPort;
-                $this->ModErrorLog("MyWebSocketSever", $text, $array);
+                $this->ModErrorLog($log, "MyWebSocketSever", $text, $array);
             //Fehler Ausgabe Ende
             trigger_error($this->Translate('Unknow client') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
             return false;
@@ -1432,7 +1439,7 @@ class MyWebsocketServer extends IPSModule
             //Fehler Ausgabe
                 $text = "SendTextToClient: Client not connected. ";
                 $array =  $ClientIP . ':' . $ClientPort;
-                $this->ModErrorLog("MyWebSocketSever", $text, $array);
+                $this->ModErrorLog($log, "MyWebSocketSever", $text, $array);
             //Fehler Ausgabe Ende
             trigger_error($this->Translate('Client not connected') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
             return false;
@@ -1448,6 +1455,7 @@ class MyWebsocketServer extends IPSModule
     {
         //$Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         //$ClientList = $this->Multi_Clients->GetClients();
+        $log = $this->ReadPropertyBoolean("ErrLog");
         $Clients = $this->Multi_Clients->GetClients();
         if ($Clients){
            $this->SendDebug('Client Liste =' , $Clients, 0);
@@ -1462,7 +1470,7 @@ class MyWebsocketServer extends IPSModule
                     //Fehler Ausgabe
                         $text = "SendText: Client not known. ";
                         $array =  $Client->ClientIP;
-                        $this->ModErrorLog("MyWebSocketSever", $text, $array);
+                        $this->ModErrorLog($log, "MyWebSocketSever", $text, $array);
                     //Fehler Ausgabe Ende
                      $this->SendDebug('Unknow Multi-client', $ClientIP . ':' . $ClientPort, 0);
                     trigger_error($this->Translate('Unknow client') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
@@ -1472,7 +1480,7 @@ class MyWebsocketServer extends IPSModule
                     //Fehler Ausgabe
                         $text = "SendText: Client known, but not connected. ";
                         $array =  $Client->ClientIP;
-                        $this->ModErrorLog("MyWebSocketSever", $text, $array);
+                        $this->ModErrorLog($log, "MyWebSocketSever", $text, $array);
                     //Fehler Ausgabe Ende
                     $this->SendDebug('Multi-Client not connected', $ClientIP . ':' . $ClientPort, 0);
                     trigger_error($this->Translate('Client not connected') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
@@ -1507,7 +1515,7 @@ class MyWebsocketServer extends IPSModule
         else{
             return false;
             //kein Client verbunden
-            $this->ModErrorLog("WebSocketServer", "SendText: ", 'kein Client verbunden.');
+            $this->ModErrorLog($log, "WebSocketServer", "SendText: ", 'kein Client verbunden.');
         }
     } 
 
@@ -1636,7 +1644,7 @@ class MyWebsocketServer extends IPSModule
         ------------------------------------------------------------------------------- */
 	    public function sendIPSVars(){
 
-
+            $log = $this->ReadPropertyBoolean("ErrLog");
                     $IPSVariablesjson = $this->getvalue("IpsSendVars");
                     $IPSVariables = json_decode($IPSVariablesjson);
                     $AnzahlVars = count($IPSVariables);
@@ -1653,7 +1661,7 @@ class MyWebsocketServer extends IPSModule
                             $varid = $this->GetIDForIdent("dummyID");
                             $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
                             $this->SetValue("Message", "Variable fehlt:".$varid);
-                            $this->ModErrorLog("WebSocketServer", "sendIPSVars", "Variable ".$varid." fehlt.");
+                            $this->ModErrorLog($log, "WebSocketServer", "sendIPSVars", "Variable ".$varid." fehlt.");
                         }
                         finally{
                             $n = $n + 1;
@@ -1721,7 +1729,7 @@ class MyWebsocketServer extends IPSModule
                                 $fehler = ' - Unbekannter Fehler';
                                 break;
                             }
-                            $this->ModErrorLog("WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
+                            $this->ModErrorLog($log, "WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
                             $this->SendDebug("PAKET2Fehler:",$fehler, 0);
                         }
                         else{
@@ -1783,7 +1791,7 @@ class MyWebsocketServer extends IPSModule
                                 break;
                         }
                         $this->SendDebug("PAKET2Fehler:",$fehler, 0);
-                        $this->ModErrorLog("WebSocketServer", "sendIPSVars-Paket2 Fehler", $fehler);
+                        $this->ModErrorLog($log, "WebSocketServer", "sendIPSVars-Paket2 Fehler", $fehler);
                     }
                     else{
                         $this->SendDebug("PAKETJSON2:", "sende Paket 2", 0);
