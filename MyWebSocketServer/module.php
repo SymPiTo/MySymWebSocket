@@ -522,6 +522,7 @@ class MyWebsocketServer extends IPSModule
                  
                 if($token[1] != "tboercskten"){
                     $this->SendDebug('Auth Token', "not accepted", 0);
+                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Auth Token not accepted.");
                     return HTTP_ERROR_CODES::Unauthorized;
                 }
                 else{
@@ -531,6 +532,7 @@ class MyWebsocketServer extends IPSModule
             }
             else{
                 //auth Token nicht vorhanden
+                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Auth Token not available.");
                 return HTTP_ERROR_CODES::Not_Found;
             }
             if(preg_match("/.*[?](.*)/",$match[1], $keymatch)){
@@ -545,6 +547,7 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('Receive Handshake URI', $uri, 0);
             if ($uri != trim($this->ReadPropertyString('URI'))) {
                 $this->SendDebug('Wrong URI requested', $Data, 0);
+                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", 'Wrong URI requested:'.$Data);
                 return HTTP_ERROR_CODES::Not_Found;
             }
             if ($this->ReadPropertyBoolean('BasisAuth')) {
@@ -552,47 +555,57 @@ class MyWebsocketServer extends IPSModule
                 if (preg_match("/Authorization: Basic (.*)\r\n/", $Data, $match)) {
                     if ($match[1] != $realm) {
                         $this->SendDebug('Unauthorized Connection:', base64_decode($match[1]), 0);
+                        $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Unauthorized Connection:");
                         return HTTP_ERROR_CODES::Forbidden;
                     }
                 } else {
                     $this->SendDebug('Authorization missing', '', 0);
+                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Authorization missing:");
                     return HTTP_ERROR_CODES::Unauthorized;
                 }
             }
             if (preg_match("/Connection: (.*)\r\n/", $Data, $match)) {
                 if (strtolower($match[1]) != 'upgrade') {
                     $this->SendDebug('WRONG Connection:', $match[1], 0);
+                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Method_Not_Allowed - WRONG Connection:");
                     return HTTP_ERROR_CODES::Method_Not_Allowed;
                 }
             } else {
                 $this->SendDebug('MISSING', 'Connection: Upgrade', 0);
+                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Bad_Request:");
                 return HTTP_ERROR_CODES::Bad_Request;
             }
             if (preg_match("/Upgrade: (.*)\r\n/", $Data, $match)) {
                 if (strtolower($match[1]) != 'websocket') {
                     $this->SendDebug('WRONG Upgrade:', $match[1], 0);
+                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "WRONG Upgrade.");
                     return HTTP_ERROR_CODES::Method_Not_Allowed;
                 }
             } else {
                 $this->SendDebug('MISSING', 'Upgrade: websocket', 0);
+                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "MISSING Upgrade.");
                 return HTTP_ERROR_CODES::Bad_Request;
             }
             if (preg_match("/Sec-WebSocket-Version: (.*)\r\n/", $Data, $match)) {
                 if (strpos($match[1], '13') === false) {
                     $this->SendDebug('WRONG Version:', $match[1], 0);
+                    $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "WRONG Version:".$match[1]);
                     return HTTP_ERROR_CODES::Not_Acceptable;
                 }
             } else {
                 $this->SendDebug('MISSING', 'Sec-WebSocket-Version', 0);
+                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "MISSING Sec-WebSocket-Version");
                 return HTTP_ERROR_CODES::Bad_Request;
             }
             if (!preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $Data, $match)) {
                 $this->SendDebug('MISSING', 'Sec-WebSocket-Key', 0);
+                $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "MISSING Sec-WebSocket-Key");
                 return HTTP_ERROR_CODES::Bad_Request;
             }
             return true;
         }
         $this->SendDebug('Invalid HTTP-Request', $Data, 0);
+        $this->ModErrorLog("WebSocketServer", "ReceiveHandshake", "Invalid HTTP-Request");
         return HTTP_ERROR_CODES::Bad_Request;
     }
 
@@ -994,7 +1007,7 @@ class MyWebsocketServer extends IPSModule
             }
             if ($this->UsePlain and ( preg_match("/^GET ?.* HTTP\/1.1\r\n/", $Payload, $match))) { //valid header wenn Plain is active
                 $Client->State = WebSocketState::HandshakeReceived;
-                $this->SendDebug('Receive'.'Handshake Receives',$match, 0);
+                $this->SendDebug('Receive'.'Handshake Received',$match, 0);
                 $Client->UseTLS = false;
                 $this->{'Buffer' . $Client->ClientIP . $Client->ClientPort} = '';
             }
@@ -1198,7 +1211,7 @@ class MyWebsocketServer extends IPSModule
             case 0: /* Data */
                 if ($Client === false) {
                     $this->SendDebug('no Connection for Data found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
-                    $this->ModErrorLog("WebsocketServer", "Receive Data: ", "no Connection for Data found");
+                    $this->ModErrorLog("WebsocketServer", "Receive Data: ", "no Connection for Data found - Verbindung wird geschlossen.");
                     $this->CloseConnection($IncomingClient);
                 } else {
                     $this->ProcessIncomingData($Client, $Payload);
