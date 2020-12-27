@@ -1512,6 +1512,7 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug('Status des Multi-Client' ,  WebSocketState::Connected , 0);
                     if(WebSocketState::Connected == 3){
                         $this->Send($Package, WebSocketOPCode::text, $Client);
+                        IPS_Sleep(100);
                     }
                 }
                 return true;
