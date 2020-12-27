@@ -953,8 +953,7 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('Send', $WSFrame, 0);
             $SendData = $this->MakeJSON($Client, $Frame);
             if ($SendData) {
-                $antwort = $this->SendDataToParent($SendData);
-                $this->SendDebug('SendDataToParent-Antwort: ', $antwort, 0);
+               $this->SendDataToParent($SendData);
             }
             //Semaphore wieder freigeben!
             IPS_SemaphoreLeave("SemaSend");
@@ -1452,71 +1451,77 @@ class MyWebsocketServer extends IPSModule
         return true;
     }
     
-        public function SendText(string $Text)
+        public function SendText(string $Packages)
     {
         //$Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         //$ClientList = $this->Multi_Clients->GetClients();
         $log = $this->ReadPropertyBoolean("ErrLog");
-        $Clients = $this->Multi_Clients->GetClients();
-        if ($Clients){
-           $this->SendDebug('Client Liste =' , $Clients, 0);
 
-            foreach ($Clients as $Client) {
+        foreach ($Packages as $Package){
 
-                /*
-                 $ClientIP = $Client->ClientIP ;
-                $ClientPort = $Client->ClientPort;
 
-                if ($Client === false) {
-                    //Fehler Ausgabe
-                        $text = "SendText: Client not known. ";
-                        $array =  $Client->ClientIP;
-                        $this->ModErrorLog($log, "MyWebSocketSever", $text, $array);
-                    //Fehler Ausgabe Ende
-                     $this->SendDebug('Unknow Multi-client', $ClientIP . ':' . $ClientPort, 0);
-                    trigger_error($this->Translate('Unknow client') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
-                    //return false;
-                }
-                else if ($Client->State != WebSocketState::Connected) {
-                    //Fehler Ausgabe
-                        $text = "SendText: Client known, but not connected. ";
-                        $array =  $Client->ClientIP;
-                        $this->ModErrorLog($log, "MyWebSocketSever", $text, $array);
-                    //Fehler Ausgabe Ende
-                    $this->SendDebug('Multi-Client not connected', $ClientIP . ':' . $ClientPort, 0);
-                    trigger_error($this->Translate('Client not connected') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
-                    // Client ist nicht richtig verbunden IP OK aber Port hat sich geändert.
-                    //TB 21.10.2019 ergänzt entferne Client wenn nicht verbunden
-                    $this->SendDebug('Entferne Client da nicht verbunden: ', $ClientIP . ':' . $ClientPort, 0);
-                   
-                     
-                    //$this->Multi_Clients->Remove($Client);
-                    $x = $this->Multi_Clients->GetClients();
+            $Clients = $this->Multi_Clients->GetClients();
+            if ($Clients){
+            $this->SendDebug('Client Liste =' , $Clients, 0);
 
-                    $this->SendDebug('bereinigte Client Liste: ',  $x, 0);
-                    //$this->RestartServer();
-                    //return false;
+                foreach ($Clients as $Client) {
+
+                    /*
+                    $ClientIP = $Client->ClientIP ;
+                    $ClientPort = $Client->ClientPort;
+
+                    if ($Client === false) {
+                        //Fehler Ausgabe
+                            $text = "SendText: Client not known. ";
+                            $array =  $Client->ClientIP;
+                            $this->ModErrorLog($log, "MyWebSocketSever", $text, $array);
+                        //Fehler Ausgabe Ende
+                        $this->SendDebug('Unknow Multi-client', $ClientIP . ':' . $ClientPort, 0);
+                        trigger_error($this->Translate('Unknow client') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
+                        //return false;
+                    }
+                    else if ($Client->State != WebSocketState::Connected) {
+                        //Fehler Ausgabe
+                            $text = "SendText: Client known, but not connected. ";
+                            $array =  $Client->ClientIP;
+                            $this->ModErrorLog($log, "MyWebSocketSever", $text, $array);
+                        //Fehler Ausgabe Ende
+                        $this->SendDebug('Multi-Client not connected', $ClientIP . ':' . $ClientPort, 0);
+                        trigger_error($this->Translate('Client not connected') . ': ' . $ClientIP . ':' . $ClientPort, E_USER_NOTICE);
+                        // Client ist nicht richtig verbunden IP OK aber Port hat sich geändert.
+                        //TB 21.10.2019 ergänzt entferne Client wenn nicht verbunden
+                        $this->SendDebug('Entferne Client da nicht verbunden: ', $ClientIP . ':' . $ClientPort, 0);
+                    
+                        
+                        //$this->Multi_Clients->Remove($Client);
+                        $x = $this->Multi_Clients->GetClients();
+
+                        $this->SendDebug('bereinigte Client Liste: ',  $x, 0);
+                        //$this->RestartServer();
+                        //return false;
+                    }
+                    else if ($Client->State == WebSocketState::Connected) {
+                        $this->SendDebug('Send Text Message to Multi-Client' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
+                        $this->SendDebug('Textlänge Message: ' , strlen($Text), 0);
+                        $this->Send($Text, WebSocketOPCode::text, $Client);
+                    }
+                    */
+                
+                    $this->SendDebug('Send Text Message to Multi-Client' . $Client->ClientIP . ':' . $Client->ClientPort, $Package, 0);
+                    $this->SendDebug('Textlänge Message: ' , strlen($Package), 0);
+                    $this->SendDebug('Status des Multi-Client' ,  WebSocketState::Connected , 0);
+                    if(WebSocketState::Connected == 3){
+                        $this->Send($Package, WebSocketOPCode::text, $Client);
+                    }
                 }
-                else if ($Client->State == WebSocketState::Connected) {
-                    $this->SendDebug('Send Text Message to Multi-Client' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
-                    $this->SendDebug('Textlänge Message: ' , strlen($Text), 0);
-                    $this->Send($Text, WebSocketOPCode::text, $Client);
-                }
-                */
-             
-                $this->SendDebug('Send Text Message to Multi-Client' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
-                $this->SendDebug('Textlänge Message: ' , strlen($Text), 0);
-                $this->SendDebug('Status des Multi-Client' ,  WebSocketState::Connected , 0);
-                if(WebSocketState::Connected == 3){
-                    $this->Send($Text, WebSocketOPCode::text, $Client);
-                }
+                return true;
             }
-            return true;
-        }
-        else{
-            return false;
-            //kein Client verbunden
-            $this->ModErrorLog($log, "WebSocketServer", "SendText: ", 'kein Client verbunden.');
+            else{
+                return false;
+                //kein Client verbunden
+                $this->ModErrorLog($log, "WebSocketServer", "SendText: ", 'kein Client verbunden.');
+            }
+
         }
     } 
 
@@ -1597,7 +1602,7 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	public function getIPSVars(){
-            
+            // Funktion wird nicht mehr verwenet wurde ersetz durch sendIPS Vars
             $IPSVariables = json_decode($this->ReadPropertyString("IPSVars"));
             $this->SendDebug('Event Variable', $IPSVariables, 0);
             foreach($IPSVariables as $IPSVariable) {
@@ -1659,7 +1664,7 @@ class MyWebsocketServer extends IPSModule
                             }
                         }
                         catch (Exception $e) {
-                            $varid = $this->GetIDForIdent("dummyID");
+                            //$varid = $this->GetIDForIdent("dummyID");
                             $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
                             $this->SetValue("Message", "Variable fehlt:".$varid);
                             $this->ModErrorLog($log, "WebSocketServer", "sendIPSVars", "Variable ".$varid." fehlt.");
@@ -1701,7 +1706,7 @@ class MyWebsocketServer extends IPSModule
                     $dataOldHash = $this->GetBuffer("hc0");
                     if($dataNewHash !== $dataOldHash){
                         $paket['PaketNr'] = 1;
-                        $c1 =array($data0, $paket);
+                        $c1 = array($data0, $paket);
                         try {
                             $json1 = json_encode($c1);
                             $this->SendDebug("JSON1 - Paket 1", json_last_error(), 0);
@@ -1737,7 +1742,7 @@ class MyWebsocketServer extends IPSModule
                             $dataNewHash = md5($json1);
                             $this->SendDebug("PAKETJSON1:","sende Paket 1", 0);
                             $this->setvalue("DataSendToClient", "Paket 1");
-                            $this->SendText($json1);
+                            //$this->SendText($json1);
                         }
                         $this->SetBuffer("hc0", $dataNewHash);
                     }
@@ -1797,11 +1802,15 @@ class MyWebsocketServer extends IPSModule
                     else{
                         $this->SendDebug("PAKETJSON2:", "sende Paket 2", 0);
                         $this->setvalue("DataSendToClient", "Paket 2");
-                        $this->SendText($json2);
+                        //$this->SendText($json2);
                     }
                     $this->SetBuffer("hc1", $dataNewHash);
                 }
             }
+            $package[0] =  $json1;
+            $package[1] =  $json2;
+            $this->SendText($package);
+             
     }
           
                         
