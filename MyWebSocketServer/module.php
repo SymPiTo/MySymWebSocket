@@ -1807,7 +1807,10 @@ class MyWebsocketServer extends IPSModule
                     $this->SetBuffer("hc1", $dataNewHash);
                 }
                 else{
-                    $json2 = "";
+                    $paket['PaketNr'] = 2;
+                    $c2 = array("", $paket);
+                    $json2 = json_encode($c2, JSON_INVALID_UTF8_IGNORE);
+                     
                 }
             }
             $package[0] =  $json1;
