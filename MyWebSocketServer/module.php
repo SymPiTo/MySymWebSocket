@@ -65,6 +65,7 @@ class MyWebsocketServer extends IPSModule
          
         $this->SetBuffer("hc0", "");
         $this->SetBuffer("hc1", "");
+        $this->SetBuffer("CamBuffer", "");
         //create server Socket if not exist
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
@@ -112,7 +113,8 @@ class MyWebsocketServer extends IPSModule
         
         //Variable für zu übertragende Variable (Array) anlegen
         $this->RegisterVariableString("IpsSendVars", "IPS Variablen");   
-        
+        //Variable für zu übertragende Variable (Array) anlegen
+        $this->RegisterVariableString("CamSendVars", "Cam Variablen"); 
         //Listen Einträge als JSON regisrieren
         // zum umwandeln in ein Array 
         // $IPSVars = json_decode($this->ReadPropertyString("IPSVars"));
@@ -618,37 +620,46 @@ class MyWebsocketServer extends IPSModule
      * @param HTTP_ERROR_CODES $Code Der HTTP Code welcher versendet werden soll.
      * @param string $Data Die empfangenen Daten des Clients.
      * @param Websocket_Client $Client Der Client vom welchen die Daten empfangen wurden.
+     *  match Array:    [0] => Sec-WebSocket-Key: ZnIWnMD5fCyXY6bGcari0g==
+     *                  [1] => ZnIWnMD5fCyXY6bGcari0g==
      */
     private function SendHandshake(int $Code, string $Data, Websocket_Client $Client)
     {
         $log = $this->ReadPropertyBoolean("ErrLog");
-        preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $Data, $match);
-        $this->ModErrorLog($log, "WebSocketServer", "SendHandshake-Data: ", $Data);
-        $this->ModErrorLog($log, "WebSocketServer", "SendHandshake-Match: ", $match);
-        $SendKey = base64_encode(sha1($match[1] . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
-        $Header[] = 'HTTP/1.1 ' . HTTP_ERROR_CODES::ToString($Code);
-        if ($Code == HTTP_ERROR_CODES::Unauthorized) {
-            $Header[] = 'WWW-Authenticate: Basic';
+        try {
+            preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $Data, $match);
+            
+
+            $SendKey = base64_encode(sha1($match[1] . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
+            $Header[] = 'HTTP/1.1 ' . HTTP_ERROR_CODES::ToString($Code);
+            if ($Code == HTTP_ERROR_CODES::Unauthorized) {
+                $Header[] = 'WWW-Authenticate: Basic';
+            }
+            //$Header[] = 'Date: '; // Datum fehlt !
+            $Header[] = 'Server: IP-Symcon Websocket Gateway';
+            if ($Code == HTTP_ERROR_CODES::Web_Socket_Protocol_Handshake) {
+                $Header[] = 'Connection: Upgrade';
+                $Header[] = 'Sec-WebSocket-Accept: ' . $SendKey;
+                $Header[] = 'Upgrade: websocket';
+                $Header[] = "\r\n";
+                $SendHeader = implode("\r\n", $Header);
+            } else {
+                $Header[] = 'Content-Length:' . strlen(HTTP_ERROR_CODES::ToString($Code));
+                $Header[] = "\r\n";
+                $SendHeader = implode("\r\n", $Header) . HTTP_ERROR_CODES::ToString($Code);
+            }
+            $this->SendDebug('SendHandshake ' . $Client->ClientIP . ':' . $Client->ClientPort, $SendHeader, 0);
+            $SendData = $this->MakeJSON($Client, $SendHeader);
+            if ($SendData) {
+                //Daten an I/O Schnittstelle senden
+                $this->SendDataToParent($SendData);
+            }
+        } catch (exception $e) {
+            //code for exception
+            $this->ModErrorLog($log, "WebSocketServer", "SendHandshake-Data: ", $Data);
+            $this->ModErrorLog($log, "WebSocketServer", "SendHandshake-Match: ", $match);
         }
-        //$Header[] = 'Date: '; // Datum fehlt !
-        $Header[] = 'Server: IP-Symcon Websocket Gateway';
-        if ($Code == HTTP_ERROR_CODES::Web_Socket_Protocol_Handshake) {
-            $Header[] = 'Connection: Upgrade';
-            $Header[] = 'Sec-WebSocket-Accept: ' . $SendKey;
-            $Header[] = 'Upgrade: websocket';
-            $Header[] = "\r\n";
-            $SendHeader = implode("\r\n", $Header);
-        } else {
-            $Header[] = 'Content-Length:' . strlen(HTTP_ERROR_CODES::ToString($Code));
-            $Header[] = "\r\n";
-            $SendHeader = implode("\r\n", $Header) . HTTP_ERROR_CODES::ToString($Code);
-        }
-        $this->SendDebug('SendHandshake ' . $Client->ClientIP . ':' . $Client->ClientPort, $SendHeader, 0);
-        $SendData = $this->MakeJSON($Client, $SendHeader);
-        if ($SendData) {
-            //Daten an I/O Schnittstelle senden
-            $this->SendDataToParent($SendData);
-        }
+
     }
 
     /**
@@ -1802,6 +1813,7 @@ class MyWebsocketServer extends IPSModule
                     else{
                         $this->SendDebug("PAKETJSON2:", "sende Paket 2", 0);
                         $this->setvalue("DataSendToClient", "Paket 2");
+                        //Paket 2 verschicken
                         $this->SendText($json2);
                     }
                     $this->SetBuffer("hc1", $dataNewHash);
@@ -1810,6 +1822,83 @@ class MyWebsocketServer extends IPSModule
                     $this->SendDebug("PAKETJSON2:", "Daten haben sich nicht geändert keine Übertragung.", 0);
                 }
             }
+
+
+            //Cam Bilder übertragen
+            $CamVariablesjson = $this->getvalue("CamSendVars");
+            $CamVariables = json_decode($CamVariablesjson);
+            //prüfen ob Variable verfügbar sind
+            $c = 0;
+            foreach($CamVariables as $CamVariable) {
+                $camid = $CamVariable->ID;
+                try {
+                    if(!IPS_VariableExists($camid)){
+                        throw new Exception('Variable mit ID '.$camid.'ist nicht vorhanden.');  
+                    }
+                }
+                catch (Exception $e) {
+                    //$varid = $this->GetIDForIdent("dummyID");
+                    $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
+                    $this->SetValue("Message", "CamVariable fehlt:".$camid);
+                    $this->ModErrorLog($log, "WebSocketServer", "sendIPSVars", "CamVariable ".$camid." fehlt.");
+                }
+                finally{
+                    $c = $c + 1;
+                       $camdata['ID'.$camid] = getvalue($camid);
+                }
+
+                //Prüfen ob CamBild sich verändert hat.
+                $CamdataNewHash = md5(serialize($camdata));
+                $CamdataOldHash = $this->GetBuffer("CamBuffer");
+                $this->SendDebug("CamDatat- Hash Codes Neu - Alt: ", $CamdataNewHash." - ".$CamdataOldHash, 0);
+                if($CamdataNewHash !== $CamdataOldHash){
+                    $paket['PaketNr'] = 3;
+                    $c3 = array($camdata, $paket);
+                    try {
+                        $json3 = json_encode($c3);
+                        $this->SendDebug("JSON1 - Paket 3 Error", json_last_error(), 0);
+                    } catch (JsonException $err) { }
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        switch(json_last_error()) {
+                            case JSON_ERROR_NONE:
+                                $fehler = ' - Keine Fehler';
+                            break;
+                            case JSON_ERROR_DEPTH:
+                                $fehler = ' - Maximale Stacktiefe überschritten';
+                            break;
+                            case JSON_ERROR_STATE_MISMATCH:
+                                $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
+                            break;
+                            case JSON_ERROR_CTRL_CHAR:
+                                $fehler = ' - Unerwartetes Steuerzeichen gefunden';
+                            break;
+                            case JSON_ERROR_SYNTAX:
+                                $fehler = ' - Syntaxfehler, ungültiges JSON';
+                            break;
+                            case JSON_ERROR_UTF8:
+                                $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
+                            break;
+                            default:
+                            $fehler = ' - Unbekannter Fehler';
+                            break;
+                        }
+                        $this->ModErrorLog($log, "WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
+                        $this->SendDebug("PAKET2Fehler:",$fehler, 0);
+                    }
+                    else{
+                        $dataNewHash = md5($json1);
+                        $this->SendDebug("PAKETJSON3:","sende Paket 3", 0);
+                        $this->setvalue("DataSendToClient", "Paket 3");
+                        $this->SendText($json3);
+                    }
+                    $this->SetBuffer("CamBuffer", $dataNewHash);
+                }
+                else{
+                    $this->SendDebug("PAKETJSON3:", "Daten haben sich nicht geändert keine Übertragung.", 0);
+                }                
+
+            }
+
     }
           
                         
@@ -1820,7 +1909,7 @@ class MyWebsocketServer extends IPSModule
         /* ----------------------------------------------------------------------------
          Function: RegisterIPSMessages
         ...............................................................................
-         Alle IP Symcon Variable mit der Bershreibung WSS oder WSS1 werden ausgelesen 
+         Alle IP Symcon Variable mit der Beschreibung WSS oder WSS1 werden ausgelesen 
          und in ein file "/media/newfile.txt" und in die Variablen Liste "IpsSenVars" 
          geschrieben. Alle Variable in dieser Liste werden von WSS übertragen.
          Aktualisierung dieser Liste nur Manuell über die Konfiguration. 
@@ -1847,6 +1936,7 @@ class MyWebsocketServer extends IPSModule
             //Alle Variablen mit Beschreibung WSS holen und ein Evet anlegen.
             $alleVariablen = IPS_GetVariableList();
             $i = 0; 
+            $c = 0;
             //file öffnen falls vorhanden - wird überschreieben
             $myfile = fopen($file, "w+");
             //Das Modul "horcht" nicht mehr auf Nachrichten der Instanz 12345 mit der NachrichtID 10505
@@ -1863,9 +1953,14 @@ class MyWebsocketServer extends IPSModule
                         $this->RegisterMessage($var, VM_UPDATE);  
                     }
                 }
+                if ($Info === "WSSCAM"){
+                    $CamVars[$c]['ID'] = $var;
+                }
             }
             fclose($myfile);    
-            setvalue($this->GetIDForIdent("IpsSendVars"), json_encode($IpsVars));
+             
+            $this->SetValue('IpsSendVars', json_encode($IpsVars));
+            $this->SetValue('CamSendVars', json_encode($CamVars));
         }
         
         
