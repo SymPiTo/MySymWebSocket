@@ -849,6 +849,7 @@ class MyWebsocketServer extends IPSModule
     
     private function RemoveOneClient(Websocket_Client $Client)
     {
+        $log = $this->ReadPropertyBoolean("ErrLog");
         $this->ModErrorLog($log, "WebsocketServer", "Entferne Client aus Liste", $Client);
         $this->ClearClientBuffer($Client);
         $Clients = $this->Multi_Clients;
