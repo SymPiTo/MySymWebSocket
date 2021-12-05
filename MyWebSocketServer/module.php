@@ -849,6 +849,7 @@ class MyWebsocketServer extends IPSModule
     
     private function RemoveOneClient(Websocket_Client $Client)
     {
+        $this->ModErrorLog($log, "WebsocketServer", "Entferne Client aus Liste", $Client);
         $this->ClearClientBuffer($Client);
         $Clients = $this->Multi_Clients;
         $this->SendDebug("RemoveOneClient: ", "entferne Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
@@ -864,6 +865,7 @@ class MyWebsocketServer extends IPSModule
                     foreach ($cl as $key => $value) {
                         //$this->SendDebug("Verbundene Clients:".$key, $value->ClientIP, 0);
                         $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
+                        $this->ModErrorLog($log, "WebsocketServer", "Bereinigt & verbundener Client", $liste[$key]);
                     }
                     if (!empty($liste)){
                         $this->writeClients($liste);
@@ -1743,7 +1745,7 @@ class MyWebsocketServer extends IPSModule
                                 break;
                             }
                             $this->ModErrorLog($log, "WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
-                            $this->SendDebug("PAKET2Fehler:",$fehler, 0);
+                            $this->SendDebug("PAKET1Fehler:",$fehler, 0);
                         }
                         else{
                             $dataNewHash = md5($json1);
@@ -1824,12 +1826,13 @@ class MyWebsocketServer extends IPSModule
             }
 
 
-            //Cam Bilder übertragen
+            //Cam Bilder übertragen aber nur Einzeln
             $CamVariablesjson = $this->getvalue("CamSendVars");
             $CamVariables = json_decode($CamVariablesjson);
-            //prüfen ob Variable verfügbar sind
+            
             $c = 0;
             foreach($CamVariables as $CamVariable) {
+                //prüfen ob Variable verfügbar sind
                 $camid = $CamVariable->ID;
                 try {
                     if(!IPS_VariableExists($camid)){
@@ -1850,13 +1853,13 @@ class MyWebsocketServer extends IPSModule
                 //Prüfen ob CamBild sich verändert hat.
                 $CamdataNewHash = md5(serialize($camdata));
                 $CamdataOldHash = $this->GetBuffer("CamBuffer");
-                $this->SendDebug("CamDatat- Hash Codes Neu - Alt: ", $CamdataNewHash." - ".$CamdataOldHash, 0);
+                $this->SendDebug("CamData- Hash Codes Neu - Alt: ", $CamdataNewHash." - ".$CamdataOldHash, 0);
                 if($CamdataNewHash !== $CamdataOldHash){
                     $paket['PaketNr'] = 3;
                     $c3 = array($camdata, $paket);
                     try {
                         $json3 = json_encode($c3);
-                        $this->SendDebug("JSON1 - Paket 3 Error", json_last_error(), 0);
+                        $this->SendDebug("JSON3 - Paket 3 Error", json_last_error(), 0);
                     } catch (JsonException $err) { }
                     if (json_last_error() !== JSON_ERROR_NONE) {
                         switch(json_last_error()) {
@@ -1886,7 +1889,7 @@ class MyWebsocketServer extends IPSModule
                         $this->SendDebug("PAKET2Fehler:",$fehler, 0);
                     }
                     else{
-                        $dataNewHash = md5($json1);
+                        $dataNewHash = md5($json3);
                         $this->SendDebug("PAKETJSON3:","sende Paket 3", 0);
                         $this->setvalue("DataSendToClient", "Paket 3");
                         $this->SendText($json3);
