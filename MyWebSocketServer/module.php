@@ -628,36 +628,38 @@ class MyWebsocketServer extends IPSModule
         $log = $this->ReadPropertyBoolean("ErrLog");
         try {
             preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $Data, $match);
-            
-
-            $SendKey = base64_encode(sha1($match[1] . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
-            $Header[] = 'HTTP/1.1 ' . HTTP_ERROR_CODES::ToString($Code);
-            if ($Code == HTTP_ERROR_CODES::Unauthorized) {
-                $Header[] = 'WWW-Authenticate: Basic';
-            }
-            //$Header[] = 'Date: '; // Datum fehlt !
-            $Header[] = 'Server: IP-Symcon Websocket Gateway';
-            if ($Code == HTTP_ERROR_CODES::Web_Socket_Protocol_Handshake) {
-                $Header[] = 'Connection: Upgrade';
-                $Header[] = 'Sec-WebSocket-Accept: ' . $SendKey;
-                $Header[] = 'Upgrade: websocket';
-                $Header[] = "\r\n";
-                $SendHeader = implode("\r\n", $Header);
+            if (isset($match)){
+                $SendKey = base64_encode(sha1($match[1] . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
+                $Header[] = 'HTTP/1.1 ' . HTTP_ERROR_CODES::ToString($Code);
+                if ($Code == HTTP_ERROR_CODES::Unauthorized) {
+                    $Header[] = 'WWW-Authenticate: Basic';
+                }
+                //$Header[] = 'Date: '; // Datum fehlt !
+                $Header[] = 'Server: IP-Symcon Websocket Gateway';
+                if ($Code == HTTP_ERROR_CODES::Web_Socket_Protocol_Handshake) {
+                    $Header[] = 'Connection: Upgrade';
+                    $Header[] = 'Sec-WebSocket-Accept: ' . $SendKey;
+                    $Header[] = 'Upgrade: websocket';
+                    $Header[] = "\r\n";
+                    $SendHeader = implode("\r\n", $Header);
+                } else {
+                    $Header[] = 'Content-Length:' . strlen(HTTP_ERROR_CODES::ToString($Code));
+                    $Header[] = "\r\n";
+                    $SendHeader = implode("\r\n", $Header) . HTTP_ERROR_CODES::ToString($Code);
+                }
+                $this->SendDebug('SendHandshake ' . $Client->ClientIP . ':' . $Client->ClientPort, $SendHeader, 0);
+                $SendData = $this->MakeJSON($Client, $SendHeader);
+                if ($SendData) {
+                    //Daten an I/O Schnittstelle senden
+                    $this->SendDataToParent($SendData);
+                }
             } else {
-                $Header[] = 'Content-Length:' . strlen(HTTP_ERROR_CODES::ToString($Code));
-                $Header[] = "\r\n";
-                $SendHeader = implode("\r\n", $Header) . HTTP_ERROR_CODES::ToString($Code);
-            }
-            $this->SendDebug('SendHandshake ' . $Client->ClientIP . ':' . $Client->ClientPort, $SendHeader, 0);
-            $SendData = $this->MakeJSON($Client, $SendHeader);
-            if ($SendData) {
-                //Daten an I/O Schnittstelle senden
-                $this->SendDataToParent($SendData);
+                $this->LogMessage("Websocket: Websocket-key nicht vorhanden.", KL_error); 
             }
         } catch (exception $e) {
             //code for exception
-            $this->ModErrorLog($log, "WebSocketServer", "SendHandshake-Data: ", $Data);
-            $this->ModErrorLog($log, "WebSocketServer", "SendHandshake-Match: ", $match);
+            $this->LogMessage("WebsocketServer: SendHandshake-Data:.".$Data, KL_error);
+            $this->LogMessage("WebsocketServer: SendHandshake-Match:".$match, KL_error);
         }
 
     }
@@ -850,7 +852,8 @@ class MyWebsocketServer extends IPSModule
     private function RemoveOneClient(Websocket_Client $Client)
     {
         $log = $this->ReadPropertyBoolean("ErrLog");
-        $this->ModErrorLog($log, "WebsocketServer", "Entferne Client aus Liste", $Client);
+        $this->ModErrorLog($log, "WebsocketServer", "Entferne Client aus Liste", $Client->ClientIP.$Client->ClientPort);
+        $this->LogMessage("WebsocketServer: Entferne Client aus Liste", $Client->ClientIP.$Client->ClientPort, KL_WARNING);
         $this->ClearClientBuffer($Client);
         $Clients = $this->Multi_Clients;
         $this->SendDebug("RemoveOneClient: ", "entferne Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
