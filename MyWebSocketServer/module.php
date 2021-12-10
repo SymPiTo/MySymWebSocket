@@ -853,7 +853,7 @@ class MyWebsocketServer extends IPSModule
     {
         $log = $this->ReadPropertyBoolean("ErrLog");
         $this->ModErrorLog($log, "WebsocketServer: Entferne Client aus Liste".$Client->ClientIP.$Client->ClientPort);
-        $this->LogMessage("WebsocketServer: Entferne Client aus Liste", $Client->ClientIP.$Client->ClientPort, KL_WARNING);
+        
         $this->ClearClientBuffer($Client);
         $Clients = $this->Multi_Clients;
         $this->SendDebug("RemoveOneClient: ", "entferne Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
