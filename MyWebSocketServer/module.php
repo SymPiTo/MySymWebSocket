@@ -852,7 +852,7 @@ class MyWebsocketServer extends IPSModule
     private function RemoveOneClient(Websocket_Client $Client)
     {
         $log = $this->ReadPropertyBoolean("ErrLog");
-        $this->ModErrorLog($log, "WebsocketServer", "Entferne Client aus Liste", $Client->ClientIP.$Client->ClientPort);
+        $this->ModErrorLog($log, "WebsocketServer: Entferne Client aus Liste".$Client->ClientIP.$Client->ClientPort);
         $this->LogMessage("WebsocketServer: Entferne Client aus Liste", $Client->ClientIP.$Client->ClientPort, KL_WARNING);
         $this->ClearClientBuffer($Client);
         $Clients = $this->Multi_Clients;
