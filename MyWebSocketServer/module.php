@@ -852,8 +852,8 @@ class MyWebsocketServer extends IPSModule
     private function RemoveOneClient(Websocket_Client $Client)
     {
         $log = $this->ReadPropertyBoolean("ErrLog");
-        $this->ModErrorLog($log, "WebsocketServer: Entferne Client aus Liste".$Client->ClientIP.$Client->ClientPort);
         
+        $this->LogMessage("WebsocketServer: Entferne Client aus Liste".$Client->ClientIP.$Client->ClientPort, KL_WARNING);
         $this->ClearClientBuffer($Client);
         $Clients = $this->Multi_Clients;
         $this->SendDebug("RemoveOneClient: ", "entferne Client: ". $Client->ClientIP.":".$Client->ClientPort, 0);
@@ -869,6 +869,7 @@ class MyWebsocketServer extends IPSModule
                     foreach ($cl as $key => $value) {
                         //$this->SendDebug("Verbundene Clients:".$key, $value->ClientIP, 0);
                         $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
+                        $this->LogMessage("WebsocketServer: Bereinigt & verbundener Client".$liste[$key], KL_WARNING);
                         $this->ModErrorLog($log, "WebsocketServer", "Bereinigt & verbundener Client", $liste[$key]);
                     }
                     if (!empty($liste)){
