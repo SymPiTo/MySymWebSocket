@@ -137,14 +137,17 @@
             "type": "List",
             "name": "WhiteList",
             "caption": "zugelassene Clients",
-            "rowcount": 0,
+            "rowcount": 5,
             "add": true,
             "delete": true,
+            "visible": true,
+            "enable": true,
             "columns": [
                 {
-                    "label": "IP-Adresse",
+                    "caption": "IP-Adresse",
+                    "name": "WhiteListIP",
                     "width": "200px",
-                    "add": "ddd",
+                    "add": "192.168.178.0",
                     "edit":{
                         "type": "ValidationTextBox"
                     }
@@ -152,7 +155,7 @@
                 },
                 {   "label": "aktiv",
                     "width": "200px",
-                    "add": "ddddd",
+                    "add": false,
                     "edit": {
                         "type": "CheckBox"
                     }
