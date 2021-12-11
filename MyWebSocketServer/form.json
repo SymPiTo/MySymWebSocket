@@ -142,7 +142,7 @@
             "type": "List",
             "name": "WhiteList",
             "caption": "zugelassene Clients",
-            "rowCount": 5,
+            
             "add": true,
             "delete": true,
             "sort": {
