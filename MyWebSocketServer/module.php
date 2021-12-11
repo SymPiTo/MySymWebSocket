@@ -1504,7 +1504,7 @@ class MyWebsocketServer extends IPSModule
         if (count($liste) > 0){
            $this->SendDebug('Client Liste =' , $liste, 0);
 
-            foreach ($Clients as $Client) {
+            foreach ($cl as $Client) {
 
                 /*
                  $ClientIP = $Client->ClientIP ;
