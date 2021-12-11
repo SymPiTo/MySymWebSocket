@@ -1489,8 +1489,8 @@ class MyWebsocketServer extends IPSModule
         //$Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         //$ClientList = $this->Multi_Clients->GetClients();
         $log = $this->ReadPropertyBoolean("ErrLog");
-        $Clients = $this->Multi_Clients;
-         
+        $Clients_Object = $this->Multi_Clients;
+        $array = json_decode(json_encode($Clients_Object), true); 
                         //alle verbundenen Clients in Variable schreiben
                         $cl = $Clients->GetClients();
                         //$this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
@@ -1500,7 +1500,7 @@ class MyWebsocketServer extends IPSModule
                         }
 
         //$Clients = $this->Multi_Clients->GetClients();
-        $this->SendDebug('SendText Funktion alle gefundenen clients ', (array) $Clients , 0);
+        $this->SendDebug('SendText Funktion alle gefundenen clients ', $array , 0);
         if ($Clients){
            $this->SendDebug('Client Liste =' , $Clients, 0);
 
