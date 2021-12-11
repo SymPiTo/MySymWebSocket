@@ -133,14 +133,6 @@
             "name": "Password",
             "type": "PasswordTextBox",
             "caption": "Password"
-        },
-        {
-            "type": "Label",
-            "label": "--------------------------------------------------"
-        },
-        {
-            "type": "Label",
-            "label": "--------------------------------------------------"
         }
     ],
     "actions": [
