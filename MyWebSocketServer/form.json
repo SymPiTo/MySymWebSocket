@@ -132,7 +132,37 @@
             "name": "Password",
             "type": "PasswordTextBox",
             "caption": "Password"
-        }
+        },
+        {
+            "type": "List",
+            "name": "WhiteList",
+            "caption": "zugelassene Clients",
+            "rowcount": 0,
+            "add": true,
+            "delete": true,
+            "columns": [
+                {
+                    "label": "IP-Adresse",
+                    "width": "200px",
+                    "add": "",
+                    "edit":{
+                        "type": "ValidationTextBox"
+                    }
+                     
+                },
+                {   "label": "aktiv",
+                    "width": "20px",
+                    "add": "",
+                    "edit": {
+                        "type": "CheckBox"
+                    }
+                    
+                }    
+
+            ]
+        
+
+        }  
 
     ],
     "actions": [{

@@ -629,6 +629,7 @@ class MyWebsocketServer extends IPSModule
         try {
             preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $Data, $match);
             if (isset($match)){
+                $this->LogMessage("WebsocketServer: SendHandshake-Data:.".$match[0], KL_DEBUG);
                 $SendKey = base64_encode(sha1($match[1] . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
                 $Header[] = 'HTTP/1.1 ' . HTTP_ERROR_CODES::ToString($Code);
                 if ($Code == HTTP_ERROR_CODES::Unauthorized) {
