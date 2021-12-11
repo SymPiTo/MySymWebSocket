@@ -1230,7 +1230,7 @@ class MyWebsocketServer extends IPSModule
         $Payload = utf8_decode($data->Buffer);
         $Clients = $this->Multi_Clients;
         $IncomingClient = new Websocket_Client($data->ClientIP, $data->ClientPort, WebSocketState::init);
-        $this->SendDebug("EIngehende Client Anfrage: ", $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
+        $this->SendDebug("EIngehende Client Anfrage: ", $IncomingClient->ClientIP, 0);
         //prüfen of Client in Whitelist enthalten, sonst ignorieren
         $safeClient = $this->checkWhitelist($IncomingClient->ClientIP);
         if($safeClient){
@@ -2070,6 +2070,7 @@ class MyWebsocketServer extends IPSModule
             $WhiteListData = json_decode($this->ReadPropertyString("WhiteList"));
             foreach($WhiteListData as $WhiteListDataRow) {
                 if(IPS_ObjectExists($WhiteListDataRow->WhiteListIP)) {
+                    $this->SendDebug('Vergleiche Whitelist: ' , $ClIP . ':' . $WhiteListDataRow->WhiteListIP, 0);
                     if ($ClIP == $WhiteListDataRow->WhiteListIP){
                         return true;
                     }
