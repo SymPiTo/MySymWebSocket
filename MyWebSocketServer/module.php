@@ -70,7 +70,7 @@ class MyWebsocketServer extends IPSModule
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
-        $this->RegisterPropertyString("WhiteList", "");
+        $this->RegisterPropertyString("WhiteList", "[]");
         $this->RegisterPropertyBoolean("Open", false);
         $this->RegisterPropertyBoolean("ErrLog", true);
         $this->RegisterPropertyInteger("UpdateInterval", 5000);
