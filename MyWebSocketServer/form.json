@@ -141,11 +141,9 @@
             "type": "List",
             "name": "WhiteList",
             "caption": "zugelassene Clients",
-            "rowcount": 20,
+            "rowcount": 2,
             "add": true,
             "delete": true,
-            "visible": true,
-            "enable": true,
             "sort": {
                 "column": "WhiteListIP",
                 "direction": "ascending"
@@ -175,8 +173,10 @@
                     
                 }    
 
-            ] 
-        
+            ], 
+            "values": [{
+
+                }]
 
         },  
         {
