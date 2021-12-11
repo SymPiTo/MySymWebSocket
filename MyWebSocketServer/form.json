@@ -142,13 +142,15 @@
             "delete": true,
             "visible": true,
             "enable": true,
-            "columns": [
+            "columns": 
+            [
                 {
                     "caption": "IP-Adresse",
                     "name": "WhiteListIP",
                     "width": "200px",
                     "add": "192.168.178.0",
-                    "edit":{
+                    "edit":
+                    {
                         "type": "ValidationTextBox"
                     }
                      
@@ -156,7 +158,8 @@
                 {   "label": "aktiv",
                     "width": "200px",
                     "add": false,
-                    "edit": {
+                    "edit": 
+                    {
                         "type": "CheckBox"
                     }
                     
