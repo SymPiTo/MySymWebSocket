@@ -1485,11 +1485,12 @@ class MyWebsocketServer extends IPSModule
     
         public function SendText(string $Text)
     {
-        $this->SendDebug('SendText Funktion wird ausgeführt' , $Text, 0);
+        
         //$Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         //$ClientList = $this->Multi_Clients->GetClients();
         $log = $this->ReadPropertyBoolean("ErrLog");
         $Clients = $this->Multi_Clients->GetClients();
+        $this->SendDebug('SendText Funktion wird ausgeführt' , $Client, 0);
         if ($Clients){
            $this->SendDebug('Client Liste =' , $Clients, 0);
 
