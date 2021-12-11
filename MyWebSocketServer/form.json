@@ -144,15 +144,15 @@
                 {
                     "label": "IP-Adresse",
                     "width": "200px",
-                    "add": "",
+                    "add": "ddd",
                     "edit":{
                         "type": "ValidationTextBox"
                     }
                      
                 },
                 {   "label": "aktiv",
-                    "width": "20px",
-                    "add": "",
+                    "width": "200px",
+                    "add": "ddddd",
                     "edit": {
                         "type": "CheckBox"
                     }
