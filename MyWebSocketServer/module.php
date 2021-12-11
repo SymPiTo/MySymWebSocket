@@ -2107,7 +2107,7 @@ class MyWebsocketServer extends IPSModule
                   }
               
 
-                $this->setValue((string) $ClientName, $list[$key]["ClientIP"].":".$list[$key]["ClientPort"]);
+                $this->setValue($ClientName, $list[$key]["ClientIP"].":".$list[$key]["ClientPort"]);
             }
         }
         Protected function unWriteClient($clientIP_Port){ 
