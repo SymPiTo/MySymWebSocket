@@ -175,7 +175,8 @@
 
             ], 
             "values": [{
-
+                "textWithValue": "This is a value text",
+                "textBox": "Initial TextBox text"
                 }]
 
         },  
