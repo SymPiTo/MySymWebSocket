@@ -1547,7 +1547,7 @@ class MyWebsocketServer extends IPSModule
                 }
                 */
              
-                //$this->SendDebug('Send Text Message to Multi-Client' . $liste->ClientIP . ':' . $liste->ClientPort, $Text, 0);
+                $this->SendDebug('Send Text Message to Multi-Client' . $Client->ClientIP . ':' . $Client->ClientPort, $Text, 0);
                 $this->SendDebug('Textlänge Message: ' , strlen($Text), 0);
                 $this->SendDebug('Status des Multi-Client' ,  WebSocketState::Connected , 0);
                 if(WebSocketState::Connected == 3){
@@ -1559,6 +1559,7 @@ class MyWebsocketServer extends IPSModule
         else{
             return false;
             //kein Client verbunden
+            $this->SendDebug('Kein Client verbunden: ' , "nicht verbunden", 0);
             $this->ModErrorLog($log, "WebSocketServer", "SendText: ", 'kein Client verbunden.');
         }
     } 
