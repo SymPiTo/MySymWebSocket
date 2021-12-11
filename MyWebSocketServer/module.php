@@ -1557,10 +1557,11 @@ class MyWebsocketServer extends IPSModule
             return true;
         }
         else{
-            return false;
+           
             //kein Client verbunden
             $this->SendDebug('Kein Client verbunden: ' , "nicht verbunden", 0);
             $this->ModErrorLog($log, "WebSocketServer", "SendText: ", 'kein Client verbunden.');
+            return false;
         }
     } 
 
