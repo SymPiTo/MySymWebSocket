@@ -2087,17 +2087,17 @@ class MyWebsocketServer extends IPSModule
             }
             */
             // changed 11-12-2021
-            $n = 0;
+             
             foreach ($list as $key => $value){
                 $n = strval($key);
                 $this->SendDebug("WRITE VALUE INDEX", $n, 0);
-                if ($n == 0) {$ClientName = "Client1";}
-                elseif($n == 1){$ClientName = "Client2";}
-                elseif($n == 2){$ClientName = "Client3";}
-                elseif($n == 3){$ClientName = "Client4";}
-                 
+                if ($key == 0) {$ClientName = "Client1";}
+                elseif($key == 1){$ClientName = "Client2";}
+                elseif($key == 2){$ClientName = "Client3";}
+                elseif($key == 3){$ClientName = "Client4";}
+                else($ClientName = "Client4");
 
-                $this->setValue((string) $ClientName, $list[$key]["ClientIP"].":".$list[$key]["ClientPort"]);
+                $this->setValue((string) $ClientName, $list[$key]["ClientIP"].$list[$key]["ClientPort"]);
             }
         }
         Protected function unWriteClient($clientIP_Port){ 
