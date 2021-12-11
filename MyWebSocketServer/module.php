@@ -1215,7 +1215,7 @@ class MyWebsocketServer extends IPSModule
  
 
     /**
-     * Empfängt Daten vom Parent ServerSocket I/O port9000.
+     * Empfängt Daten vom Parent ServerSocket I/O auf port9000.
      *
      * @access public
      * @param string $JSONString Das empfangene JSON-kodierte Objekt vom Parent.
@@ -1229,6 +1229,9 @@ class MyWebsocketServer extends IPSModule
         $Payload = utf8_decode($data->Buffer);
         $Clients = $this->Multi_Clients;
         $IncomingClient = new Websocket_Client($data->ClientIP, $data->ClientPort, WebSocketState::init);
+        //prüfen of Client in Whitelist enthalten, sonst ignorieren
+        $safeClient = $this->checkWhitelist($data->ClientIP);
+
         //prüfen ob Client schon in Clients - Liste
         $Client = $Clients->GetByIpPort($IncomingClient);
         $this->SendDebug(($Client ? 'OLD' : 'NEW') . ' CLIENT', SocketType::ToString($data->Type), 0);
@@ -1276,7 +1279,7 @@ class MyWebsocketServer extends IPSModule
                     $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "Client send closed");
                    
                     $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ",  $Payload);
-  /* temporär stillgelegt zum testen   */               
+              
                     $Clients->Remove($Client);
                     $this->ClearClientBuffer($Client);
                     $this->SendDebug('unWrite', $Client->ClientIP.":".$Client->ClientPort, 0);
@@ -2048,7 +2051,17 @@ class MyWebsocketServer extends IPSModule
                 setValue($this->GetIDForIdent("Client4"),''); 
             }     
         }
-  
+
+
+
+
+
+        Protected function checkWhitelist($ClientIP){
+           
+        
+            
+     
+        }
 }
 
 
