@@ -2092,6 +2092,7 @@ class MyWebsocketServer extends IPSModule
                 elseif($key == 1){$ClientName = "Client2";}
                 elseif($key == 2){$ClientName = "Client3";}
                 elseif($key == 3){$ClientName = "Client4";}
+                else($ClientName = "");
 
                 $this->setValue((string) $ClientName, $list[$key]["ClientIP"].$list[$key]["ClientPort"]);
             }
