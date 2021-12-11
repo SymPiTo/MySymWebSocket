@@ -177,8 +177,7 @@
 
             ], 
             "values": [{
-                "WhiteListIP": "This is a value text",
-                "safeIP": "Initial TextBox text"
+
                 }]
 
         },  
