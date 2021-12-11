@@ -154,7 +154,7 @@
                     "caption": "IP-Adresse",
                     "name": "WhiteListIP",
                     "width": "auto",
-                    "add": "192.168.178.0",
+                    "add": "",
                     "edit":
                     {
                         "caption": "IP",
@@ -163,7 +163,7 @@
                      
                 },
                 {   
-                    "caption": "erlaubt",
+                    "caption": "aktivIP",
                     "name": "safeIP",
                     "width": "auto",
                     "add": false,
@@ -176,10 +176,7 @@
                 }    
 
             ], 
-            "values": [{
-                "WhiteListIP": "192.168.178.0",
-                "safeIP": true
-                }]
+            "values": []
 
         },  
         {
