@@ -2087,9 +2087,9 @@ class MyWebsocketServer extends IPSModule
             }
             */
             // changed 11-12-2021
-             
+            $n = 0; 
             foreach ($list as $key => $value){
-                $n = key();
+                
                 $this->SendDebug("WRITE VALUE INDEX", $n, 0);
                 switch ($n) {
                     case 0:
@@ -2105,7 +2105,7 @@ class MyWebsocketServer extends IPSModule
                         $ClientName = "Client4";
                         break;                 
                 }
-          
+                $n = $n + 1;
 
                 $this->setValue((string) $ClientName, $list[$key]["ClientIP"].":".$list[$key]["ClientPort"]);
             }
