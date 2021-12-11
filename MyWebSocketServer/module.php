@@ -2060,16 +2060,18 @@ class MyWebsocketServer extends IPSModule
         //////////////////////////////////////////////////////////////////////////////*/
         Protected function writeClients($list){ 
             //CLients in 4 Variable schreiben
-             
+            
+           
+            $this->setValue("Client1",'');   
+            $this->setValue("Client2",'');    
+            $this->setValue("Client3",'');    
+            $this->setValue("Client4",'');  
+            /* 
             $n = 0;
-            setValue($this->GetIDForIdent("Client1"),'');   
-            setValue($this->GetIDForIdent("Client2"),'');    
-            setValue($this->GetIDForIdent("Client3"),'');    
-            setValue($this->GetIDForIdent("Client4"),'');   
-            foreach ($list as $key => $value) {
+            foreach ($list as $client) {
                 
                 if($n == 0){
-                    $this->setValue("Client1", $value);
+                    $this->setValue("Client1", $);
                 }
                 elseif($n == 1){
                     $this->setValue("Client2", $value);
@@ -2082,8 +2084,11 @@ class MyWebsocketServer extends IPSModule
                 }  
                 $n = $n + 1;
             }
-                      
-          
+            */
+            // changed 11-12-2021
+            foreach ($list as $key => $value){
+                $this->setValue("Client".($key-1), $list[$key]["ClientIP"].$list[$key]["ClientPort"]);
+            }
         }
         Protected function unWriteClient($clientIP_Port){ 
             //CLients in 4 Variable schreiben
