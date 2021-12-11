@@ -162,7 +162,9 @@
                     }
                      
                 },
-                {   "label": "aktiv",
+                {   
+                    "caption": "erlaubt",
+                    "name": "safeIP",
                     "width": "auto",
                     "add": false,
                     "edit": 
@@ -175,8 +177,8 @@
 
             ], 
             "values": [{
-                "textWithValue": "This is a value text",
-                "textBox": "Initial TextBox text"
+                "WhiteListIP": "This is a value text",
+                "safeIP": "Initial TextBox text"
                 }]
 
         },  
