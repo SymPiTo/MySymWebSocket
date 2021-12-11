@@ -39,50 +39,7 @@
             "type": "NumberSpinner",
             "caption": "Timeout"
         },
-        {
-            "type": "List",
-            "name": "WhiteList",
-            "caption": "zugelassene Clients",
-            "rowcount": 5,
-            "add": true,
-            "delete": true,
-            "sort": {
-                "column": "WhiteListIP",
-                "direction": "ascending"
-            },
-            "columns": 
-            [
-                {
-                    "caption": "IP-Adresse",
-                    "name": "WhiteListIP",
-                    "width": "auto",
-                    "visible": true,
-                    "add": "",
-                    "edit":
-                    {
-                        "caption": "IP",
-                        "type": "ValidationTextBox"
-                    }
-                     
-                },
-                {   
-                    "caption": "aktivIP",
-                    "name": "safeIP",
-                    "width": "auto",
-                    "visible": true,
-                    "add": false,
-                    "edit": 
-                    {
-                        "caption": "Aktiviert",
-                        "type": "CheckBox"
-                    }
-                    
-                }    
 
-            ], 
-            "values": []
-
-        },  
         {
             "type": "Label",
             "label": "Caution: Only use TLS with authentication if the port is accessible externally!"
@@ -189,7 +146,51 @@
     "actions": [{
         "type": "Button",
         "caption": "Create WSS-Variable and Messages",
-        "onClick": "MyWSS_RegisterIPSMessages($id);"
+        "onClick": "MyWSS_RegisterIPSMessages($id);",
+        {
+            "type": "List",
+            "name": "WhiteList",
+            "caption": "zugelassene Clients",
+            "rowcount": 5,
+            "add": true,
+            "delete": true,
+            "sort": {
+                "column": "WhiteListIP",
+                "direction": "ascending"
+            },
+            "columns": 
+            [
+                {
+                    "caption": "IP-Adresse",
+                    "name": "WhiteListIP",
+                    "width": "auto",
+                    "visible": true,
+                    "add": "",
+                    "edit":
+                    {
+                        "caption": "IP",
+                        "type": "ValidationTextBox"
+                    }
+                     
+                },
+                {   
+                    "caption": "aktivIP",
+                    "name": "safeIP",
+                    "width": "auto",
+                    "visible": true,
+                    "add": false,
+                    "edit": 
+                    {
+                        "caption": "Aktiviert",
+                        "type": "CheckBox"
+                    }
+                    
+                }    
+
+            ], 
+            "values": []
+
+        },  
     }],
     "status": [{
             "code": 101,
