@@ -1223,6 +1223,7 @@ class MyWebsocketServer extends IPSModule
      */
     public function ReceiveData($JSONString)
     {
+        $this->SendDebug('incoming', 'Data', 0);
         $log = $this->ReadPropertyBoolean("ErrLog");
         $data = json_decode($JSONString);
         unset($data->DataID);
@@ -2107,7 +2108,7 @@ class MyWebsocketServer extends IPSModule
                 }
                 $n = $n + 1;
 
-                $this->setValue((string) $ClientName, $list[$key]["ClientIP"].":".$list[$key]["ClientPort"]);
+                $this->setValue($ClientName, $list[$key]["ClientIP"].":".$list[$key]["ClientPort"]);
             }
         }
         Protected function unWriteClient($clientIP_Port){ 
