@@ -70,6 +70,7 @@ class MyWebsocketServer extends IPSModule
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
+        $this->RegisterPropertyString("WhiteList", "");
         $this->RegisterPropertyBoolean("Open", false);
         $this->RegisterPropertyBoolean("ErrLog", true);
         $this->RegisterPropertyInteger("UpdateInterval", 5000);
@@ -1231,65 +1232,72 @@ class MyWebsocketServer extends IPSModule
         $IncomingClient = new Websocket_Client($data->ClientIP, $data->ClientPort, WebSocketState::init);
         //prüfen of Client in Whitelist enthalten, sonst ignorieren
         $safeClient = $this->checkWhitelist($data->ClientIP);
-
-        //prüfen ob Client schon in Clients - Liste
-        $Client = $Clients->GetByIpPort($IncomingClient);
-        $this->SendDebug(($Client ? 'OLD' : 'NEW') . ' CLIENT', SocketType::ToString($data->Type), 0);
-        switch ($data->Type) {
-            case 0: /* Data */
-                if ($Client === false) {
-                    $this->SendDebug('no Connection for Data found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
-                    $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "no Connection for Data found - Verbindung wird geschlossen.");
-                    $this->CloseConnection($IncomingClient);
-                } else {
-                    $this->ProcessIncomingData($Client, $Payload);
-                    $Clients->Update($Client);
-                    
-                }
-                break;
-            case 1: /* Connected */
-                if (!$this->NoNewClients) {
-                    $this->SendDebug('new Connection', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
-                    $this->ClearClientBuffer($IncomingClient);
-                    $Clients->Update($IncomingClient);
-
-               
-
-
- 
-                    //added 4.1.2020
-
-                    //alle verbundenen Clients in Variable schreiben
-                    $cl = $Clients->GetClients();
-                     //$this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
-                    foreach ($cl as $key => $value) {
-                        //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
-                        $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
+        if($safeClient){
+            //prüfen ob Client schon in Clients - Liste
+            $Client = $Clients->GetByIpPort($IncomingClient);
+            $this->SendDebug(($Client ? 'OLD' : 'NEW') . ' CLIENT', SocketType::ToString($data->Type), 0);
+            switch ($data->Type) {
+                case 0: /* Data */
+                    if ($Client === false) {
+                        $this->SendDebug('no Connection for Data found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
+                        $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "no Connection for Data found - Verbindung wird geschlossen.");
+                        $this->LogMessage("WebsocketServer: Receive Data: no Connection for Data found - Verbindung wird geschlossen.", KL_CUSTOM);
+                        $this->CloseConnection($IncomingClient);
+                    } else {
+                        $this->ProcessIncomingData($Client, $Payload);
+                        $Clients->Update($Client);
+                        
                     }
-                    $this->writeClients($liste);
-                  
+                    break;
+                case 1: /* Connected */
+                    if (!$this->NoNewClients) {
+                        $this->SendDebug('new Connection', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
+                        $this->LogMessage("WebsocketServer: Eingehende Verbindung.".$IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, KL_CUSTOM);
+                        $this->ClearClientBuffer($IncomingClient);
+                        $Clients->Update($IncomingClient);
 
-                }
-                break;
-            case 2: /* Disconnected */
-                if ($Client === false) {
-                    $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "no Connection to disconnect found");
-                    $this->SendDebug('no Connection to disconnect found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
-                } else {
-                    $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "Client send closed");
-                   
-                    $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ",  $Payload);
-              
-                    $Clients->Remove($Client);
-                    $this->ClearClientBuffer($Client);
-                    $this->SendDebug('unWrite', $Client->ClientIP.":".$Client->ClientPort, 0);
-                    $this->unWriteClient($Client->ClientIP.":".$Client->ClientPort);
+                
+
+
     
-                }
-                break;
+                        //added 4.1.2020
+
+                        //alle verbundenen Clients in Variable schreiben
+                        $cl = $Clients->GetClients();
+                        //$this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
+                        foreach ($cl as $key => $value) {
+                            //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
+                            $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
+                        }
+                        $this->writeClients($liste);
+                    
+
+                    }
+                    break;
+                case 2: /* Disconnected */
+                    if ($Client === false) {
+                        $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "no Connection to disconnect found");
+                        $this->LogMessage("WebsocketServer: Receive Data: ", "no Connection to disconnect found.", KL_CUSTOM);
+                        $this->SendDebug('no Connection to disconnect found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
+                    } else {
+                        $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "Client send closed");
+                    
+                        $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ",  $Payload);
+                
+                        $Clients->Remove($Client);
+                        $this->ClearClientBuffer($Client);
+                        $this->SendDebug('unWrite', $Client->ClientIP.":".$Client->ClientPort, 0);
+                        $this->unWriteClient($Client->ClientIP.":".$Client->ClientPort);
+        
+                    }
+                    break;
+            }
+            $this->Multi_Clients = $Clients;
+            $this->SetNextTimer();
         }
-        $this->Multi_Clients = $Clients;
-        $this->SetNextTimer();
+        else{
+            $this->LogMessage("WebsocketServer: Whiliste Check-nicht zugelassene IP:".$data->ClientIP, KL_CUSTOM);
+        }
     }
 
 
@@ -2056,11 +2064,18 @@ class MyWebsocketServer extends IPSModule
 
 
 
-        Protected function checkWhitelist($ClientIP){
-           
-        
-            
-     
+        Protected function checkWhitelist($ClIP){
+            $WhiteListData = json_decode($this->ReadPropertyString("WhiteList"));
+            foreach($WhiteListData as $WhiteListDataRow) {
+                if(IPS_ObjectExists($WhiteListDataRow->WhiteListIP)) {
+                    if ($ClIP == $WhiteListDataRow->WhiteListIP){
+                        return true;
+                    }
+                } else {
+   
+                }						
+            };
+            return false;
         }
 }
 
