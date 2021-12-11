@@ -1490,9 +1490,9 @@ class MyWebsocketServer extends IPSModule
         //$ClientList = $this->Multi_Clients->GetClients();
         $log = $this->ReadPropertyBoolean("ErrLog");
         $Clients = $this->Multi_Clients;
-        $cl = $Clients->GetClients();
+        $cll = $Clients->GetClients();
         //$Clients = $this->Multi_Clients->GetClients();
-        $this->SendDebug('SendText Funktion alle gefundenen clients ', json_decode($cl, true), 0);
+        $this->SendDebug('SendText Funktion alle gefundenen clients ', $cll[0] , 0);
         if ($Clients){
            $this->SendDebug('Client Liste =' , $Clients, 0);
 
