@@ -2068,6 +2068,8 @@ class MyWebsocketServer extends IPSModule
 
         Protected function checkWhitelist($ClIP){
             $WhiteListData = json_decode($this->ReadPropertyString("WhiteList"));
+            $this->SendDebug('checkWhitelist: ' , $ClIP, 0);
+            $this->SendDebug('checkWhitelist: ' , $WhiteListData, 0);
             foreach($WhiteListData as $WhiteListDataRow) {
                 if(IPS_ObjectExists($WhiteListDataRow->WhiteListIP)) {
                     $this->SendDebug('Vergleiche Whitelist: ' , $ClIP . ':' . $WhiteListDataRow->WhiteListIP, 0);
