@@ -2104,10 +2104,7 @@ class MyWebsocketServer extends IPSModule
                     case 3:
                         $ClientName = "Client4";
                         break;
-                    default:
-                        $ClientName = "Client4";
-                        break;
-                }
+                  }
               
 
                 $this->setValue((string) $ClientName, $list[$key]["ClientIP"].":".$list[$key]["ClientPort"]);
