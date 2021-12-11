@@ -1253,7 +1253,7 @@ class MyWebsocketServer extends IPSModule
                 case 1: /* Connected */
                     if (!$this->NoNewClients) {
                         $this->SendDebug('new Connection', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
-                        $this->LogMessage("WebsocketServer: Eingehende Verbindung.".$IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, KL_CUSTOM);
+                        $this->LogMessage("WebsocketServer: Eingehende Verbindung.".$IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, KL_MESSAGE );
                         $this->ClearClientBuffer($IncomingClient);
                         $Clients->Update($IncomingClient);
 
