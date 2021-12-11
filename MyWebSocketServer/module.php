@@ -1489,10 +1489,10 @@ class MyWebsocketServer extends IPSModule
         //$Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         //$ClientList = $this->Multi_Clients->GetClients();
         $log = $this->ReadPropertyBoolean("ErrLog");
-        $Clients = $this->Multi_Clients;
+         
          
                         //alle verbundenen Clients in Variable schreiben
-                        $cl = $Clients->GetClients();
+                        $cl = $this->Multi_Clients->GetClients();
                         //$this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
                         foreach ($cl as $key => $value) {
                             //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
