@@ -1690,7 +1690,7 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	    public function sendIPSVars(){
-
+            $liste = array();
             $Clients = $this->Multi_Clients;
             //alle verbundenen Clients in Variable schreiben
             $cl = $Clients->GetClients();
