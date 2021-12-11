@@ -2091,11 +2091,21 @@ class MyWebsocketServer extends IPSModule
             foreach ($list as $key => $value){
                 $n = key();
                 $this->SendDebug("WRITE VALUE INDEX", $n, 0);
-                if ($key == 0) {$ClientName = "Client1";}
-                elseif($key == 1){$ClientName = "Client2";}
-                elseif($key == 2){$ClientName = "Client3";}
-                elseif($key == 3){$ClientName = "Client4";}
-                else($ClientName = "Client4");
+                switch ($n) {
+                    case 0:
+                        $ClientName = "Client1";
+                        break;
+                    case 1:
+                        $ClientName = "Client2";
+                        break;
+                    case 2:
+                        $ClientName = "Client3";
+                        break;
+                    case 3:
+                        $ClientName = "Client4";
+                        break;                 
+                }
+          
 
                 $this->setValue((string) $ClientName, $list[$key]["ClientIP"].$list[$key]["ClientPort"]);
             }
