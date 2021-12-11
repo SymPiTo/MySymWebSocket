@@ -2092,7 +2092,7 @@ class MyWebsocketServer extends IPSModule
                 elseif($key == 2){$ClientName = "Client3";}
                 elseif($key == 3){$ClientName = "Client4";}
 
-                $this->setValue($this->GetIDForIdent($ClientName), $list[$key]["ClientIP"].$list[$key]["ClientPort"]);
+                $this->setValue((string) $ClientName, $list[$key]["ClientIP"].$list[$key]["ClientPort"]);
             }
         }
         Protected function unWriteClient($clientIP_Port){ 
