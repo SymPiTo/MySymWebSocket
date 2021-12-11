@@ -141,17 +141,21 @@
             "type": "List",
             "name": "WhiteList",
             "caption": "zugelassene Clients",
-            "rowcount": 5,
+            "rowcount": 20,
             "add": true,
             "delete": true,
             "visible": true,
             "enable": true,
+            "sort": {
+                "column": "WhiteListIP",
+                "direction": "ascending"
+            },
             "columns": 
             [
                 {
                     "caption": "IP-Adresse",
                     "name": "WhiteListIP",
-                    "width": "200px",
+                    "width": "auto",
                     "add": "192.168.178.0",
                     "edit":
                     {
@@ -161,7 +165,7 @@
                      
                 },
                 {   "label": "aktiv",
-                    "width": "200px",
+                    "width": "auto",
                     "add": false,
                     "edit": 
                     {
@@ -171,12 +175,14 @@
                     
                 }    
 
-            ],
-            "values":[]
+            ] 
         
 
-        }  
-
+        },  
+        {
+            "type": "Label",
+            "label": "--------------------------------------------------"
+        }
     ],
     "actions": [{
         "type": "Button",
