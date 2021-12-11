@@ -2087,7 +2087,8 @@ class MyWebsocketServer extends IPSModule
             */
             // changed 11-12-2021
             foreach ($list as $key => $value){
-                $this->SendDebug("WRITE VALUE INDEX", (string)$key, 0);
+                $n = strval($key);
+                $this->SendDebug("WRITE VALUE INDEX", ($n, 0);
                 if ($key == 0) {$ClientName = "Client1";}
                 elseif($key == 1){$ClientName = "Client2";}
                 elseif($key == 2){$ClientName = "Client3";}
