@@ -147,19 +147,6 @@
             },
             "columns": 
             [
-                {
-                    "caption": "IP-Adresse",
-                    "name": "WhiteListIP",
-                    "width": "auto",
-                    "visible": true,
-                    "add": "",
-                    "edit":
-                    {
-                        "caption": "IP",
-                        "type": "ValidationTextBox"
-                    }
-                     
-                },
                 {   
                     "caption": "aktivIP",
                     "name": "safeIP",
@@ -172,8 +159,20 @@
                         "type": "CheckBox"
                     }
                     
-                }    
-
+                } ,
+                {
+                    "caption": "IP-Adresse",
+                    "name": "WhiteListIP",
+                    "width": "auto",
+                    "visible": true,
+                    "add": "",
+                    "edit":
+                    {
+                        "caption": "IP",
+                        "type": "ValidationTextBox"
+                    }
+                     
+                }
             ], 
             "values": []
 
