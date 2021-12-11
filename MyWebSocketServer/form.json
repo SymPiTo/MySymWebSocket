@@ -154,6 +154,7 @@
                     "caption": "IP-Adresse",
                     "name": "WhiteListIP",
                     "width": "auto",
+                    "visible": true,
                     "add": "",
                     "edit":
                     {
@@ -166,6 +167,7 @@
                     "caption": "aktivIP",
                     "name": "safeIP",
                     "width": "auto",
+                    "visible": true,
                     "add": false,
                     "edit": 
                     {
