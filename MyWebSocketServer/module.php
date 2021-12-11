@@ -1297,8 +1297,8 @@ class MyWebsocketServer extends IPSModule
             $this->SetNextTimer();
         }
         else{
-            $this->LogMessage("WebsocketServer: Whiliste Check-nicht zugelassene IP:".$data->ClientIP, KL_CUSTOM);
-            $this->SendDebug('ebsocketServer: Whiliste Check-nicht zugelassene IP:', $data->ClientIP, 0);
+            $this->LogMessage("WebsocketServer: Whiliste Check-nicht zugelassene IP:".$IncomingClient->ClientIP, KL_CUSTOM);
+            $this->SendDebug('WebsocketServer: Whiliste Check-nicht zugelassene IP:', $IncomingClient->ClientIP, 0);
         }
     }
 
