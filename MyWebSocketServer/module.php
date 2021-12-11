@@ -2087,7 +2087,12 @@ class MyWebsocketServer extends IPSModule
             */
             // changed 11-12-2021
             foreach ($list as $key => $value){
-                $this->setValue("Client".($key-1), $list[$key]["ClientIP"].$list[$key]["ClientPort"]);
+                if ($key == 0) {$ClientName = "Client1";}
+                elseif($key == 1){$ClientName = "Client2";}
+                elseif($key == 2){$ClientName = "Client3";}
+                elseif($key == 3){$ClientName = "Client4";}
+
+                $this->setValue($ClientName, $list[$key]["ClientIP"].$list[$key]["ClientPort"]);
             }
         }
         Protected function unWriteClient($clientIP_Port){ 
