@@ -457,8 +457,8 @@ class WebSocket_ClientList
      */
     public function GetClientsList()
     {
-        $Clientliste = array();
-        $cl = $Clients->GetClients();
+        $Clientliste = array(); 
+        $cl = $this->Items->GetClients();
         foreach ($cl as $key => $value) {
             $Clientlist[$key]["ClientIP"] =  $value->ClientIP;
             $Clientlist[$key]["ClientPort"] =  $value->ClientPort;
