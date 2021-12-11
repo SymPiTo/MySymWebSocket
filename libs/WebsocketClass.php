@@ -457,7 +457,7 @@ class WebSocket_ClientList
      */
     public function GetClientsList()
     {
-        $Clientliste = array(); 
+        $Clientlist = array(); 
         $Clients =  $this->Items;
          
         foreach ($Clients as $key => $value) {
