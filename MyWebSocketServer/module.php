@@ -1278,7 +1278,7 @@ class MyWebsocketServer extends IPSModule
                 case 2: /* Disconnected */
                     if ($Client === false) {
                         $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "no Connection to disconnect found");
-                        $this->LogMessage("WebsocketServer: Receive Data: ", "no Connection to disconnect found.", KL_MESSAGE);
+                        $this->LogMessage("WebsocketServer: Receive Data: no Connection to disconnect found.", KL_MESSAGE);
                         $this->SendDebug('no Connection to disconnect found', $IncomingClient->ClientIP . ':' . $IncomingClient->ClientPort, 0);
                     } else {
                         $this->ModErrorLog($log, "WebsocketServer", "Receive Data: ", "Client send closed");
