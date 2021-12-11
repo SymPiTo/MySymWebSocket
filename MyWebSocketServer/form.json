@@ -143,10 +143,13 @@
             "label": "--------------------------------------------------"
         }
     ],
-    "actions": [{
+    "actions": [
+        {
         "type": "Button",
         "caption": "Create WSS-Variable and Messages",
-        "onClick": "MyWSS_RegisterIPSMessages($id);",
+        "onClick": "MyWSS_RegisterIPSMessages($id);"
+
+        },
         {
             "type": "List",
             "name": "WhiteList",
@@ -190,8 +193,8 @@
             ], 
             "values": []
 
-        },  
-    }],
+        }
+    ],
     "status": [{
             "code": 101,
             "icon": "inactive",
