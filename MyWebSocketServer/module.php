@@ -2075,17 +2075,18 @@ class MyWebsocketServer extends IPSModule
             
             $this->SendDebug("unWrite del", $clientIP_Port, 0);
             if($this->getvalue("Client1") == $clientIP_Port){
-                setValue($this->GetIDForIdent("Client1"),'');
+                $this->setValue("Client1",'');
             }
             if($this->getvalue("Client2") == $clientIP_Port){
-                setValue($this->GetIDForIdent("Client2"),''); 
+                $this->setValue("Client2",''); 
             }
             if($this->getvalue("Client3") == $clientIP_Port){
-                setValue($this->GetIDForIdent("Client3"),'');
+                $this->setValue("Client3",'');
             }
             if($this->getvalue("Client4") == $clientIP_Port){
-                setValue($this->GetIDForIdent("Client4"),''); 
+                $this->setValue("Client4",''); 
             }     
+            $this->setvalue("DataSendToClient", "stopped");
         }
 
 
