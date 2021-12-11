@@ -139,22 +139,10 @@
             "label": "--------------------------------------------------"
         },
         {
-            "type": "Label",
-            "label": "--------------------------------------------------"
-        }
-    ],
-    "actions": [
-        {
-        "type": "Button",
-        "caption": "Create WSS-Variable and Messages",
-        "onClick": "MyWSS_RegisterIPSMessages($id);"
-
-        },
-        {
             "type": "List",
             "name": "WhiteList",
             "caption": "zugelassene Clients",
-            "rowcount": 5,
+            "rowCount": 5,
             "add": true,
             "delete": true,
             "sort": {
@@ -193,7 +181,20 @@
             ], 
             "values": []
 
+        },
+        {
+            "type": "Label",
+            "label": "--------------------------------------------------"
         }
+    ],
+    "actions": [
+        {
+        "type": "Button",
+        "caption": "Create WSS-Variable and Messages",
+        "onClick": "MyWSS_RegisterIPSMessages($id);"
+
+        }
+
     ],
     "status": [{
             "code": 101,
