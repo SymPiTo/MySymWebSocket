@@ -2069,7 +2069,7 @@ class MyWebsocketServer extends IPSModule
             foreach ($list as $client) {
                 
                 if($n == 0){
-                    $this->setValue("Client1", $);
+                    $this->setValue("Client1", $value);
                 }
                 elseif($n == 1){
                     $this->setValue("Client2", $value);
