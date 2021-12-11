@@ -450,6 +450,21 @@ class WebSocket_ClientList
         }
         return $FoundClient;
     }
+
+        /**
+     * Liefert ein Array mit allen Clients.
+     * @return Websocket_Client[] Ein Array mit allen Websocket_Client-Objekten.
+     */
+    public function GetClientsList()
+    {
+        $Clientliste = array();
+        $cl = $Clients->GetClients();
+        foreach ($cl as $key => $value) {
+            $Clientlist[$key]["ClientIP"] =  $value->ClientIP;
+            $Clientlist[$key]["ClientPort"] =  $value->ClientPort;
+        }
+        return $Clientlist;
+    }
 }
 
 

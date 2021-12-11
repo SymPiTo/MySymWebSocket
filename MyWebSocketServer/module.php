@@ -1264,12 +1264,16 @@ class MyWebsocketServer extends IPSModule
                         //added 4.1.2020
 
                         //alle verbundenen Clients in Variable schreiben
+                        /*
                         $cl = $Clients->GetClients();
                         //$this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
                         foreach ($cl as $key => $value) {
                             //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
                             $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
                         }
+                        */
+                        //changed new class-function 11.12.2021
+                        $liste = $Clients->GetClientsList();
                         $this->writeClients($liste);
                     
 
@@ -1490,7 +1494,7 @@ class MyWebsocketServer extends IPSModule
         //$ClientList = $this->Multi_Clients->GetClients();
         $log = $this->ReadPropertyBoolean("ErrLog");
         $Clients = $this->Multi_Clients;
-         
+        /* 
         //alle verbundenen Clients in Variable schreiben
         $cl = $Clients->GetClients();
         //$this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
@@ -1498,6 +1502,10 @@ class MyWebsocketServer extends IPSModule
              //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
             $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
         }
+        */
+
+        //changed new class-function 11.12.2021
+        $liste = $Clients->GetClientsList();
 
         //$Clients = $this->Multi_Clients->GetClients();
        
@@ -1692,13 +1700,20 @@ class MyWebsocketServer extends IPSModule
 	    public function sendIPSVars(){
             $liste = array();
             $Clients = $this->Multi_Clients;
-            //alle verbundenen Clients in Variable schreiben
-            $cl = $Clients->GetClients();
+           
+            
+            
             //$this->SendDebug("Verbundener Client", $IncomingClient->state, 0);
+            /*
+            $cl = $Clients->GetClients();
             foreach ($cl as $key => $value) {
                  //$this->SendDebug("Verbundene Clients", $value->ClientIP, 0);
                 $liste[$key] =  $value->ClientIP.":". $value->ClientPort;
             }
+            */
+            //changed new class-function 11.12.2021
+            $liste = $Clients->GetClientsList();
+
             //wenn Clients verbunden sind, dann senden
             if (count($liste) > 0){
 
