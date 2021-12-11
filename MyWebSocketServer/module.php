@@ -1485,6 +1485,7 @@ class MyWebsocketServer extends IPSModule
     
         public function SendText(string $Text)
     {
+        $this->SendDebug('SendText Funktion wird ausgeführt' , $Text, 0);
         //$Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         //$ClientList = $this->Multi_Clients->GetClients();
         $log = $this->ReadPropertyBoolean("ErrLog");
@@ -1667,6 +1668,7 @@ class MyWebsocketServer extends IPSModule
         ...............................................................................
          * holt die Variablen aus der Event Liste und packt sie in ein Array
          * und sendet sie an den client
+         * Diese Funktion wird zyklisch alle x sekunden ausgeführt
         ...............................................................................
         Parameters: 
             none.
