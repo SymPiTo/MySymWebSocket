@@ -134,6 +134,10 @@
             "caption": "Password"
         },
         {
+            "type": "Label",
+            "label": "--------------------------------------------------"
+        },
+        {
             "type": "List",
             "name": "WhiteList",
             "caption": "zugelassene Clients",
