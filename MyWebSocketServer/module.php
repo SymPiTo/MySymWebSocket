@@ -1231,7 +1231,7 @@ class MyWebsocketServer extends IPSModule
         $Clients = $this->Multi_Clients;
         $IncomingClient = new Websocket_Client($data->ClientIP, $data->ClientPort, WebSocketState::init);
         $this->SendDebug("Eingehende Client Anfrage: ", $IncomingClient->ClientIP, 0);
-        $this->LogMessage("WebsocketServer: Receive Clientanfrage: ".$IncomingClient, KL_MESSAGE);
+        $this->LogMessage("WebsocketServer: Receive Clientanfrage: ".$IncomingClient->ClientIP, KL_MESSAGE);
         //prüfen of Client in Whitelist enthalten, sonst ignorieren
         $safeClient = $this->checkWhitelist($IncomingClient->ClientIP);
         if($safeClient){
