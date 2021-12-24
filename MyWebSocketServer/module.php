@@ -1425,6 +1425,7 @@ class MyWebsocketServer extends IPSModule
      */
     public function SendPing(string $ClientIP, string $ClientPort, string $Text)
     {
+        $this->LogMessage("WebsocketServer: sende PING", KL_MESSAGE);
         $log = $this->ReadPropertyBoolean("ErrLog");
         $Client = $this->Multi_Clients->GetByIpPort(new Websocket_Client($ClientIP, $ClientPort));
         if ($Client === false) {
