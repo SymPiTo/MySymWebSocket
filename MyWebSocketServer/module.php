@@ -1344,53 +1344,59 @@ class MyWebsocketServer extends IPSModule
     public function CommandToServer(string $Data){
         $this->SendDebug('Received following Data from Client', $Data, 0); 
  
-        SetValueString(26720, "Data");
+        SetValueString(26720, $Data);
 
-        if(substr($Data, 0, 8) == 'setvalue'){
-           $Data = explode(",", substr($Data, 9, strlen($Data)-10));
-            setvalue($Data[0],$Data[1]);
-            $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
-        }
-        if(substr($Data, 0, 13) == 'IPS_RunScript'){
-           $Data = substr($Data, 14, strlen($Data)-14);
-           SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
-           $Daten = explode(",",$Data);
-            IPS_RunScript($Daten[0]);
-            $this->SendDebug('extrahierte Werte sind = ', $Daten[0], 0);
-        }
-
-        if(substr($Data, 0, 7) == 'command'){
-           $Data = substr($Data, 8, strlen($Data)-9);
-           SetValueString($this->GetIDForIdent("CommandSendToServer"), $Data);
-           
-            IPS_RunScript($this->ReadPropertyInteger('IDcommand'));
-            $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
-        }
-        if(substr($Data, 0, 4) == 'func'){
-            SetValue(26720, "HJHHJHK");
-            $Data = explode(",", substr($Data, 5, strlen($Data)-6));
-            foreach ($Data as $key => $value) {
-                if($key == 0){
-                    $MyFunktion = $value;
-                    $this->SendDebug('Received following MyFunction from Client', $MyFunktion, 0); 
-                }
-                else{
-                    $param[$key-1] = $value;
-                    $this->SendDebug('Received following Param from Client', $param[$key-1], 0); 
-                }
-            }
-            
-            
-
-            $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
-            //Funktion ausführen
-            call_user_func_array($MyFunktion, $param);
-            
-            
-            SetValue($this->GetIDForIdent("CommandSendToServer"), $MyFunktion.",".$param[0]);
-        }
-
+        // Befehle extrahieren und dann nacheinader ausführen
+        $DataSet = explode("!", $Data);
+        foreach($Data as $key => $command){
         
+            
+
+            if(substr($command, 0, 8) == 'setvalue'){
+            $command = explode(",", substr($command, 9, strlen($command)-10));
+                setvalue($command[0],$command[1]);
+                $this->SendDebug('extrahierte Werte sind = ', $command, 0);
+            }
+            if(substr($command, 0, 13) == 'IPS_RunScript'){
+            $command = substr($command, 14, strlen($command)-14);
+            SetValueString($this->GetIDForIdent("CommandSendToServer"), $command);
+            $command = explode(",",$command);
+                IPS_RunScript($command[0]);
+                $this->SendDebug('extrahierte Werte sind = ', $command[0], 0);
+            }
+
+            if(substr($command, 0, 7) == 'command'){
+            $command = substr($command, 8, strlen($command)-9);
+            SetValueString($this->GetIDForIdent("CommandSendToServer"), $command);
+            
+                IPS_RunScript($this->ReadPropertyInteger('IDcommand'));
+                $this->SendDebug('extrahierte Werte sind = ', $command, 0);
+            }
+            if(substr($command, 0, 4) == 'func'){
+                SetValue(26720, "HJHHJHK");
+                $command = explode(",", substr($command, 5, strlen($command)-6));
+                foreach ($command as $key => $value) {
+                    if($key == 0){
+                        $MyFunktion = $value;
+                        $this->SendDebug('Received following MyFunction from Client', $MyFunktion, 0); 
+                    }
+                    else{
+                        $param[$key-1] = $value;
+                        $this->SendDebug('Received following Param from Client', $param[$key-1], 0); 
+                    }
+                }
+                
+                
+
+                $this->SendDebug('extrahierte Werte sind = ', $command, 0);
+                //Funktion ausführen
+                call_user_func_array($MyFunktion, $param);
+                
+                
+                SetValue($this->GetIDForIdent("CommandSendToServer"), $MyFunktion.",".$param[0]);
+            }
+
+        }
     }
     
     /**
