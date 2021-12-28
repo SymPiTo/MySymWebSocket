@@ -1373,7 +1373,7 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('extrahierte Werte sind = ', $command, 0);
             }
             if(substr($command, 0, 4) == 'func'){
-                SetValue(26720, "HJHHJHK");
+                
                 $command = explode(",", substr($command, 5, strlen($command)-6));
                 foreach ($command as $key => $value) {
                     if($key == 0){
