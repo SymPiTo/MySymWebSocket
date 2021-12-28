@@ -1383,6 +1383,8 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
             //Funktion ausführen
             call_user_func_array($MyFunktion, $param);
+            $this->SendDebug('Received following MyFunction from Client', $MyFunktion, 0); 
+            $this->SendDebug('Received following Param from Client', $param, 0); 
             SetValue($this->GetIDForIdent("CommandSendToServer"), $MyFunktion.",".$param[0]);
         }
 
