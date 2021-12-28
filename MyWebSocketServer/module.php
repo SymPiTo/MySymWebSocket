@@ -1344,7 +1344,7 @@ class MyWebsocketServer extends IPSModule
     public function CommandToServer(string $Data){
         $this->SendDebug('Received following Data from Client', $Data, 0); 
  
-
+        SetValueString(26720, $Data);
 
         if(substr($Data, 0, 8) == 'setvalue'){
            $Data = explode(",", substr($Data, 9, strlen($Data)-10));
