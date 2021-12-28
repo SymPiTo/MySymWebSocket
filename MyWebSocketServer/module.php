@@ -1348,7 +1348,7 @@ class MyWebsocketServer extends IPSModule
 
         // Befehle extrahieren und dann nacheinader ausführen
         $DataSet = explode("!", $Data);
-        foreach($Data as $key => $command){
+        foreach($DataSet as $key => $command){
         
             
 
