@@ -1344,7 +1344,7 @@ class MyWebsocketServer extends IPSModule
     public function CommandToServer(string $Data){
         $this->SendDebug('Received following Data from Client', $Data, 0); 
  
-        SetValueString(26720, $Data);
+        SetValueString(26720, "Data");
 
         if(substr($Data, 0, 8) == 'setvalue'){
            $Data = explode(",", substr($Data, 9, strlen($Data)-10));
@@ -1367,7 +1367,7 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
         }
         if(substr($Data, 0, 4) == 'func'){
-            
+            SetValue(26720, "HJHHJHK");
             $Data = explode(",", substr($Data, 5, strlen($Data)-6));
             foreach ($Data as $key => $value) {
                 if($key == 0){
@@ -1377,6 +1377,9 @@ class MyWebsocketServer extends IPSModule
                     $param[$key-1] = $value;
                 }
             }
+            
+            
+
             $this->SendDebug('extrahierte Werte sind = ', $Data, 0);
             //Funktion ausführen
             call_user_func_array($MyFunktion, $param);
