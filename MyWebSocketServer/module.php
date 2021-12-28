@@ -1345,7 +1345,7 @@ class MyWebsocketServer extends IPSModule
         $this->SendDebug('Received following Data from Client', $Data, 0); 
  
         SetValueString(26720, $Data);
-        $this->SendDebug('extrahierte Werte sind = ', json_decode($Data, true), 0);
+        $this->SendDebug(json_decode($Data, true), 0);
 
         //call_user_func_array(json_decode($Data, true));
 
