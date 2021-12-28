@@ -1381,6 +1381,10 @@ class MyWebsocketServer extends IPSModule
                         $this->SendDebug('Received following MyFunction from Client', $MyFunktion, 0); 
                     }
                     else{
+                        if(substr($value,0,6) == "toggle"){
+                            $toggleId = substr($value,6,5) ;
+                            $value = !getvalue($toggleId);
+                        }
                         $param[$key-1] = $value;
                         $this->SendDebug('Received following Param from Client', $param[$key-1], 0); 
                     }
