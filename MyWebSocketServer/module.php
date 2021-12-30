@@ -1347,7 +1347,7 @@ class MyWebsocketServer extends IPSModule
         SetValueString(26720, $Data);
 
         // Befehle extrahieren und dann nacheinader ausführen
-        $DataSet = explode("§", $Data);
+        $DataSet = explode("§", str_replace('"','',$Data));
         $this->SendDebug('Received following extracted Commands from Client', $DataSet, 0); 
         foreach($DataSet as $key => $command){
         
