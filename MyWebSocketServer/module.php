@@ -1348,6 +1348,7 @@ class MyWebsocketServer extends IPSModule
 
         // Befehle extrahieren und dann nacheinader ausführen
         $DataSet = explode("§", $Data);
+        $this->SendDebug('Received following extracted Commands from Client', $DataSet, 0); 
         foreach($DataSet as $key => $command){
         
             
@@ -1372,6 +1373,7 @@ class MyWebsocketServer extends IPSModule
                 IPS_RunScript($this->ReadPropertyInteger('IDcommand'));
                 $this->SendDebug('extrahierte Werte sind = ', $command, 0);
             }
+
             if(substr($command, 0, 4) == 'func'){
                 SetValueString(26720, $command);
                 $command = explode(",", substr($command, 5, strlen($command)-6));
@@ -1381,7 +1383,7 @@ class MyWebsocketServer extends IPSModule
                         $this->SendDebug('Received following MyFunction from Client', $MyFunktion, 0); 
                     }
                     else{
-                        //Wert wird nehgiert
+                        //Wert wird negiert
                         if(substr($value,0,6) == "toggle"){
                             $toggleId = substr($value,6,5) ;
                             $value = !getvalue($toggleId);
