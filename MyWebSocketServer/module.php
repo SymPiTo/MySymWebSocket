@@ -1370,12 +1370,12 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('extrahierte Werte sind = ', $command, 0);
             }
 
-   
+            if(count($JSONcmd)>0){
                 if(substr($JSONcmd[0], 0, 4) == 'func'){
                     SetValueString(26720, $command);
                     IPS_RunScript(22954);
                 }
-         
+            }
 
 
         
