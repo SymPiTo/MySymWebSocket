@@ -1344,13 +1344,10 @@ class MyWebsocketServer extends IPSModule
     public function CommandToServer(string $Data){
         $this->SendDebug('Received following Data from Client', $Data, 0); 
  
-        SetValueString(26720, $Data);
-
-        // Befehle extrahieren und dann nacheinader ausführen
-        $DataSet = explode("§", str_replace('"','',$Data));
-        $this->SendDebug('Received following extracted Commands from Client', $DataSet, 0); 
-        foreach($DataSet as $key => $command){
         
+
+
+            $command = $Data;
             
 
             if(substr($command, 0, 8) == 'setvalue'){
@@ -1375,12 +1372,11 @@ class MyWebsocketServer extends IPSModule
             }
 
             if(substr($command, 0, 4) == 'func'){
- 
-               SetValueString(26720, $command);
+                 SetValueString(26720, $command);
                 IPS_RunScript(22954);
             }
 
-        }
+        
     }
     
     /**
