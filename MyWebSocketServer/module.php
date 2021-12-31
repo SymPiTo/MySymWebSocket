@@ -1371,7 +1371,7 @@ class MyWebsocketServer extends IPSModule
             }
 
             if(substr($JSONcmd[0], 0, 4) == 'func'){
-                 SetValueString(26720, $command);
+                SetValueString(26720, $command);
                 IPS_RunScript(22954);
             }
 
