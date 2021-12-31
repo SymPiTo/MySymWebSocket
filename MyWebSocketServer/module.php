@@ -1375,39 +1375,9 @@ class MyWebsocketServer extends IPSModule
             }
 
             if(substr($command, 0, 4) == 'func'){
-                SetValueString(26720, $command);
-                $command = explode(",", substr($command, 5, strlen($command)-6));
-                foreach ($command as $key => $value) {
-                    if($key == 0){
-                        $MyFunktion = $value;
-                        $this->SendDebug('Received following MyFunction from Client', $MyFunktion, 0); 
-                    }
-                    else{
-                        //Wert wird negiert
-                        if(substr($value,0,6) == "toggle"){
-                            $toggleId = substr($value,6,5) ;
-                            $value = !getvalue($toggleId);
-                        }
-                        $param[$key-1] = $value;
-                        $this->SendDebug('Received following Param from Client', $param[$key-1], 0); 
-                    }
-                }
-                
-                $this->SendDebug('extrahierte Parameter sind = ', $param, 0);
-
-                $this->SendDebug('extrahierte Werte sind = ', $command, 0);
-                //Funktion ausführen
-                $result = call_user_func_array($MyFunktion, $param);
-
-                $this->SendDebug('CmdSendTServer_call_user_func_array: ',$result, 0);
-                if($result == false){
-                    $this->SendDebug('CmdSendTServer_call_user_func_array: ',"Fehler erkannt", 0);
-                    $this->SendDebug('CmdSendTServer_call_user_func_array: Funktion:', $MyFunktion, 0);
-                    $this->SendDebug('CmdSendTServer_call_user_func_array: Param:', $param, 0);
-                }
-                
-                
-                SetValue($this->GetIDForIdent("CommandSendToServer"), $MyFunktion.",".$param[0]);
+ 
+               SetValueString(26720, $command);
+                IPS_RunScript(22954);
             }
 
         }
