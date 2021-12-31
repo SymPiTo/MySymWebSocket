@@ -1397,8 +1397,11 @@ class MyWebsocketServer extends IPSModule
 
                 $this->SendDebug('extrahierte Werte sind = ', $command, 0);
                 //Funktion ausführen
-                call_user_func_array($MyFunktion, $param);
-                IPS_Sleep(500);
+                $result = call_user_func_array($MyFunktion, $param);
+                if($result == false){
+                    $this->SendDebug('CmdSendTServer_call_user_func_array: ',"Fehler erkannt", 0);
+                }
+                
                 
                 SetValue($this->GetIDForIdent("CommandSendToServer"), $MyFunktion.",".$param[0]);
             }
