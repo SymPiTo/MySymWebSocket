@@ -1345,8 +1345,8 @@ class MyWebsocketServer extends IPSModule
         $this->SendDebug('Received following Data from Client', $Data, 0); 
  
 
-            $command = $Data;
-            $JSONcmd = JSON_decode($command, true);
+            $command = $Data; 
+            $JSONcmd = JSON_decode($command, true);//Umwandeln in Array
             $this->SendDebug('CommandToServer_JsonData', $JSONcmd, 0);
 
             if(substr($command, 0, 8) == 'setvalue'){
@@ -1370,7 +1370,7 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('extrahierte Werte sind = ', $command, 0);
             }
 
-            if(count($JSONcmd)>0){
+            if(isset($JSONcmd[0])){
                 if(substr($JSONcmd[0], 0, 4) == 'func'){
                     SetValueString(26720, $command);
                     IPS_RunScript(22954);
