@@ -1354,7 +1354,7 @@ class MyWebsocketServer extends IPSModule
                 setvalue($command[0],$command[1]);
                 $this->SendDebug('extrahierte Werte sind = ', $command, 0);
             }
-            if(substr($command, 0, 13) == 'IPS_RunScript'){
+            elseif(substr($command, 0, 13) == 'IPS_RunScript'){
             $command = substr($command, 14, strlen($command)-14);
             SetValueString($this->GetIDForIdent("CommandSendToServer"), $command);
             $command = explode(",",$command);
@@ -1362,20 +1362,22 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('extrahierte Werte sind = ', $command[0], 0);
             }
 
-            if(substr($command, 0, 7) == 'command'){
+            elseif(substr($command, 0, 7) == 'command'){
             $command = substr($command, 8, strlen($command)-9);
             SetValueString($this->GetIDForIdent("CommandSendToServer"), $command);
             
                 IPS_RunScript($this->ReadPropertyInteger('IDcommand'));
                 $this->SendDebug('extrahierte Werte sind = ', $command, 0);
             }
-
-            if(isset($JSONcmd[0])){
-                if(substr($JSONcmd[0], 0, 4) == 'func'){
-                    SetValueString(26720, $command);
-                    IPS_RunScript(22954);
+            else{
+                if(isset($JSONcmd[0])){
+                    if(substr($JSONcmd[0], 0, 4) == 'func'){
+                        SetValueString(26720, $command);
+                        IPS_RunScript(22954);
+                    }
                 }
             }
+
 
 
         
