@@ -1373,7 +1373,36 @@ class MyWebsocketServer extends IPSModule
                 if(isset($JSONcmd[0])){
                     if(substr($JSONcmd[0], 0, 4) == 'func'){
                         SetValueString(26720, $command);
-                        IPS_RunScript(22954);
+                        //IPS_RunScript(22954);
+
+                        $DataSet = json_decode($command);
+        
+                        foreach($DataSet as $key => $command){
+                            $command = explode(",", substr($command, 5, strlen($command)-6));
+                            print_r($command);
+                            foreach ($command as $key => $value) {
+                                if($key == 0){
+                                    $MyFunktion = $value; 
+                                }
+                                else{
+                                    //Wert wird negiert
+                                    if(substr($value,0,6) == "toggle"){
+                                        $toggleId = substr($value,6,5) ;
+                                        $value = !getvalue($toggleId);
+                                    }
+                                    $param[$key-1] = $value;
+                                }
+                            }
+                            //param[2] = '"'.param[2].'"';
+                            if($MyFunktion != ""){
+                                call_user_func_array($MyFunktion, $param);
+                            }   
+                        }
+
+
+
+
+
                     }
                 }
             }
