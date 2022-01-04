@@ -1379,7 +1379,7 @@ class MyWebsocketServer extends IPSModule
         
                         foreach($DataSet as $key => $command){
                             $command = explode(",", substr($command, 5, strlen($command)-6));
-                            print_r($command);
+                            //print_r($command);
                             foreach ($command as $key => $value) {
                                 if($key == 0){
                                     $MyFunktion = $value; 
