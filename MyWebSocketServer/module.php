@@ -46,7 +46,7 @@ use PTLS\Exceptions\TLSAlertException;
  * @property bool $NoNewClients
  *
  */
-public $test = array('a','b');
+ 
 
 class MyWebsocketServer extends IPSModule
 {
@@ -1793,8 +1793,7 @@ class MyWebsocketServer extends IPSModule
         ------------------------------------------------------------------------------- */
 	    public function sendIPSVars(){
             //$this->sendIPSVarsNew();
-            //TEST
-            $this->SendDebug("Test", $test, 0);
+            
 
             $liste = array();
             $Clients = $this->Multi_Clients;
