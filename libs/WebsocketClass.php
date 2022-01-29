@@ -17,6 +17,16 @@
 
 //$autoloader->register();
 
+class VarData {
+    var $data = array();
+
+    function __construct() {
+      $this->data = array();
+    }
+    function getVarData() {
+       return $this->data;
+    }
+  }
 
 /**
  * Der Typ des Paketes.

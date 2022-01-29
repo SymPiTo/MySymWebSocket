@@ -60,6 +60,7 @@ class MyWebsocketServer extends IPSModule
      * @access public 
      */
     
+    public $test = array(a,b);
 
     public function Create()
     {
@@ -1790,6 +1791,7 @@ class MyWebsocketServer extends IPSModule
         ------------------------------------------------------------------------------- */
 	    public function sendIPSVars(){
             //$this->sendIPSVarsNew();
+            $this->SendDebug("Test", $test, 0);
 
             $liste = array();
             $Clients = $this->Multi_Clients;
