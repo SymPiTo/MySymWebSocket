@@ -19,7 +19,7 @@
 
 
 class VarData{
-    public $Vars = array();
+    public $Vars;
 }
 
 

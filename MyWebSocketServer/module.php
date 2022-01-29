@@ -1756,7 +1756,8 @@ class MyWebsocketServer extends IPSModule
                         $this->SetValue("Message", "Variable fehlt:".$varid);
                     }
                     finally{
-                        if(md5(getvalue($varid)) == $OldVars[$varid]){
+
+                        if(md5(getvalue($varid)) == $OldVars->$varid){
                             $data['ID'.$varid] = getvalue($varid);
                             $OldVars[$varid] = md5($data['ID'.$varid]);
                         }
