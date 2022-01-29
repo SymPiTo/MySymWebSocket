@@ -59,7 +59,7 @@ class MyWebsocketServer extends IPSModule
      *
      * @access public 
      */
-    public $VarData = [];
+    
 
     public function Create()
     {
@@ -68,6 +68,7 @@ class MyWebsocketServer extends IPSModule
         $this->SetBuffer("hc0", "");
         $this->SetBuffer("hc1", "");
         $this->SetBuffer("CamBuffer", "");
+        $this->SetBuffer("OldData", "");
         //create server Socket if not exist
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
@@ -1759,10 +1760,9 @@ class MyWebsocketServer extends IPSModule
                     }
                     finally{
 
-                        if(md5(getvalue($varid)) == $VarData[$varid]){
+                
                             $data['ID'.$varid] = getvalue($varid);
-                            $VarData[$varid] = md5($data['ID'.$varid]);
-                        }
+                  
                         
                         
      
@@ -1770,8 +1770,7 @@ class MyWebsocketServer extends IPSModule
                     }
 
                 }
-                $this->SendDebug('sendIPSVarsNew: OldVarsMD5',  $OldVars, 0);
-                $this->SendDebug('sendIPSVarsNew: DATA',  $OldVars, 0);
+               
             }
 
         }
@@ -1790,7 +1789,7 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	    public function sendIPSVars(){
-            $this->sendIPSVarsNew();
+            //$this->sendIPSVarsNew();
 
             $liste = array();
             $Clients = $this->Multi_Clients;
