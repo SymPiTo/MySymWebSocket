@@ -46,6 +46,8 @@ use PTLS\Exceptions\TLSAlertException;
  * @property bool $NoNewClients
  *
  */
+public $test = array('a','b');
+
 class MyWebsocketServer extends IPSModule
 {
     //Traits verbinden
@@ -60,7 +62,7 @@ class MyWebsocketServer extends IPSModule
      * @access public 
      */
     
-    public $test = array('a','b');
+   
 
     public function Create()
     {
