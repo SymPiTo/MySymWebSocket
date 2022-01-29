@@ -62,7 +62,7 @@ class MyWebsocketServer extends IPSModule
     public function Create()
     {
         parent::Create();
-         
+        $his->RegisterPropertyBoolean("da", true); 
         $this->SetBuffer("hc0", "");
         $this->SetBuffer("hc1", "");
         $this->SetBuffer("CamBuffer", "");
@@ -70,6 +70,7 @@ class MyWebsocketServer extends IPSModule
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
+        $this->Multi_Vars = new VarData();
         $this->RegisterPropertyString("WhiteList", "[]");
         $this->RegisterPropertyBoolean("Open", false);
         $this->RegisterPropertyBoolean("ErrLog", true);
@@ -1719,7 +1720,58 @@ class MyWebsocketServer extends IPSModule
             setvalue($this->GetIDForIdent("DataSendToClient"), $xml);
         } 
 
+        /* ----------------------------------------------------------------------------
+         Function: sendIPSVarsToClients2
+        ...............................................................................
+         * holt die Variablen aus der Event Liste und packt sie in ein Array
+         * und sendet sie an den client
+         * Diese Funktion wird zyklisch alle x sekunden ausgeführt
+        ...............................................................................
+        Parameters: 
+            none.
+        ..............................................................................
+        Returns:   
+             none
+        ------------------------------------------------------------------------------- */
+	    public function sendIPSVarsNew(){
+            //nur Daten senden wenn mindestens 1 Client verbunden ist
+            $Clients = $this->Multi_Clients;
+            $cl = $Clients->CountClients();
+            $this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
+            if ($cl>0){
+                //alle Variablen-Daten einsammeln, die sich verändert haben.
+                $OldVars = $this->Multi_Vars;
+                $IPSVariablesjson = $this->getvalue("IpsSendVars");
+                $IPSVariables = json_decode($IPSVariablesjson);
+                foreach($IPSVariables as $IPSVariable) {
+                    $varid = $IPSVariable->ID;
+                    try {
+                        if(!IPS_VariableExists($varid)){
+                            throw new Exception('Variable mit ID '.$varid.'ist nicht vorhanden.');  
+                        }
+                    }
+                    catch (Exception $e) {
+                        //$varid = $this->GetIDForIdent("dummyID");
+                        $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
+                        $this->SetValue("Message", "Variable fehlt:".$varid);
+                    }
+                    finally{
+                        if(md5(getvalue($varid)) == $OldVars[$varid]){
+                            $data['ID'.$varid] = getvalue($varid);
+                            $OldVars[$varid] = md5($data['ID'.$varid]);
+                        }
+                        
+                        
+     
+                        
+                    }
 
+                }
+                $this->SendDebug('sendIPSVarsNew: OldVarsMD5',  $OldVars, 0);
+                $this->SendDebug('sendIPSVarsNew: DATA',  $OldVars, 0);
+            }
+
+        }
     
         /* ----------------------------------------------------------------------------
          Function: sendIPSVarsToClients
@@ -1735,6 +1787,8 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	    public function sendIPSVars(){
+            $this->sendIPSVarsNew();
+            
             $liste = array();
             $Clients = $this->Multi_Clients;
             //alle verbundenen Clients in Variable schreiben
@@ -1795,7 +1849,7 @@ class MyWebsocketServer extends IPSModule
                                 $m = substr($b,14,2);
                                 $data0['ID57942'] = $h.':'.$m;	
 
-                                //Daten Array aufteilen wenn >65536
+                                //Daten Array aufteilen wenn >65536 (besser1024()
                                 //Daten die gesendet werden dürfen 65536 Zeichen nicht überschreiten
                                  
                 //Senden der Daten Pakete

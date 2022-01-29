@@ -5,6 +5,11 @@
             "caption": "Activate WebSocketServer"
         },
         {
+            "name": "da",
+            "type": "CheckBox",
+            "caption": "Activate Debug"
+        },
+        {
             "type": "NumberSpinner",
             "name": "UpdateInterval",
             "caption": "UpdateInterval",

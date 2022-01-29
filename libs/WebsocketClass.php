@@ -17,6 +17,12 @@
 
 //$autoloader->register();
 
+
+class VarData{
+    $Vars = [];
+}
+
+
 /**
  * Der Typ des Paketes.
  */
@@ -427,6 +433,17 @@ class WebSocket_ClientList
     }
 
     /**
+     * Liefert die Anzahl der verbundenen Clients.
+     * @return Websocket_Client[] Ein Array mit allen Websocket_Client-Objekten.
+     */
+    public function CountClients()
+    {
+        $list = array();
+            $NoClients=count($this->Items);
+        return $NoClients;
+    }
+
+    /**
      * Liefert einen bestimmten Eintrag wo als nÃ¤chstes das Timeout auftritt.
      * @access public
      * @param int $Offset Offset
@@ -466,6 +483,7 @@ class WebSocket_ClientList
         }
         return $Clientlist;
     }
+
 }
 
 

@@ -198,33 +198,68 @@ trait MyDebugHelper
      */
     protected function SendDebug($Message, $Data, $Format)
     {
-        if (is_a($Data, 'WebSocketFrame')) {
-            $this->SendDebug($Message . ' FIN', ($Data->Fin ? "true" : "false"), 0);
-            $this->SendDebug($Message . ' OpCode', WebSocketOPCode::ToString($Data->OpCode), 0);
-            $this->SendDebug($Message . ' Mask', ($Data->Mask ? "true" : "false"), 0);
-            if ($Data->MaskKey != "") {
-                $this->SendDebug($Message . ' MaskKey', $Data->MaskKey, 1);
-            }
-            if ($Data->Payload != "") {
-                $this->SendDebug($Message . ' Payload', $Data->Payload, ($Data->OpCode == WebSocketOPCode::text ? (int) $Data->Mask : ($Format)));
-            }
+            if (is_a($Data, 'WebSocketFrame')) {
+                $this->SendDebug($Message . ' FIN', ($Data->Fin ? "true" : "false"), 0);
+                $this->SendDebug($Message . ' OpCode', WebSocketOPCode::ToString($Data->OpCode), 0);
+                $this->SendDebug($Message . ' Mask', ($Data->Mask ? "true" : "false"), 0);
+                if ($Data->MaskKey != "") {
+                    $this->SendDebug($Message . ' MaskKey', $Data->MaskKey, 1);
+                }
+                if ($Data->Payload != "") {
+                    $this->SendDebug($Message . ' Payload', $Data->Payload, ($Data->OpCode == WebSocketOPCode::text ? (int) $Data->Mask : ($Format)));
+                }
 
-            if ($Data->PayloadRAW != "") {
-                $this->SendDebug($Message . ' PayloadRAW', $Data->PayloadRAW, ($Data->OpCode == WebSocketOPCode::text ? 0 : 1));
-            }
-        } elseif (is_object($Data)) {
-            foreach ($Data as $Key => $DebugData) {
-                $this->SendDebug($Message . ":" . $Key, $DebugData, 0);
-            }
-        } elseif (is_array($Data)) {
-            foreach ($Data as $Key => $DebugData) {
-                $this->SendDebug($Message . ":" . $Key, $DebugData, 0);
-            }
-        } else {
-            if (is_bool($Data)) {
-                parent::SendDebug($Message, ($Data ? 'true' : 'false'), 0);
+                if ($Data->PayloadRAW != "") {
+                    $this->SendDebug($Message . ' PayloadRAW', $Data->PayloadRAW, ($Data->OpCode == WebSocketOPCode::text ? 0 : 1));
+                }
+            } elseif (is_object($Data)) {
+                foreach ($Data as $Key => $DebugData) {
+                    $this->SendDebug($Message . ":" . $Key, $DebugData, 0);
+                }
+            } elseif (is_array($Data)) {
+                foreach ($Data as $Key => $DebugData) {
+                    $this->SendDebug($Message . ":" . $Key, $DebugData, 0);
+                }
             } else {
-                parent::SendDebug($Message, (string) $Data, $Format);
+                if (is_bool($Data)) {
+                    parent::SendDebug($Message, ($Data ? 'true' : 'false'), 0);
+                } else {
+                    parent::SendDebug($Message, (string) $Data, $Format);
+                }
+            }
+    }
+
+    protected function SendDebugI($Message, $Data, $Format, $activ)
+    {
+        if($activ){
+            if (is_a($Data, 'WebSocketFrame')) {
+                $this->SendDebug($Message . ' FIN', ($Data->Fin ? "true" : "false"), 0);
+                $this->SendDebug($Message . ' OpCode', WebSocketOPCode::ToString($Data->OpCode), 0);
+                $this->SendDebug($Message . ' Mask', ($Data->Mask ? "true" : "false"), 0);
+                if ($Data->MaskKey != "") {
+                    $this->SendDebug($Message . ' MaskKey', $Data->MaskKey, 1);
+                }
+                if ($Data->Payload != "") {
+                    $this->SendDebug($Message . ' Payload', $Data->Payload, ($Data->OpCode == WebSocketOPCode::text ? (int) $Data->Mask : ($Format)));
+                }
+
+                if ($Data->PayloadRAW != "") {
+                    $this->SendDebug($Message . ' PayloadRAW', $Data->PayloadRAW, ($Data->OpCode == WebSocketOPCode::text ? 0 : 1));
+                }
+            } elseif (is_object($Data)) {
+                foreach ($Data as $Key => $DebugData) {
+                    $this->SendDebug($Message . ":" . $Key, $DebugData, 0);
+                }
+            } elseif (is_array($Data)) {
+                foreach ($Data as $Key => $DebugData) {
+                    $this->SendDebug($Message . ":" . $Key, $DebugData, 0);
+                }
+            } else {
+                if (is_bool($Data)) {
+                    parent::SendDebug($Message, ($Data ? 'true' : 'false'), 0);
+                } else {
+                    parent::SendDebug($Message, (string) $Data, $Format);
+                }
             }
         }
     }
