@@ -60,7 +60,7 @@ class MyWebsocketServer extends IPSModule
      * @access public 
      */
     
-    public $test = array(a,b);
+    public $test = array('a','b');
 
     public function Create()
     {
