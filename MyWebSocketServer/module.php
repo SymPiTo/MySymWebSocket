@@ -60,7 +60,7 @@ class MyWebsocketServer extends IPSModule
      * @access public 
      */
     public $VarData = [];
-    
+
     public function Create()
     {
         parent::Create();
@@ -1759,9 +1759,9 @@ class MyWebsocketServer extends IPSModule
                     }
                     finally{
 
-                        if(md5(getvalue($varid)) == $OldVars->$varid){
+                        if(md5(getvalue($varid)) == $VarData[$varid]){
                             $data['ID'.$varid] = getvalue($varid);
-                            $OldVars[$varid] = md5($data['ID'.$varid]);
+                            $VarData[$varid] = md5($data['ID'.$varid]);
                         }
                         
                         
