@@ -62,7 +62,7 @@ class MyWebsocketServer extends IPSModule
     public function Create()
     {
         parent::Create();
-        $his->RegisterPropertyBoolean("da", true); 
+        $this->RegisterPropertyBoolean("da", true); 
         $this->SetBuffer("hc0", "");
         $this->SetBuffer("hc1", "");
         $this->SetBuffer("CamBuffer", "");
@@ -1788,7 +1788,7 @@ class MyWebsocketServer extends IPSModule
         ------------------------------------------------------------------------------- */
 	    public function sendIPSVars(){
             $this->sendIPSVarsNew();
-            
+
             $liste = array();
             $Clients = $this->Multi_Clients;
             //alle verbundenen Clients in Variable schreiben
