@@ -18,11 +18,6 @@
 //$autoloader->register();
 
 
-class VarData{
-    public $Vars;
-}
-
-
 /**
  * Der Typ des Paketes.
  */

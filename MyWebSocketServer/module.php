@@ -59,6 +59,8 @@ class MyWebsocketServer extends IPSModule
      *
      * @access public 
      */
+    public $VarData = [];
+    
     public function Create()
     {
         parent::Create();
@@ -70,7 +72,7 @@ class MyWebsocketServer extends IPSModule
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
-        $this->Multi_Vars = new VarData();
+        
         $this->RegisterPropertyString("WhiteList", "[]");
         $this->RegisterPropertyBoolean("Open", false);
         $this->RegisterPropertyBoolean("ErrLog", true);
@@ -1740,7 +1742,7 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
             if ($cl>0){
                 //alle Variablen-Daten einsammeln, die sich verändert haben.
-                $OldVars = $this->Multi_Vars;
+                
                 $IPSVariablesjson = $this->getvalue("IpsSendVars");
                 $IPSVariables = json_decode($IPSVariablesjson);
                 foreach($IPSVariables as $IPSVariable) {
