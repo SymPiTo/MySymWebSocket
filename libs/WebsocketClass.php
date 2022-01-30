@@ -18,7 +18,7 @@
 //$autoloader->register();
 
 class VarData {
-    var $data = array();
+    public $data = array();
 
     public function __construct() {
       $this->data = array();
