@@ -2079,7 +2079,7 @@ class MyWebsocketServer extends IPSModule
 	public function RegisterIPSMessages(){
 
         $MyVars = $this->VarData;
-        $VarAr = $MyVars->getVarData();
+        $VarAr = $MyVars->getData();
 
             //Alle alten Events löschen und neu anlegen
             //IPS_DeleteEvent($EreignisID);

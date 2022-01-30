@@ -29,7 +29,7 @@ class VarData {
         return ['data'];
     }
 
-    public function getVarData() {
+    public function getData() {
        return $this->data;
     }
   }
