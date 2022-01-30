@@ -2111,6 +2111,9 @@ class MyWebsocketServer extends IPSModule
                 // WSS Variablen in ein File schreiben und Message registrieren
                 if ($Info === "WSS" or $Info === "WSS1"){
                     $IpsVars[$i]['ID'] = $var;
+
+                    $VarAr['ID'.$var] ='';
+
                     fwrite($myfile, $var.",");
                     $i++;
                     if($Info === "WSS1"){
