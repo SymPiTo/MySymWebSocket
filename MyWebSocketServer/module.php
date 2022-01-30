@@ -1795,9 +1795,9 @@ class MyWebsocketServer extends IPSModule
         ------------------------------------------------------------------------------- */
 	    public function sendIPSVars(){
             //$this->sendIPSVarsNew();
-            $VarData = $this->Multi_Vars;
-            $VarArray = $VarData->getVarData();
-            $this->SendDebug("Test", $VarArray, 0);
+            //$VarData = $this->Multi_Vars;
+            //$VarArray = $VarData->getVarData();
+            //$this->SendDebug("Test", $VarArray, 0);
 
             $liste = array();
             $Clients = $this->Multi_Clients;
