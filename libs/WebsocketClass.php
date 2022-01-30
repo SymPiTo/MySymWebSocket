@@ -18,19 +18,31 @@
 //$autoloader->register();
 
 class VarData {
-    public $data = [];
+    private $data = [];
      
     /**
      * Liefert die Daten welche behalten werden mÃ¼ssen.
      * @access public
      */
+
+
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    public function updateData($d)
+    {
+        $this->data = $d;
+    }
+
     public function __sleep()
     {
         return ['data'];
     }
 
     public function __wakeup() {
-        $this->data = $data;
+        $this->data = $d;
          
     }
   }
