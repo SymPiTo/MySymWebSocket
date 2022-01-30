@@ -30,6 +30,7 @@ class VarData {
     }
 
     public function getData() {
+        $this->data = [];
        return $this->data;
     }
   }
