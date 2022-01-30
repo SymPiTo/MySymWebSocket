@@ -2077,6 +2077,10 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	public function RegisterIPSMessages(){
+
+        $MyVars = $this->VarData;
+        $VarAr = $MyVars->getVarData();
+
             //Alle alten Events löschen und neu anlegen
             //IPS_DeleteEvent($EreignisID);
             $file = $this->Kernel()."media/".'newfile.txt';
