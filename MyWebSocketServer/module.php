@@ -2124,6 +2124,8 @@ class MyWebsocketServer extends IPSModule
                     $CamVars[$c]['ID'] = $var;
                 }
             }
+                    $VarAr['ID'.$var] ='';
+            $MyVars->updateData($VarAr);
             fclose($myfile);    
              
             $this->SetValue('IpsSendVars', json_encode($IpsVars));

@@ -33,6 +33,10 @@ class VarData {
         $this->data['ID00000'] = 'IPS';
         return $this->data;
     }
+    public function updateData($d) {
+        $this->data = $d;
+         
+    }
   }
 
 /**
