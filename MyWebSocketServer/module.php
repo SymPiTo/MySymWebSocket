@@ -77,6 +77,8 @@ class MyWebsocketServer extends IPSModule
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
         
+        $this->Multi_Vars = new VarData();
+
         $this->RegisterPropertyString("WhiteList", "[]");
         $this->RegisterPropertyBoolean("Open", false);
         $this->RegisterPropertyBoolean("ErrLog", true);
