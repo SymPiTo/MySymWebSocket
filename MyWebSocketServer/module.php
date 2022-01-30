@@ -1800,7 +1800,6 @@ class MyWebsocketServer extends IPSModule
          
             $this->SendDebug("test", $MyVars->getData(), 0);
 
-
             $liste = array();
             $Clients = $this->Multi_Clients;
             //alle verbundenen Clients in Variable schreiben
