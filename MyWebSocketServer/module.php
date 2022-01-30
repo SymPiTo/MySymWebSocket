@@ -1798,7 +1798,7 @@ class MyWebsocketServer extends IPSModule
             
             $MyVars = $this->Multi_Vars;
          
-            $this->SendDebug("test", $MyVars->data, 0);
+            $this->SendDebug("test", $MyVars->getData(), 0);
 
 
             $liste = array();
@@ -2112,7 +2112,8 @@ class MyWebsocketServer extends IPSModule
                 if ($Info === "WSS" or $Info === "WSS1"){
                     $IpsVars[$i]['ID'] = $var;
 
-    $MyVars->data['ID'.$var] = 'x';
+    $d['ID'.$var]= 'x';
+    $MyVars->updateData($d);
 
                     fwrite($myfile, $var.",");
                     $i++;
@@ -2127,7 +2128,7 @@ class MyWebsocketServer extends IPSModule
                     $VarAr['ID'.$var] ='';
             
             
-    $this->SendDebug("test",  $MyVars->data, 0);
+    $this->SendDebug("test",  $MyVars->getData(), 0);
 
 
 
