@@ -31,20 +31,12 @@ class VarData {
         return $this->data;
     }
 
-    public function updateData($d)
+    public function setData($d)
     {
         $this->data = $d;
     }
 
-    public function __sleep()
-    {
-        return ['data'];
-    }
 
-    public function __wakeup() {
-        $this->data = $d;
-         
-    }
   }
 
 /**

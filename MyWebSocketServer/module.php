@@ -2112,7 +2112,7 @@ class MyWebsocketServer extends IPSModule
                     $IpsVars[$i]['ID'] = $var;
 
     $d['ID'.$var]= 'x';
-    $MyVars->updateData($d);
+    $MyVars->setData($d);
 
                     fwrite($myfile, $var.",");
                     $i++;
