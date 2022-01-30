@@ -18,11 +18,17 @@
 //$autoloader->register();
 
 class VarData {
-    public $data = array();
-
-    public function __construct() {
-      $this->data = array();
+    private $data = [];
+     
+    /**
+     * Liefert die Daten welche behalten werden mÃ¼ssen.
+     * @access public
+     */
+    public function __sleep()
+    {
+        return ['data'];
     }
+
     public function getVarData() {
        return $this->data;
     }
