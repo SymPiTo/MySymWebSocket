@@ -2077,7 +2077,7 @@ class MyWebsocketServer extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	public function RegisterIPSMessages(){
-
+        $VarAr = array();
         $MyVars = $this->VarData;
         $VarAr = $MyVars->getData();
 
