@@ -26,12 +26,12 @@ class VarData {
      */
     public function __sleep()
     {
-        return array('data');
+        return ['data'];
     }
 
     public function getData() {
-        $this->data = [];
-       return $this->data;
+        $this->data['ID00000'] = 'IPS';
+        return $this->data;
     }
   }
 
