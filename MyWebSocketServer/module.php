@@ -76,9 +76,7 @@ class MyWebsocketServer extends IPSModule
         $this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}");
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
-        
-        $this->Multi_Vars = new VarData();
-
+     
         $this->RegisterPropertyString("WhiteList", "[]");
         $this->RegisterPropertyBoolean("Open", false);
         $this->RegisterPropertyBoolean("ErrLog", true);
@@ -1796,9 +1794,9 @@ class MyWebsocketServer extends IPSModule
 	    public function sendIPSVars(){
             //$this->SendDebug("sendIPSVars", 'starte....', 0);
             
-        $MyVars = $this->Multi_Vars;
-            $test = $MyVars->getData();
-        //$this->SendDebug("sendIPSVars", $test['hash'], 0);
+            $a = unserialize($this->GetBuffer('Test'));
+            $this->SendDebug("sendIPSVars", $a, 0);
+       
 
             $liste = array();
             $Clients = $this->Multi_Clients;
@@ -2081,8 +2079,7 @@ class MyWebsocketServer extends IPSModule
         ------------------------------------------------------------------------------- */
 	public function RegisterIPSMessages(){
         
-        $MyVars = $this->Multi_Vars;
- 
+        
 
             //Alle alten Events löschen und neu anlegen
             //IPS_DeleteEvent($EreignisID);
@@ -2110,10 +2107,10 @@ class MyWebsocketServer extends IPSModule
                 // WSS Variablen in ein File schreiben und Message registrieren
                 if ($Info === "WSS" or $Info === "WSS1"){
                     $IpsVars[$i]['ID'] = $var;
-    $d['ID'] = $var;
-    $d['hash'] = 'xxxx';
-    $d['changed'] = false;
-    $MyVars->setData($d);
+    $d[$i]['ID'] = $var;
+    $d[$i]['hash'] = 'xxxx';
+    $d[$i]['changed'] = 'n';
+    
 
                     fwrite($myfile, $var.",");
                     $i++;
@@ -2128,8 +2125,8 @@ class MyWebsocketServer extends IPSModule
                     $VarAr['ID'.$var] ='';
             
             
-    //$this->SendDebug("test",  $MyVars->getData(), 0);
-
+    
+$this->SetBuffer('Test', serialize($d));
 
 
             fclose($myfile);    

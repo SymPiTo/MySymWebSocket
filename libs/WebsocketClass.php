@@ -17,27 +17,6 @@
 
 //$autoloader->register();
 
-class VarData {
-    private $data = [];
-     
-    /**
-     * Liefert die Daten welche behalten werden mÃ¼ssen.
-     * @access public
-     */
-
-
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    public function setData($d)
-    {
-        $this->data = $d;
-    }
-
-
-  }
 
 /**
  * Der Typ des Paketes.
