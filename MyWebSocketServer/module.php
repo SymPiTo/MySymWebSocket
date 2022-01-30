@@ -77,6 +77,8 @@ class MyWebsocketServer extends IPSModule
         $this->Multi_Clients = new WebSocket_ClientList();
         $this->NoNewClients = true;
         
+        $this->MultiVars = new VarData();
+
         $this->RegisterPropertyString("WhiteList", "[]");
         $this->RegisterPropertyBoolean("Open", false);
         $this->RegisterPropertyBoolean("ErrLog", true);
@@ -1793,7 +1795,9 @@ class MyWebsocketServer extends IPSModule
         ------------------------------------------------------------------------------- */
 	    public function sendIPSVars(){
             //$this->sendIPSVarsNew();
-            
+            $VarData = $this->Multi_Vars;
+            $VarArray = $VarData->getVarData();
+            $this->SendDebug("Test", $VarArray, 0);
 
             $liste = array();
             $Clients = $this->Multi_Clients;
@@ -2087,7 +2091,11 @@ class MyWebsocketServer extends IPSModule
                 }
                 
             }
-            //Alle Variablen mit Beschreibung WSS holen und ein Evet anlegen.
+
+            $VarData = $this->Multi_Vars;
+            $VarArray = $VarData->getVarData();
+
+            //Alle Variablen mit Beschreibung WSS holen und ein Event anlegen.
             $alleVariablen = IPS_GetVariableList();
             $i = 0; 
             $c = 0;
@@ -2101,6 +2109,9 @@ class MyWebsocketServer extends IPSModule
                 // WSS Variablen in ein File schreiben und Message registrieren
                 if ($Info === "WSS" or $Info === "WSS1"){
                     $IpsVars[$i]['ID'] = $var;
+                    
+                    $VarArray['LastValue']['ID'.$var] = '';
+
                     fwrite($myfile, $var.",");
                     $i++;
                     if($Info === "WSS1"){
