@@ -26,7 +26,7 @@ class VarData {
      */
     public function __sleep()
     {
-        return ['data'];
+        return array('data');
     }
 
     public function getData() {
