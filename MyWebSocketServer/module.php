@@ -1797,8 +1797,8 @@ class MyWebsocketServer extends IPSModule
             //$this->sendIPSVarsNew();
             
             $MyVars = $this->Multi_Vars;
-            $VarAr = $MyVars->getData();
-            $this->SendDebug("test", $VarAr, 0);
+         
+            $this->SendDebug("test", $MyVars->data, 0);
 
 
             $liste = array();
@@ -2083,7 +2083,7 @@ class MyWebsocketServer extends IPSModule
 	public function RegisterIPSMessages(){
         
         $MyVars = $this->Multi_Vars;
-        $VarAr = $MyVars->getData();
+ 
 
             //Alle alten Events löschen und neu anlegen
             //IPS_DeleteEvent($EreignisID);
@@ -2112,7 +2112,7 @@ class MyWebsocketServer extends IPSModule
                 if ($Info === "WSS" or $Info === "WSS1"){
                     $IpsVars[$i]['ID'] = $var;
 
-                    $VarAr['ID'.$var] = 'x';
+    $MyVars->data['ID'.$var] = 'x';
 
                     fwrite($myfile, $var.",");
                     $i++;
@@ -2125,8 +2125,12 @@ class MyWebsocketServer extends IPSModule
                 }
             }
                     $VarAr['ID'.$var] ='';
-            $MyVars->updateData($VarAr);
-            $this->SendDebug("test",  $VarAr, 0);
+            
+            
+    $this->SendDebug("test",  $MyVars->data, 0);
+
+
+
             fclose($myfile);    
              
             $this->SetValue('IpsSendVars', json_encode($IpsVars));

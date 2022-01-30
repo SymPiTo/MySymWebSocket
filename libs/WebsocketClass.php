@@ -18,7 +18,7 @@
 //$autoloader->register();
 
 class VarData {
-    private $data = [];
+    public $data = [];
      
     /**
      * Liefert die Daten welche behalten werden mÃ¼ssen.
@@ -29,12 +29,8 @@ class VarData {
         return ['data'];
     }
 
-    public function getData() {
-        $this->data['ID00000'] = 'IPS';
-        return $this->data;
-    }
-    public function updateData($d) {
-        $this->data = $d;
+    public function __wakeup() {
+        $this->data = $data;
          
     }
   }
