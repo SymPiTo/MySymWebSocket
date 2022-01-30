@@ -1796,9 +1796,9 @@ class MyWebsocketServer extends IPSModule
 	    public function sendIPSVars(){
             //$this->sendIPSVarsNew();
             
-            $MyVars = $this->Multi_Vars;
-         
-            $this->SendDebug("test", $MyVars->getData(), 0);
+        $MyVars = $this->Multi_Vars;
+ 
+        $this->SendDebug("sendIPSVars", $MyVars->getData(), 0);
 
             $liste = array();
             $Clients = $this->Multi_Clients;
@@ -2111,7 +2111,8 @@ class MyWebsocketServer extends IPSModule
                 if ($Info === "WSS" or $Info === "WSS1"){
                     $IpsVars[$i]['ID'] = $var;
 
-    $d['ID'.$var]= 'x';
+    $d['ID'.$var]['hash'] = '';
+    $d['ID'.$var]['changed'] = false;
     $MyVars->setData($d);
 
                     fwrite($myfile, $var.",");
@@ -2127,7 +2128,7 @@ class MyWebsocketServer extends IPSModule
                     $VarAr['ID'.$var] ='';
             
             
-    $this->SendDebug("test",  $MyVars->getData(), 0);
+    //$this->SendDebug("test",  $MyVars->getData(), 0);
 
 
 
