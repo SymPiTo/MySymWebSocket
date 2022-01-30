@@ -1794,7 +1794,7 @@ class MyWebsocketServer extends IPSModule
 	    public function sendIPSVars(){
             //$this->SendDebug("sendIPSVars", 'starte....', 0);
             
-            $a = unserialize($this->GetBuffer('Test'));
+            $a = json_decode($this->GetBuffer('Test'),true);
             $this->SendDebug("sendIPSVars", $a, 0);
        
 
@@ -2126,7 +2126,7 @@ class MyWebsocketServer extends IPSModule
             
             
     
-$this->SetBuffer('Test', serialize($d));
+$this->SetBuffer('Test', json_encode($d));
 
 
             fclose($myfile);    
