@@ -20,10 +20,10 @@
 class VarData {
     var $data = array();
 
-    function __construct() {
+    public function __construct() {
       $this->data = array();
     }
-    function getVarData() {
+    public function getVarData() {
        return $this->data;
     }
   }
