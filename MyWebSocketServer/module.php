@@ -1755,8 +1755,8 @@ class MyWebsocketServer extends IPSModule
                     $varid = $IPSVariable['ID'];
                     $this->SendDebug('sendIPSVarsNew: IPSVariable: ', $key.' : '. $varid, 0);
 
-                        $IPSdata[$key]['ID']=$varID;
-                        //$wert = getvalue($varid);
+                        //$IPSdata[$key]['ID']=$varID;
+                        $wert = getvalue($varid);
                        
                     
                          
