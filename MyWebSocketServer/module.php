@@ -1802,11 +1802,12 @@ class MyWebsocketServer extends IPSModule
 
                 $pakete = array_chunk($data, 20);
                 foreach ($pakete as $key =>  $daten) {
+                    $this->SendDebug("Test:", $daten, 0);
                     $paket['PaketNr'] = $key;
                         $c = array($daten, $paket);
                         try {
                             $json1 = json_encode($c);
-                            $this->SendDebug("JSON1 - Paket 1 Error", json_last_error(), 0);
+                            //$this->SendDebug("JSON1 - Paket 1 Error", json_last_error(), 0);
                         } catch (JsonException $err) { }
                         if (json_last_error() !== JSON_ERROR_NONE) {
                             switch(json_last_error()) {
