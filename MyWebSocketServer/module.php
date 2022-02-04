@@ -1837,7 +1837,7 @@ class MyWebsocketServer extends IPSModule
                         }
                         else{
                              
-                            $this->SendDebug("PAKETJSON:","sende Paket 1", 0);
+                            $this->SendDebug("PAKETJSON:","sende Paket".$key, 0);
                             $this->setvalue("DataSendToClient", "Daten-Paket");
                             $this->SendText($json1);
                         }
