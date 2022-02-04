@@ -1743,7 +1743,7 @@ class MyWebsocketServer extends IPSModule
             //nur Daten senden wenn mindestens 1 Client verbunden ist
             $Clients = $this->Multi_Clients;
             $cl = $Clients->CountClients();
-            $this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
+            //$this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
 
             if ($cl>0){
                 $this->SendDebug('sendIPSVarsNew: ',  'Variable auf doppelte untersuchen.', 0);
@@ -1753,7 +1753,7 @@ class MyWebsocketServer extends IPSModule
                 
                 foreach($IPSdataArr as $key =>  $IPSVariable) {
                     $varid = $IPSVariable['ID'];
-                    //$this->SendDebug('sendIPSVarsNew: IPSVariable: ',  $varid, 0);
+                    $this->SendDebug('sendIPSVarsNew: IPSVariable: ',  $varid, 0);
                     try {
                         if(!IPS_VariableExists($varid)){
                             throw new Exception('Variable mit ID '.$varid.'ist nicht vorhanden.');  
