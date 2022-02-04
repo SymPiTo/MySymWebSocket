@@ -1747,12 +1747,12 @@ class MyWebsocketServer extends IPSModule
 
             if ($cl>0){
                 //alle Variablen-Daten einsammeln, die sich verändert haben.
-                $IPSdata = json_decode($this->GetBuffer('IPSdata'),true);
+                $IPSdata = json_decode($this->GetBuffer('IPSdata'));
                 //$this->SendDebug('sendIPSVarsNew: IPSdata: ',  $IPSdata, 0);
                 
                 foreach($IPSdata as $key =>  $IPSVariable) {
                     $varid = $IPSVariable->ID;
-                    //$this->SendDebug('sendIPSVarsNew: IPSVariable: ',  $IPSVariable, 0);
+                    $this->SendDebug('sendIPSVarsNew: IPSVariable: ',  $IPSVariable, 0);
                     try {
                         if(!IPS_VariableExists($varid)){
                             throw new Exception('Variable mit ID '.$varid.'ist nicht vorhanden.');  
@@ -1834,7 +1834,7 @@ class MyWebsocketServer extends IPSModule
                     //$this->SendDebug('Event Variable', $IPSVariables, 0);
                     $n = 0;
                     foreach($IPSVariables as $IPSVariable) {
-                        $varid = $IPSVariable['ID'];
+                        $varid = $IPSVariable->ID;
                         try {
                             if(!IPS_VariableExists($varid)){
                                 throw new Exception('Variable mit ID '.$varid.'ist nicht vorhanden.');  
