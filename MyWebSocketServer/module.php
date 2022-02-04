@@ -1751,6 +1751,7 @@ class MyWebsocketServer extends IPSModule
                 
                 foreach($IPSdata as $key =>  $IPSVariable) {
                     $varid = $IPSVariable->ID;
+                    $this->SendDebug('sendIPSVarsNew: varID: ',  $varid, 0);
                     try {
                         if(!IPS_VariableExists($varid)){
                             throw new Exception('Variable mit ID '.$varid.'ist nicht vorhanden.');  
@@ -1758,7 +1759,7 @@ class MyWebsocketServer extends IPSModule
                     }
                     catch (Exception $e) {
                         //$varid = $this->GetIDForIdent("dummyID");
-                        $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
+                        $this->SendDebug('sendIPSVarsNew:', 'Caught exception: '.$e->getMessage(), 0);
                         $this->SetValue("Message", "Variable fehlt:".$varid);
                     }
                     finally{
@@ -1786,7 +1787,7 @@ class MyWebsocketServer extends IPSModule
                 $new = array_filter($IPSdata, function ($var) {
                     return ($var['changed'] == 'y');
                 });
-                $this->SendDebug('gefilterte Vars',  $new, 0);
+                $this->SendDebug('sendIPSVarsNew: gefilterte Vars',  $new, 0);
             }
 
         }
