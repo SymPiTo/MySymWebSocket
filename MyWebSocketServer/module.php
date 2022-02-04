@@ -1748,7 +1748,7 @@ class MyWebsocketServer extends IPSModule
             if ($cl>0){
                 //alle Variablen-Daten einsammeln, die sich verändert haben.
                 $IPSdata = json_decode($this->GetBuffer('IPSdata'),true);
-                $this->SendDebug('sendIPSVarsNew: IPSdata: ',  $IPSdata, 0);
+                //$this->SendDebug('sendIPSVarsNew: IPSdata: ',  $IPSdata, 0);
                 
                 foreach($IPSdata as $key =>  $IPSVariable) {
                     $varid = $IPSVariable->ID;
@@ -1765,8 +1765,8 @@ class MyWebsocketServer extends IPSModule
                     }
                     finally{
 
-                            $wert = $this->getvalue($varid);
-                            //$this->SendDebug('sendIPSVarsNew: wert: ',  $wert, 0);
+                            $wert = getvalue($varid);
+                            $this->SendDebug('sendIPSVarsNew: wert: ',  $wert, 0);
                             $data['ID'.$varid] = $wert;
                             if($IPSVariable['hash'] == md5($wert)) {
                                 $IPSdata[$key]['changed'] = 'n';
