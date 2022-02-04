@@ -1781,10 +1781,10 @@ class MyWebsocketServer extends IPSModule
      
                         
                     }
-                    $this->SetBuffer('IPSdata', json_encode($IPSdata));
+                    
 
                 }
-
+                $this->SetBuffer('IPSdata', json_encode($IPSdata));
                 // alle Daten sind ausgewertet nun alle veränderten Variablen (['changed'] == 'y' )senden.
 
                 $new = array_filter($IPSdata, function ($var) {
