@@ -1739,7 +1739,7 @@ class MyWebsocketServer extends IPSModule
         Returns:   
              none
         ------------------------------------------------------------------------------- */
-	    public function sendIPSVars(){
+	    public function sendIPSVarsTest(){
             //nur Daten senden wenn mindestens 1 Client verbunden ist
             $Clients = $this->Multi_Clients;
             $cl = $Clients->CountClients();
@@ -1861,7 +1861,7 @@ class MyWebsocketServer extends IPSModule
         Returns:   
              none
         ------------------------------------------------------------------------------- */
-	    public function sendIPSVarsORG(){
+	    public function sendIPSVars(){
             //$this->SendDebug("sendIPSVars", 'starte....', 0);
             
             
