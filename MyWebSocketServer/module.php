@@ -1764,7 +1764,7 @@ class MyWebsocketServer extends IPSModule
                         $this->SetValue("Message", "Variable fehlt:".$varid);
                     }
                     finally{
-
+                        $IPSdata[$key]['ID']=$varID;
                             $wert = getvalue($varid);
                             //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
                             $data['ID'.$varid] = $wert;
@@ -1781,6 +1781,7 @@ class MyWebsocketServer extends IPSModule
      
                         
                     }
+                    $this->SetBuffer('IPSdata', json_encode($IPSdata));
 
                 }
 
