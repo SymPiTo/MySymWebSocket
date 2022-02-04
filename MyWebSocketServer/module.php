@@ -129,7 +129,7 @@ class MyWebsocketServer extends IPSModule
         //$this->RegisterPropertyString("IPSVars", "[]");
         
         // Timer erstellen zum senden der Variablen
-         $this->RegisterTimer("UpdateVars", 0 , 'MyWSS_sendIPSVars($_IPS[\'TARGET\']);');
+         $this->RegisterTimer("UpdateVars", 0 , 'MyWSS_sendIPSVars($_IPS[\'TARGET\'],false);');
        
     }
 
@@ -189,7 +189,7 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('VM_UPDATE', $SenderID, 0);
                 // Variablen Änderung erkannt -> Daten holen und an Clients senden
             
-                $this->sendIPSVars();
+                $this->sendIPSVars(false);
             
            
                 break;
@@ -1158,7 +1158,8 @@ class MyWebsocketServer extends IPSModule
                 //$this->SendText("1234567890");
                     //nach Handshake Initial alle Daten von Server abrufen und an alle Clients senden
                     $this->SendDebug("Info", "sende Initial Variablen an alle Clients", 0);
-                   /// $this->sendIPSVars();
+                     
+                    $this->sendIPSVars(true);
                     // und Sende Timer starten
                     $this->SendDebug("Info", "starte Update Timer", 0);
                     $this->SetTimerInterval("UpdateVars", $this->ReadPropertyInteger("UpdateInterval"));
@@ -1739,7 +1740,7 @@ class MyWebsocketServer extends IPSModule
         Returns:   
              none
         ------------------------------------------------------------------------------- */
-	    public function sendIPSVars(){
+	    public function sendIPSVars($init){
             //nur Daten senden wenn mindestens 1 Client verbunden ist
             $Clients = $this->Multi_Clients;
             $cl = $Clients->CountClients();
@@ -1768,15 +1769,22 @@ class MyWebsocketServer extends IPSModule
                         $IPSdata[$key]['ID']=$varid;
                         $wert = getvalue($varid);
                         //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
-                        
-                        if($IPSVariable['hash'] == md5($wert)) {
-                            $IPSdata[$key]['changed'] = 'n';
-                        }
-                        else {
+                        if($init){
                             $IPSdata[$key]['changed'] = 'y';
                             $data['ID'.$varid] = $wert;
+                            $IPSdata[$key]['hash'] = md5($wert);
+                        } 
+                        else{
+                            if($IPSVariable['hash'] == md5($wert)) {
+                                $IPSdata[$key]['changed'] = 'n';
+                            }
+                            else {
+                                $IPSdata[$key]['changed'] = 'y';
+                                $data['ID'.$varid] = $wert;
+                            }
+                            $IPSdata[$key]['hash'] = md5($wert);
                         }
-                        $IPSdata[$key]['hash'] = md5($wert);
+
                     }
                 }
                 //$this->SendDebug('sendIPSVarsNew: ',  'speichere Daten.', 0);
