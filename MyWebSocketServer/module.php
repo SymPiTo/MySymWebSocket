@@ -1766,20 +1766,17 @@ class MyWebsocketServer extends IPSModule
                     }
                     finally{
                         $IPSdata[$key]['ID']=$varid;
-                            $wert = getvalue($varid);
-                            //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
-                            $data['ID'.$varid] = $wert;
-                            if($IPSVariable['hash'] == md5($wert)) {
-                                $IPSdata[$key]['changed'] = 'n';
-                            }
-                            else {
-                                $IPSdata[$key]['changed'] = 'y';
-                            }
-                            $IPSdata[$key]['hash'] = md5($wert);
-                        
+                        $wert = getvalue($varid);
+                        //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
+                        $data['ID'.$varid] = $wert;
+                        if($IPSVariable['hash'] == md5($wert)) {
+                            $IPSdata[$key]['changed'] = 'n';
+                        }
+                        else {
+                            $IPSdata[$key]['changed'] = 'y';
+                        }
+                        $IPSdata[$key]['hash'] = md5($wert);
                     }
-                    
-
                 }
                 //$this->SendDebug('sendIPSVarsNew: ',  'speichere Daten.', 0);
                 $this->SetBuffer('IPSdata', json_encode($IPSdata));
@@ -1789,6 +1786,19 @@ class MyWebsocketServer extends IPSModule
                     return ($var['changed'] == 'y');
                 });
                 $this->SendDebug('sendIPSVarsNew: ', 'Anzahl gefilterte Vars: '.count($new), 0);
+                $this->SendDebug('sendIPSVarsNew_New:', $new, 0);
+                $a = getvalue(11938);
+                $b = date('m/d/Y H:i:s', $a);
+                $h = substr($b,11,2);
+                $m = substr($b,14,2);
+                $data0['ID11938'] = $h.':'.$m;
+                //Sonnenuntergang
+                $a = getvalue(57942);
+                $b = date('m/d/Y H:i:s', $a);
+                $h = substr($b,11,2);
+                $m = substr($b,14,2);
+                $data0['ID57942'] = $h.':'.$m;	
+
             }
 
         }
