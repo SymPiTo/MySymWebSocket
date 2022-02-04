@@ -384,7 +384,7 @@ class MyWebsocketServer extends IPSModule
 
         $this->SetStatus($NewState);
         $this->NoNewClients = false;
-
+        $this->RegisterIPSMessages();
         
     }
 
