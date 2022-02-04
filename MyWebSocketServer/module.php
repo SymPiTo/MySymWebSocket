@@ -1744,10 +1744,11 @@ class MyWebsocketServer extends IPSModule
             $Clients = $this->Multi_Clients;
             $cl = $Clients->CountClients();
             $this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
+
             if ($cl>0){
                 //alle Variablen-Daten einsammeln, die sich verändert haben.
                 $IPSdata = json_decode($this->GetBuffer('IPSdata'),true);
-                //$this->SendDebug('sendIPSVarsNew: IPSdata: ',  $IPSdata, 0);
+                $this->SendDebug('sendIPSVarsNew: IPSdata: ',  $IPSdata, 0);
                 
                 foreach($IPSdata as $key =>  $IPSVariable) {
                     $varid = $IPSVariable->ID;
@@ -1759,13 +1760,13 @@ class MyWebsocketServer extends IPSModule
                     }
                     catch (Exception $e) {
                         //$varid = $this->GetIDForIdent("dummyID");
-                        $this->SendDebug('sendIPSVarsNew:', 'Caught exception: '.$e->getMessage(), 0);
+                        //$this->SendDebug('sendIPSVarsNew:', 'Caught exception: '.$e->getMessage(), 0);
                         $this->SetValue("Message", "Variable fehlt:".$varid);
                     }
                     finally{
 
                             $wert = $this->getvalue($varid);
-                            $this->SendDebug('sendIPSVarsNew: wert: ',  $wert, 0);
+                            //$this->SendDebug('sendIPSVarsNew: wert: ',  $wert, 0);
                             $data['ID'.$varid] = $wert;
                             if($IPSVariable['hash'] == md5($wert)) {
                                 $IPSdata[$key]['changed'] = 'n';
@@ -1788,7 +1789,7 @@ class MyWebsocketServer extends IPSModule
                 $new = array_filter($IPSdata, function ($var) {
                     return ($var['changed'] == 'y');
                 });
-                $this->SendDebug('sendIPSVarsNew: gefilterte Vars',  $new, 0);
+                //$this->SendDebug('sendIPSVarsNew: gefilterte Vars',  $new, 0);
             }
 
         }
