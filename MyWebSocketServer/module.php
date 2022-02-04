@@ -1840,7 +1840,7 @@ class MyWebsocketServer extends IPSModule
                         else{
                              
                             $this->SendDebug("PAKETJSON:","sende Paket", 0);
-                            $this->setvalue("DataSendToClient", "Daten-Paket" .' von '.count($data));
+                            $this->setvalue("DataSendToClient", "Daten-Paket" .count($c).' von '.count($data));
                             $this->SendText($json1);
                         }
                 }
