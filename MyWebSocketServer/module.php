@@ -1752,7 +1752,7 @@ class MyWebsocketServer extends IPSModule
                 
                 foreach($IPSdata as $key =>  $IPSVariable) {
                     $varid = $IPSVariable->ID;
-                    //$this->SendDebug('sendIPSVarsNew: varID: ',  $varid, 0);
+                    $this->SendDebug('sendIPSVarsNew: IPSVariable: ',  $IPSVariable, 0);
                     try {
                         if(!IPS_VariableExists($varid)){
                             throw new Exception('Variable mit ID '.$varid.'ist nicht vorhanden.');  
