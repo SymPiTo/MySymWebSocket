@@ -1766,7 +1766,7 @@ class MyWebsocketServer extends IPSModule
                     finally{
 
                             $wert = getvalue($varid);
-                            $this->SendDebug('sendIPSVarsNew: wert: ',  $wert, 0);
+                            $this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
                             $data['ID'.$varid] = $wert;
                             if($IPSVariable['hash'] == md5($wert)) {
                                 $IPSdata[$key]['changed'] = 'n';
