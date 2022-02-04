@@ -1743,7 +1743,7 @@ class MyWebsocketServer extends IPSModule
             //nur Daten senden wenn mindestens 1 Client verbunden ist
             $Clients = $this->Multi_Clients;
             $cl = $Clients->CountClients();
-            $this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
+            //$this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
 
             if ($cl>0){
                 //alle Variablen-Daten einsammeln, die sich verändert haben.
