@@ -1746,10 +1746,10 @@ class MyWebsocketServer extends IPSModule
             $this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
             if ($cl>0){
                 //alle Variablen-Daten einsammeln, die sich verändert haben.
+                $IPSdata = json_decode($this->GetBuffer('IPSdata'),true);
+
                 
-                $IPSVariablesjson = $this->getvalue("IpsSendVars");
-                $IPSVariables = json_decode($IPSVariablesjson);
-                foreach($IPSVariables as $IPSVariable) {
+                foreach($IPSdata as $key =>  $IPSVariable) {
                     $varid = $IPSVariable->ID;
                     try {
                         if(!IPS_VariableExists($varid)){
@@ -1763,9 +1763,16 @@ class MyWebsocketServer extends IPSModule
                     }
                     finally{
 
-                
-                            $data['ID'.$varid] = getvalue($varid);
-                  
+                            $wert = getvalue($varid);;
+                            $data['ID'.$varid] = $wert;
+                            if($IPSVariable['hash'] == md5($wert)) {
+                                $IPSdata[$key]['changed'] = 'n';
+                            }
+                            else {
+                                $IPSdata[$key]['changed'] = 'y';
+                            }
+                            $IPSdata[$key]['hash'] = md5($wert);
+
                         
                         
      
@@ -1773,7 +1780,13 @@ class MyWebsocketServer extends IPSModule
                     }
 
                 }
-               
+
+                // alle Daten sind ausgewertet nun alle veränderten Variablen (['changed'] == 'y' )senden.
+
+                $new = array_filter($IPSdata, function ($var) {
+                    return ($var['changed'] == 'y');
+                });
+                $this->SendDebug('gefilterte Vars',  $new, 0);
             }
 
         }
@@ -1794,8 +1807,8 @@ class MyWebsocketServer extends IPSModule
 	    public function sendIPSVars(){
             //$this->SendDebug("sendIPSVars", 'starte....', 0);
             
-            $a = json_decode($this->GetBuffer('Test'),true);
-            $this->SendDebug("sendIPSVars", $a, 0);
+            $this->sendIPSVarsNew();
+            //$this->SendDebug("sendIPSVars", $a, 0);
        
 
             $liste = array();
@@ -2107,9 +2120,8 @@ class MyWebsocketServer extends IPSModule
                 // WSS Variablen in ein File schreiben und Message registrieren
                 if ($Info === "WSS" or $Info === "WSS1"){
                     $IpsVars[$i]['ID'] = $var;
-    $d[$i]['ID'] = $var;
-    $d[$i]['hash'] = 'xxxx';
-    $d[$i]['changed'] = 'n';
+                    $IpsVars[$i]['hash'] = '';
+                    $IpsVars[$i]['changed'] = 'n';
     
 
                     fwrite($myfile, $var.",");
@@ -2126,7 +2138,7 @@ class MyWebsocketServer extends IPSModule
             
             
     
-$this->SetBuffer('Test', json_encode($d));
+            $this->SetBuffer('IPSdata', json_encode($IpsVars));
 
 
             fclose($myfile);    
