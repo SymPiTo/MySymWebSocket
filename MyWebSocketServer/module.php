@@ -1801,9 +1801,9 @@ class MyWebsocketServer extends IPSModule
                 $data['ID57942'] = $h.':'.$m;	
 
                 $pakete = array_chunk($data, 20);
-                foreach ($pakete as $key =>  $data) {
+                foreach ($pakete as $key =>  $daten) {
                     $paket['PaketNr'] = $key;
-                        $c = array($data, $paket);
+                        $c = array($daten, $paket);
                         try {
                             $json1 = json_encode($c1);
                             $this->SendDebug("JSON1 - Paket 1 Error", json_last_error(), 0);
@@ -1838,7 +1838,7 @@ class MyWebsocketServer extends IPSModule
                         else{
                              
                             $this->SendDebug("PAKETJSON:","sende Paket".$key, 0);
-                            $this->setvalue("DataSendToClient", "Daten-Paket".$key);
+                            $this->setvalue("DataSendToClient", "Daten-Paket".$key.' von '.count($data));
                             $this->SendText($json1);
                         }
                 }
