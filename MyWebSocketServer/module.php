@@ -2141,7 +2141,7 @@ class MyWebsocketServer extends IPSModule
             
             
     
-            $this->SetBuffer('IPSdata', json_encode($IpsVars));
+            $this->SetBuffer('IPSdata', json_decode($IpsVars));
 
 
             fclose($myfile);    
