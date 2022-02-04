@@ -1746,14 +1746,14 @@ class MyWebsocketServer extends IPSModule
             //$this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
 
             if ($cl>0){
-                $this->SendDebug('sendIPSVarsNew: ',  'Variable auf doppelte untersuchen.', 0);
+                //$this->SendDebug('sendIPSVarsNew: ',  'Variable auf doppelte untersuchen.', 0);
                 //alle Variablen-Daten einsammeln, die sich verändert haben.
                 $IPSdataArr = json_decode($this->GetBuffer('IPSdata'), true);
                 $this->SendDebug('sendIPSVarsNew: Anzahl-IPSdata: ',  count($IPSdataArr), 0);
                 
                 foreach($IPSdataArr as $key =>  $IPSVariable) {
                     $varid = $IPSVariable['ID'];
-                    $this->SendDebug('sendIPSVarsNew: IPSVariable: ', $key.' : '. $varid, 0);
+                    //$this->SendDebug('sendIPSVarsNew: IPSVariable: ', $key.' : '. $varid, 0);
                     try {
                         if(!IPS_VariableExists($varid)){
                             throw new Exception('Variable mit ID '.$varid.'ist nicht vorhanden.');  
@@ -1781,14 +1781,14 @@ class MyWebsocketServer extends IPSModule
                     
 
                 }
-                $this->SendDebug('sendIPSVarsNew: ',  'speichere Daten.', 0);
+                //$this->SendDebug('sendIPSVarsNew: ',  'speichere Daten.', 0);
                 $this->SetBuffer('IPSdata', json_encode($IPSdata));
                 // alle Daten sind ausgewertet nun alle veränderten Variablen (['changed'] == 'y' )senden.
 
                 $new = array_filter($IPSdata, function ($var) {
                     return ($var['changed'] == 'y');
                 });
-                $this->SendDebug('sendIPSVarsNew: gefilterte Vars',  $new, 0);
+                $this->SendDebug('sendIPSVarsNew: ', 'Anzahl gefilterte Vars: '.count($new), 0);
             }
 
         }
