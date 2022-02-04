@@ -1768,12 +1768,13 @@ class MyWebsocketServer extends IPSModule
                         $IPSdata[$key]['ID']=$varid;
                         $wert = getvalue($varid);
                         //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
-                        $data['ID'.$varid] = $wert;
+                        
                         if($IPSVariable['hash'] == md5($wert)) {
                             $IPSdata[$key]['changed'] = 'n';
                         }
                         else {
                             $IPSdata[$key]['changed'] = 'y';
+                            $data['ID'.$varid] = $wert;
                         }
                         $IPSdata[$key]['hash'] = md5($wert);
                     }
@@ -1791,13 +1792,56 @@ class MyWebsocketServer extends IPSModule
                 $b = date('m/d/Y H:i:s', $a);
                 $h = substr($b,11,2);
                 $m = substr($b,14,2);
-                $data0['ID11938'] = $h.':'.$m;
+                $data['ID11938'] = $h.':'.$m;
                 //Sonnenuntergang
                 $a = getvalue(57942);
                 $b = date('m/d/Y H:i:s', $a);
                 $h = substr($b,11,2);
                 $m = substr($b,14,2);
-                $data0['ID57942'] = $h.':'.$m;	
+                $data['ID57942'] = $h.':'.$m;	
+
+                $pakete = array_chunk($data, 20);
+                foreach ($pakete as $key =>  $data) {
+                    $paket['PaketNr'] = $key;
+                        $c = array($data, $paket);
+                        try {
+                            $json1 = json_encode($c1);
+                            $this->SendDebug("JSON1 - Paket 1 Error", json_last_error(), 0);
+                        } catch (JsonException $err) { }
+                        if (json_last_error() !== JSON_ERROR_NONE) {
+                            switch(json_last_error()) {
+                                case JSON_ERROR_NONE:
+                                    $fehler = ' - Keine Fehler';
+                                break;
+                                case JSON_ERROR_DEPTH:
+                                    $fehler = ' - Maximale Stacktiefe überschritten';
+                                break;
+                                case JSON_ERROR_STATE_MISMATCH:
+                                    $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
+                                break;
+                                case JSON_ERROR_CTRL_CHAR:
+                                    $fehler = ' - Unerwartetes Steuerzeichen gefunden';
+                                break;
+                                case JSON_ERROR_SYNTAX:
+                                    $fehler = ' - Syntaxfehler, ungültiges JSON';
+                                break;
+                                case JSON_ERROR_UTF8:
+                                    $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
+                                break;
+                                default:
+                                $fehler = ' - Unbekannter Fehler';
+                                break;
+                            }
+                            //$this->ModErrorLog($log, "WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
+                            $this->SendDebug("PAKETFehler:",$fehler, 0);
+                        }
+                        else{
+                             
+                            $this->SendDebug("PAKETJSON:","sende Paket 1", 0);
+                            $this->setvalue("DataSendToClient", "Daten-Paket");
+                            $this->SendText($json1);
+                        }
+                }
 
             }
 
