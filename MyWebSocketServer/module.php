@@ -1749,7 +1749,7 @@ class MyWebsocketServer extends IPSModule
                 $this->SendDebug('sendIPSVarsNew: ',  'Variable auf doppelte untersuchen.', 0);
                 //alle Variablen-Daten einsammeln, die sich verändert haben.
                 $IPSdataArr = json_decode($this->GetBuffer('IPSdata'), true);
-                //$this->SendDebug('sendIPSVarsNew: IPSdata: ',  $IPSdata, 0);
+                $this->SendDebug('sendIPSVarsNew: Anzahl-IPSdata: ',  count($IPSdataArr), 0);
                 
                 foreach($IPSdataArr as $key =>  $IPSVariable) {
                     $varid = $IPSVariable['ID'];
