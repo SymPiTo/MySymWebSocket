@@ -1784,6 +1784,7 @@ class MyWebsocketServer extends IPSModule
                     
 
                 }
+                $this->SendDebug('sendIPSVarsNew: ',  'speichere Daten.', 0);
                 $this->SetBuffer('IPSdata', json_encode($IPSdata));
                 // alle Daten sind ausgewertet nun alle veränderten Variablen (['changed'] == 'y' )senden.
 
