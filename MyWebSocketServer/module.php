@@ -1774,7 +1774,7 @@ class MyWebsocketServer extends IPSModule
  
                             if(substr($wert,0,1) == "["){
                                 //ein Array
-                                $this->SendDebug('sendIPSVarsTest: ', $wert, 0);
+                                $this->SendDebug('sendIPSVarsTest: ', json_decode($wert), 0);
                                 
                             }
 
