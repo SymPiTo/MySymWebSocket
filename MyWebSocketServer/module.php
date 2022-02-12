@@ -1773,10 +1773,10 @@ class MyWebsocketServer extends IPSModule
                         //prüfen ov $wert ein String oder ein Array ist
  
                             if(substr($wert,0,1) == "["){
-                                $this->SendDebug('sendIPSVarsTest: ', 'Ein AAA gefunden.', 0);
+                                $this->SendDebug('sendIPSVarsTest: ', $wert, 0);
                             }
                             else{
-                                $this->SendDebug('sendIPSVarsTest: ', 'Ein String gefunden.', 0);
+                               // $this->SendDebug('sendIPSVarsTest: ', 'Ein String gefunden.', 0);
                             }
                  
 
