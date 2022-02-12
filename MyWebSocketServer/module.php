@@ -1771,18 +1771,11 @@ class MyWebsocketServer extends IPSModule
                         $IPSdata[$key]['ID']=$varid;
                         $wert = getvalue($varid);
                         //prüfen ov $wert ein String oder ein Array ist
-                        if(is_array($wert)){
-                            $this->SendDebug('sendIPSVarsTest: ', 'Ein Array gefunden.', 0);
-                        }
-                        elseif(is_string($wert)){
+ 
                             if(substr($wert,0,1) == "["){
                                 $this->SendDebug('sendIPSVarsTest: ', 'Ein AAA gefunden.', 0);
                             }
-                            //
-                        }
-                        else{
-                            $this->SendDebug('sendIPSVarsTest: ', 'Kein Typ gefunden.', 0); 
-                        }
+                 
 
                         //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
                         if($init){
