@@ -1770,6 +1770,14 @@ class MyWebsocketServer extends IPSModule
                     finally{
                         $IPSdata[$key]['ID']=$varid;
                         $wert = getvalue($varid);
+                        //prüfen ov $wert ein String oder ein Array ist
+                        if(is_array($wert)){
+                            $this->SendDebug('sendIPSVarsTest: ', 'Ein Array gefunden.', 0);
+                        }
+                        if(is_string($wert)){
+                            $this->SendDebug('sendIPSVarsTest: ', 'Ein String gefunden.', 0);
+                        }
+
                         //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
                         if($init){
                             $IPSdata[$key]['changed'] = 'y';
@@ -1814,7 +1822,8 @@ class MyWebsocketServer extends IPSModule
                 $data['ID57942']['changed'] = true;
 
                 $this->SendDebug("Test:", $data, 0);
-                
+
+                //Datenpaket auf 20 Variablen aufteilen
                 $pakete = array_chunk($data, 20, true);
                 foreach ($pakete as $daten) {
                     $this->SendDebug("Test:", $daten, 0);
