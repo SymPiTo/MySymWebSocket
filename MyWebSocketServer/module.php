@@ -1803,15 +1803,18 @@ class MyWebsocketServer extends IPSModule
                 $b = date('m/d/Y H:i:s', $a);
                 $h = substr($b,11,2);
                 $m = substr($b,14,2);
-                $data['ID11938'] = $h.':'.$m;
+                $data['ID11938']['value'] = $h.':'.$m;
+                $data['ID11938']['changed'] = true; 
                 //Sonnenuntergang
                 $a = getvalue(57942);
                 $b = date('m/d/Y H:i:s', $a);
                 $h = substr($b,11,2);
                 $m = substr($b,14,2);
-                $data['ID57942'] = $h.':'.$m;	
-
+                $data['ID57942']['value'] = $h.':'.$m;	
+                $data['ID57942']['value'] = true;
+                
                 $this->SendDebug("Test:", $data, 0);
+                
                 $pakete = array_chunk($data, 20, true);
                 foreach ($pakete as $daten) {
                     $this->SendDebug("Test:", $daten, 0);
