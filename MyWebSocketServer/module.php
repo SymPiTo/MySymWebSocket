@@ -1343,8 +1343,10 @@ class MyWebsocketServer extends IPSModule
     Parameters: 
         setvalue(id,param2)
         IPS_Runscript(id)
-        command(sender,command,value)
+
+        command((IPS Befehl, ID, parameter (array))
         func(STV_setChannelbyName, 44308, param as array)
+        
     ...............................................................................
     Returns:    
         none
@@ -1771,7 +1773,8 @@ class MyWebsocketServer extends IPSModule
                         //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
                         if($init){
                             $IPSdata[$key]['changed'] = 'y';
-                            $data['ID'.$varid] = $wert;
+                            $data['ID'.$varid]['value'] = $wert;
+                            $data['ID'.$varid]['changed'] = true;
                             $IPSdata[$key]['hash'] = md5($wert);
                         } 
                         else{
@@ -1848,7 +1851,7 @@ class MyWebsocketServer extends IPSModule
                         else{
                              
                             $this->SendDebug("PAKETJSON:","sende Paket", 0);
-                            $this->setvalue("DataSendToClient", "Daten" .count($data).' von '.count($IPSdata));
+                            $this->setvalue("DataSendToClient", "Daten: " .count($data).' von '.count($IPSdata));
                             $this->SendText($json1);
                         }
                 }
