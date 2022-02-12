@@ -1774,8 +1774,12 @@ class MyWebsocketServer extends IPSModule
                         if(is_array($wert)){
                             $this->SendDebug('sendIPSVarsTest: ', 'Ein Array gefunden.', 0);
                         }
-                        if(is_string($wert)){
-                            $this->SendDebug('sendIPSVarsTest: ', 'Ein String gefunden.', 0);
+                        elseif(is_string($wert)){
+                            
+                            //$this->SendDebug('sendIPSVarsTest: ', 'Ein String gefunden.', 0);
+                        }
+                        else{
+                            $this->SendDebug('sendIPSVarsTest: ', 'Kein Typ gefunden.', 0); 
                         }
 
                         //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
