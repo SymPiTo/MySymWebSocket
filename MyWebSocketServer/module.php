@@ -1773,11 +1773,11 @@ class MyWebsocketServer extends IPSModule
                         //prüfen ov $wert ein String oder ein Array ist
  
                             if(substr($wert,0,1) == "["){
+                                //ein Array
                                 $this->SendDebug('sendIPSVarsTest: ', $wert, 0);
+                                $wert = json_encode($wert);
                             }
-                            else{
-                               // $this->SendDebug('sendIPSVarsTest: ', 'Ein String gefunden.', 0);
-                            }
+
                  
 
                         //$this->SendDebug('sendIPSVarsNew: wert: ', $varid.' : '.$wert, 0);
