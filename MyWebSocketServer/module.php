@@ -1811,8 +1811,8 @@ class MyWebsocketServer extends IPSModule
                 $h = substr($b,11,2);
                 $m = substr($b,14,2);
                 $data['ID57942']['value'] = $h.':'.$m;	
-                $data['ID57942']['value'] = true;
-                
+                $data['ID57942']['changed'] = true;
+
                 $this->SendDebug("Test:", $data, 0);
                 
                 $pakete = array_chunk($data, 20, true);
