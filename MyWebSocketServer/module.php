@@ -1825,12 +1825,12 @@ class MyWebsocketServer extends IPSModule
                 $data['ID57942']['value'] = $h.':'.$m;	
                 $data['ID57942']['changed'] = true;
 
-                $this->SendDebug("Test:", $data, 0);
+                //$this->SendDebug("Test:", $data, 0);
 
                 //Datenpaket auf 20 Variablen aufteilen
                 $pakete = array_chunk($data, 20, true);
-                foreach ($pakete as $daten) {
-                    $this->SendDebug("Test:", $daten, 0);
+                foreach ($pakete as $key => $daten) {
+                    //$this->SendDebug("Test:", $daten, 0);
                     $paket['PaketNr'] = $key;
                         $c = array($daten, $paket);
                         try {
@@ -1866,7 +1866,7 @@ class MyWebsocketServer extends IPSModule
                         }
                         else{
                              
-                            $this->SendDebug("PAKETJSON:","sende Paket", 0);
+                            $this->SendDebug("PAKETJSON:","sende Paket ".$key, 0);
                             $this->setvalue("DataSendToClient", "Daten: " .count($data).' von '.count($IPSdata));
                             $this->SendText($json1);
                         }
