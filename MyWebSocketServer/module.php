@@ -1747,7 +1747,7 @@ class MyWebsocketServer extends IPSModule
             $Clients = $this->Multi_Clients;
             $cl = $Clients->CountClients();
             //$this->SendDebug('sendIPSVarsNew: ', 'es sind '.$cl.' Clients verbunden', 0);
-
+            $this->SendDebug('sendIPSVars: ', 'sende Daten"', 0);
             if ($cl>0){
                 //$this->SendDebug('sendIPSVarsNew: ',  'Variable auf doppelte untersuchen.', 0);
                 //alle Variablen-Daten einsammeln, die sich verändert haben.
