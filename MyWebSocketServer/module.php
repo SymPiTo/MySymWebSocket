@@ -1872,6 +1872,85 @@ class MyWebsocketServer extends IPSModule
                         }
                 }
 
+
+
+
+            //Cam Bilder übertragen aber nur Einzeln
+            $CamVariablesjson = $this->getvalue("CamSendVars");
+            $CamVariables = json_decode($CamVariablesjson);
+            
+            $c = 0;
+            foreach($CamVariables as $CamVariable) {
+                //prüfen ob Variable verfügbar sind
+                $camid = $CamVariable->ID;
+                try {
+                    if(!IPS_VariableExists($camid)){
+                        throw new Exception('Variable mit ID '.$camid.'ist nicht vorhanden.');  
+                    }
+                }
+                catch (Exception $e) {
+                    //$varid = $this->GetIDForIdent("dummyID");
+                    $this->SendDebug('Caught exception: ',  $e->getMessage(), 0);
+                    $this->SetValue("Message", "CamVariable fehlt:".$camid);
+                    $this->ModErrorLog($log, "WebSocketServer", "sendIPSVars", "CamVariable ".$camid." fehlt.");
+                }
+                finally{
+                    $c = $c + 1;
+                       $camdata['ID'.$camid] = getvalue($camid);
+                }
+
+                //Prüfen ob CamBild sich verändert hat.
+                $CamdataNewHash = md5(serialize($camdata));
+                $CamdataOldHash = $this->GetBuffer("CamBuffer");
+                $this->SendDebug("CamData- Hash Codes Neu - Alt: ", $CamdataNewHash." - ".$CamdataOldHash, 0);
+                if($CamdataNewHash !== $CamdataOldHash){
+                    $paket['PaketNr'] = 3;
+                    $c3 = array($camdata, $paket);
+                    try {
+                        $json3 = json_encode($c3);
+                        $this->SendDebug("JSON3 - Paket 3 Error", json_last_error(), 0);
+                    } catch (JsonException $err) { }
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        switch(json_last_error()) {
+                            case JSON_ERROR_NONE:
+                                $fehler = ' - Keine Fehler';
+                            break;
+                            case JSON_ERROR_DEPTH:
+                                $fehler = ' - Maximale Stacktiefe überschritten';
+                            break;
+                            case JSON_ERROR_STATE_MISMATCH:
+                                $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
+                            break;
+                            case JSON_ERROR_CTRL_CHAR:
+                                $fehler = ' - Unerwartetes Steuerzeichen gefunden';
+                            break;
+                            case JSON_ERROR_SYNTAX:
+                                $fehler = ' - Syntaxfehler, ungültiges JSON';
+                            break;
+                            case JSON_ERROR_UTF8:
+                                $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
+                            break;
+                            default:
+                            $fehler = ' - Unbekannter Fehler';
+                            break;
+                        }
+                        $this->ModErrorLog($log, "WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
+                        $this->SendDebug("PAKET2Fehler:",$fehler, 0);
+                    }
+                    else{
+                        $dataNewHash = md5($json3);
+                        $this->SendDebug("PAKETJSON3:","sende Paket 3", 0);
+                        $this->setvalue("DataSendToClient", "Paket 3");
+                        $this->SendText($json3);
+                    }
+                    $this->SetBuffer("CamBuffer", $dataNewHash);
+                }
+                else{
+                    $this->SendDebug("PAKETJSON3:", "Daten haben sich nicht geändert keine Übertragung.", 0);
+                }                
+
+            }
+
             }
 
         }
