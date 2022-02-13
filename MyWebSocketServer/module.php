@@ -1825,7 +1825,7 @@ class MyWebsocketServer extends IPSModule
                 $data['ID57942']['value'] = $h.':'.$m;	
                 $data['ID57942']['changed'] = true;
 
-                $this->SendDebug("Test:", count$data, 0);
+                $this->SendDebug("Test:", count($data), 0);
 
                 //Datenpaket auf 20 Variablen aufteilen
                 $pakete = array_chunk($data, 20, true);
