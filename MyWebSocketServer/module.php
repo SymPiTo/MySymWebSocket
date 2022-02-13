@@ -1794,7 +1794,7 @@ class MyWebsocketServer extends IPSModule
                             }
                             else {
                                 $IPSdata[$key]['changed'] = 'y';
-                                $data['ID'.$varid] = $wert;
+                                $data['ID'.$varid]['value'] = $wert;
                                 $data['ID'.$varid]['changed'] = 'y';
                             }
                             $IPSdata[$key]['hash'] = md5($wert);
