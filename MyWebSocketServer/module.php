@@ -1810,7 +1810,7 @@ class MyWebsocketServer extends IPSModule
                     return ($var['changed'] == 'y');
                 });
                 $this->SendDebug('sendIPSVarsNew: ', 'Anzahl gefilterte Vars: '.count($new), 0);
-                $this->SendDebug('sendIPSVarsNew_New:', $new, 0);
+                $this->SendDebug('changed Variables:', $new, 0);
                 $a = getvalue(11938);
                 $b = date('m/d/Y H:i:s', $a);
                 $h = substr($b,11,2);
