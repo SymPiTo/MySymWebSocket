@@ -1785,7 +1785,7 @@ class MyWebsocketServer extends IPSModule
                         if($init){
                             $IPSdata[$key]['changed'] = 'y';
                             $data['ID'.$varid]['value'] = $wert;
-                            $data['ID'.$varid]['changed'] = true;
+                            $data['ID'.$varid]['changed'] = 'y';
                             $IPSdata[$key]['hash'] = md5($wert);
                         } 
                         else{
@@ -1795,7 +1795,7 @@ class MyWebsocketServer extends IPSModule
                             else {
                                 $IPSdata[$key]['changed'] = 'y';
                                 $data['ID'.$varid] = $wert;
-                                $data['ID'.$varid]['changed'] = true;
+                                $data['ID'.$varid]['changed'] = 'y';
                             }
                             $IPSdata[$key]['hash'] = md5($wert);
                         }
@@ -1825,7 +1825,7 @@ class MyWebsocketServer extends IPSModule
                 $data['ID57942']['value'] = $h.':'.$m;	
                 $data['ID57942']['changed'] = true;
 
-                //$this->SendDebug("Test:", $data, 0);
+                $this->SendDebug("Test:", count$data, 0);
 
                 //Datenpaket auf 20 Variablen aufteilen
                 $pakete = array_chunk($data, 20, true);
