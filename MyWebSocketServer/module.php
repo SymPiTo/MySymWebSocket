@@ -1988,6 +1988,7 @@ class MyWebsocketServer extends IPSModule
  
         /* -- Alle Variablen die in Info Feld einen Eintrag "WSS" oder "WSS1" haben - */
         /* --------------------- in ein Array IpsVars schreiben --------------------- */
+        $IpsVarsFast = [];
         foreach($alleVariablen as $key => $var){
             $IPSVariable = IPS_GetObject($var);
             $Info = $IPSVariable['ObjectInfo'];
