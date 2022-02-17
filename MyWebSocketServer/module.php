@@ -1772,7 +1772,7 @@ class MyWebsocketServer extends IPSModule
                             }
                             else {
                                 $IPSdata[$key]['changed'] = 'y';
-                                if($varID == "11938" or $varID == "57942"){
+                                if($varid == "11938" or $varid == "57942"){
                                     $b = date('m/d/Y H:i:s', $wert);
                                     $h = substr($b,11,2);
                                     $m = substr($b,14,2);
