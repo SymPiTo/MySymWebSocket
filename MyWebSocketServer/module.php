@@ -1816,13 +1816,13 @@ class MyWebsocketServer extends IPSModule
 
                 $this->SendDebug("DataTest:", $data, 0);
                 if(!empty($data)){
-                    if(count($data)>20){
+                    if(count($data)>5){
                         /* ----------- geänderte Daten in Pakete zu 20 Variablen aufteilen ---------- */
-                        $pakete = array_chunk($data, 20, true);
+                        $pakete = array_chunk($data, 5, true);
                         $this->SendDebug("MultiTest:", $pakete, 0);
                         /* --------------------------- alle Pakete senden --------------------------- */
                     } 
-                    elseif(count($data)<21){
+                    elseif(count($data)<6){
                         $pakete = $data;
                         $this->SendDebug("singleTest:", $pakete, 0);
                     }
