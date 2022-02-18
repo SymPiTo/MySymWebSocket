@@ -1819,13 +1819,16 @@ class MyWebsocketServer extends IPSModule
                     if(count($data)>20){
                         /* ----------- geänderte Daten in Pakete zu 20 Variablen aufteilen ---------- */
                         $pakete = array_chunk($data, 20, true);
+                        $this->SendDebug("MultiTest:", $pakete, 0);
                         /* --------------------------- alle Pakete senden --------------------------- */
                     } 
                     elseif(count($data)<21){
                         $pakete = $data;
+                        $this->SendDebug("singleTest:", $pakete, 0);
                     }
                     foreach ($pakete as $key => $daten) {
                         $this->SendDebug("filterTest:", $daten, 0);
+                         
                         $paket['PaketNr'] = $key;
                             $c = array($daten, $paket);
                             try {
