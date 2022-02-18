@@ -1814,7 +1814,7 @@ class MyWebsocketServer extends IPSModule
                     $data['ID57942']['changed'] = true;
                 */
 
-               $this->SendDebug("Test:", count($data), 0);
+               $this->SendDebug("DataTest:", count($data), 0);
                 if(!empty($data)){
                     if(count($data)>20){
                         /* ----------- geänderte Daten in Pakete zu 20 Variablen aufteilen ---------- */
