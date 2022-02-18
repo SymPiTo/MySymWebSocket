@@ -1822,21 +1822,20 @@ class MyWebsocketServer extends IPSModule
                         $this->SendDebug("MultiTest:", $pakete, 0);
                         /* --------------------------- alle Pakete senden --------------------------- */
                     } 
-                    elseif(count($data)<6){
-                        $pakete = $data;
-                        $this->SendDebug("singleTest:", $pakete, 0);
-                    }
-                    foreach ($pakete as $daten) {
-                        $this->SendDebug("filterTest:", $daten, 0);
-                         
+                
+                    foreach ($pakete as $key => $daten) {
                         $paket['PaketNr'] = $key;
-                            $c = array($daten, $paket);
-                            try {
-                                $json1 = json_encode($c);
-                                //$this->SendDebug("JSON1 - Paket 1 Error", json_last_error(), 0);
-                            } catch (JsonException $err) { }
-                            if (json_last_error() !== JSON_ERROR_NONE) {
-                                switch(json_last_error()) {
+                        if(count($data)<6){
+                            $daten = $data;
+                        }
+                        $this->SendDebug("filterTest:", $daten, 0);
+                        $c = array($daten, $paket);
+                        try {
+                            $json1 = json_encode($c);
+                            //$this->SendDebug("JSON1 - Paket 1 Error", json_last_error(), 0);
+                        } catch (JsonException $err) { }
+                        if (json_last_error() !== JSON_ERROR_NONE) {
+                            switch(json_last_error()) {
                                     case JSON_ERROR_NONE:
                                         $fehler = ' - Keine Fehler';
                                     break;
@@ -1861,12 +1860,12 @@ class MyWebsocketServer extends IPSModule
                                 }
                                 //$this->ModErrorLog($log, "WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
                                 $this->SendDebug("PAKETFehler:",$fehler, 0);
-                            }
-                            else{
-                                //$this->SendDebug("PAKETJSON:","sende Paket ".$key, 0);
-                                $this->setvalue("DataSendToClient", "Daten: " .count($data).' von '.count($IPSdata));
-                                $this->SendText($json1);
-                            }
+                        }
+                        else{
+                            //$this->SendDebug("PAKETJSON:","sende Paket ".$key, 0);
+                            $this->setvalue("DataSendToClient", "Daten: " .count($data).' von '.count($IPSdata));
+                            $this->SendText($json1);
+                        }
                     }
                 }
 
