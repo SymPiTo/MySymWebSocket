@@ -1821,7 +1821,7 @@ class MyWebsocketServer extends IPSModule
                         $pakete = array_chunk($data, 20, true);
                         /* --------------------------- alle Pakete senden --------------------------- */
                     } 
-                    elseif(count($data<21)){
+                    elseif(count($data)<21){
                         $pakete = $data;
                     }
                     foreach ($pakete as $key => $daten) {
