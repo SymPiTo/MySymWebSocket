@@ -1826,7 +1826,7 @@ class MyWebsocketServer extends IPSModule
                         $pakete = $data;
                         $this->SendDebug("singleTest:", $pakete, 0);
                     }
-                    foreach ($pakete as $key => $daten) {
+                    foreach ($pakete as $daten) {
                         $this->SendDebug("filterTest:", $daten, 0);
                          
                         $paket['PaketNr'] = $key;
