@@ -1814,7 +1814,7 @@ class MyWebsocketServer extends IPSModule
                     $data['ID57942']['changed'] = true;
                 */
 
-               $this->SendDebug("DataTest:", $data, 0);
+                //$this->SendDebug("DataTest:", $data, 0);
                 if(!empty($data)){
                     if(count($data)>20){
                         /* ----------- geänderte Daten in Pakete zu 20 Variablen aufteilen ---------- */
@@ -1825,7 +1825,7 @@ class MyWebsocketServer extends IPSModule
                         $pakete = $data;
                     }
                     foreach ($pakete as $key => $daten) {
-                        //$this->SendDebug("Test:", $daten, 0);
+                        $this->SendDebug("filterTest:", $daten, 0);
                         $paket['PaketNr'] = $key;
                             $c = array($daten, $paket);
                             try {
