@@ -1815,12 +1815,15 @@ class MyWebsocketServer extends IPSModule
                 */
 
                // $this->SendDebug("Test:", count($data), 0);
-                if(count($data)>20){
-                    /* ----------- geänderte Daten in Pakete zu 20 Variablen aufteilen ---------- */
-                    $pakete = array_chunk($data, 20, true);
-                    /* --------------------------- alle Pakete senden --------------------------- */
-                } 
-                elseif($data<21 and $data>0){
+                if(!empty($data)){
+                    if(count($data)>20){
+                        /* ----------- geänderte Daten in Pakete zu 20 Variablen aufteilen ---------- */
+                        $pakete = array_chunk($data, 20, true);
+                        /* --------------------------- alle Pakete senden --------------------------- */
+                    } 
+                    elseif(count($data<21)){
+                        $pakete = $data;
+                    }
                     foreach ($pakete as $key => $daten) {
                         //$this->SendDebug("Test:", $daten, 0);
                         $paket['PaketNr'] = $key;
