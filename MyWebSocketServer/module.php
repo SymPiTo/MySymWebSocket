@@ -1974,9 +1974,9 @@ class MyWebsocketServer extends IPSModule
         //IPS_DeleteEvent($EreignisID);
 
         /* ---------------- WSS1 Message Events löschen --------------- */
-        $IPSdataFastArr = array();
+        $IPSdataFastArr = [];
         $IPSdataFastArr = json_decode($this->GetBuffer('IPSdataFast'), true);
-        if(count($IPSdataFastArr)>0){
+        if(!empty($IPSdataFastArr)){
             /* ----------------- Alle WSSVariable aus dem Puffer IPSdataFast ---------------- */
             foreach($IPSdataFastArr as $key =>  $IPSVariableFast) {
                 $varid = $IPSVariableFast['ID'];
