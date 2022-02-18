@@ -1976,12 +1976,13 @@ class MyWebsocketServer extends IPSModule
         /* ---------------- WSS1 Message Events löschen --------------- */
         $IPSdataFastArr = [];;
         $IPSdataFastArr = json_decode($this->GetBuffer('IPSdataFast'), true);
-        /* ----------------- Alle WSSVariable aus dem Puffer IPSdataFast ---------------- */
-        foreach($IPSdataFastArr as $key =>  $IPSVariableFast) {
-            $varid = $IPSVariableFast['ID'];
-            $this->UnregisterMessage(intval($varid), VM_UPDATE);
+        if(count($IPSdataFastArr)>0){
+            /* ----------------- Alle WSSVariable aus dem Puffer IPSdataFast ---------------- */
+            foreach($IPSdataFastArr as $key =>  $IPSVariableFast) {
+                $varid = $IPSVariableFast['ID'];
+                $this->UnregisterMessage(intval($varid), VM_UPDATE);
+            }
         }
-     
             
         /* ---------------- Alle VariablenIDs aus Symcon DB auslesen ---------------- */
         $alleVariablen = IPS_GetVariableList();
