@@ -1815,52 +1815,54 @@ class MyWebsocketServer extends IPSModule
                 */
 
                // $this->SendDebug("Test:", count($data), 0);
-
-                /* ----------- geänderte Daten in Pakete zu 20 Variablen aufteilen ---------- */
-                $pakete = array_chunk($data, 20, true);
-                /* --------------------------- alle Pakete senden --------------------------- */
-                foreach ($pakete as $key => $daten) {
-                    //$this->SendDebug("Test:", $daten, 0);
-                    $paket['PaketNr'] = $key;
-                        $c = array($daten, $paket);
-                        try {
-                            $json1 = json_encode($c);
-                            //$this->SendDebug("JSON1 - Paket 1 Error", json_last_error(), 0);
-                        } catch (JsonException $err) { }
-                        if (json_last_error() !== JSON_ERROR_NONE) {
-                            switch(json_last_error()) {
-                                case JSON_ERROR_NONE:
-                                    $fehler = ' - Keine Fehler';
-                                break;
-                                case JSON_ERROR_DEPTH:
-                                    $fehler = ' - Maximale Stacktiefe überschritten';
-                                break;
-                                case JSON_ERROR_STATE_MISMATCH:
-                                    $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
-                                break;
-                                case JSON_ERROR_CTRL_CHAR:
-                                    $fehler = ' - Unerwartetes Steuerzeichen gefunden';
-                                break;
-                                case JSON_ERROR_SYNTAX:
-                                    $fehler = ' - Syntaxfehler, ungültiges JSON';
-                                break;
-                                case JSON_ERROR_UTF8:
-                                    $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
-                                break;
-                                default:
-                                $fehler = ' - Unbekannter Fehler';
-                                break;
+                if(count($data)>20){
+                    /* ----------- geänderte Daten in Pakete zu 20 Variablen aufteilen ---------- */
+                    $pakete = array_chunk($data, 20, true);
+                    /* --------------------------- alle Pakete senden --------------------------- */
+                } 
+                elseif($data<21 and $data>0){
+                    foreach ($pakete as $key => $daten) {
+                        //$this->SendDebug("Test:", $daten, 0);
+                        $paket['PaketNr'] = $key;
+                            $c = array($daten, $paket);
+                            try {
+                                $json1 = json_encode($c);
+                                //$this->SendDebug("JSON1 - Paket 1 Error", json_last_error(), 0);
+                            } catch (JsonException $err) { }
+                            if (json_last_error() !== JSON_ERROR_NONE) {
+                                switch(json_last_error()) {
+                                    case JSON_ERROR_NONE:
+                                        $fehler = ' - Keine Fehler';
+                                    break;
+                                    case JSON_ERROR_DEPTH:
+                                        $fehler = ' - Maximale Stacktiefe überschritten';
+                                    break;
+                                    case JSON_ERROR_STATE_MISMATCH:
+                                        $fehler = ' - Unterlauf oder Nichtübereinstimmung der Modi';
+                                    break;
+                                    case JSON_ERROR_CTRL_CHAR:
+                                        $fehler = ' - Unerwartetes Steuerzeichen gefunden';
+                                    break;
+                                    case JSON_ERROR_SYNTAX:
+                                        $fehler = ' - Syntaxfehler, ungültiges JSON';
+                                    break;
+                                    case JSON_ERROR_UTF8:
+                                        $fehler = ' - Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert';
+                                    break;
+                                    default:
+                                    $fehler = ' - Unbekannter Fehler';
+                                    break;
+                                }
+                                //$this->ModErrorLog($log, "WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
+                                $this->SendDebug("PAKETFehler:",$fehler, 0);
                             }
-                            //$this->ModErrorLog($log, "WebSocketServer", "sendIPSVars-Paket1 Fehler", $fehler);
-                            $this->SendDebug("PAKETFehler:",$fehler, 0);
-                        }
-                        else{
-                            //$this->SendDebug("PAKETJSON:","sende Paket ".$key, 0);
-                            $this->setvalue("DataSendToClient", "Daten: " .count($data).' von '.count($IPSdata));
-                            $this->SendText($json1);
-                        }
+                            else{
+                                //$this->SendDebug("PAKETJSON:","sende Paket ".$key, 0);
+                                $this->setvalue("DataSendToClient", "Daten: " .count($data).' von '.count($IPSdata));
+                                $this->SendText($json1);
+                            }
+                    }
                 }
-
 
 
 
