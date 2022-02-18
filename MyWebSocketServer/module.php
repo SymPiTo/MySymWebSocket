@@ -1741,7 +1741,7 @@ class MyWebsocketServer extends IPSModule
                         $this->SetValue("Message", "Variable fehlt:".$varid);
                     }
                     finally{
-                        $IPSdata[$key]['ID']=$varid;
+                        $IPSdata[$key]['ID'] = $varid;
                         $wert = getvalue($varid);
                         //prüfen ov $wert ein String oder ein Array ist
  
@@ -1787,7 +1787,7 @@ class MyWebsocketServer extends IPSModule
                     }
                 }
                 //$this->SendDebug('sendIPSVarsNew: ',  'speichere Daten.', 0);
-
+                /* ------------ schreibt aktuelle Werte zurück in history Buffer ------------ */
                 $this->SetBuffer('IPSdata', json_encode($IPSdata));
                 
                 /* ------ Daten die sich verändert haben ausfiltern (['changed'] == 'y' ----- */
@@ -1814,7 +1814,7 @@ class MyWebsocketServer extends IPSModule
                     $data['ID57942']['changed'] = true;
                 */
 
-               // $this->SendDebug("Test:", count($data), 0);
+               $this->SendDebug("Test:", count($data), 0);
                 if(!empty($data)){
                     if(count($data)>20){
                         /* ----------- geänderte Daten in Pakete zu 20 Variablen aufteilen ---------- */
@@ -1995,6 +1995,7 @@ class MyWebsocketServer extends IPSModule
         /* -- Alle Variablen die in Info Feld einen Eintrag "WSS" oder "WSS1" haben - */
         /* --------------------- in ein Array IpsVars schreiben --------------------- */
         $IpsVarsFast = [];
+        /* ------------------------- $var = IPS Variable ID ------------------------- */
         foreach($alleVariablen as $key => $var){
             $IPSVariable = IPS_GetObject($var);
             $Info = $IPSVariable['ObjectInfo'];
