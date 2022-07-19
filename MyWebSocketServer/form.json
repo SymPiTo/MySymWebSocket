@@ -155,7 +155,7 @@
                 {   
                     "caption": "aktivIP",
                     "name": "safeIP",
-                    "width": "auto",
+                    "width": "50px",
                     "visible": true,
                     "add": false,
                     "edit": 
@@ -168,7 +168,7 @@
                 {
                     "caption": "IP-Adresse",
                     "name": "WhiteListIP",
-                    "width": "auto",
+                    "width": "200px",
                     "visible": true,
                     "add": "",
                     "edit":
@@ -177,6 +177,19 @@
                         "type": "ValidationTextBox"
                     }
                      
+                },
+                {   
+                    "caption": "FKB",
+                    "name": "FKB",
+                    "width": "50px",
+                    "visible": true,
+                    "add": false,
+                    "edit": 
+                    {
+                        "caption": "FKB",
+                        "type": "CheckBox"
+                    }
+                    
                 }
             ], 
             "values": []

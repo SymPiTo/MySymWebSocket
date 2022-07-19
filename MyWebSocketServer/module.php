@@ -1345,7 +1345,7 @@ class MyWebsocketServer extends IPSModule
             /* --------- prüfen ob das noch verwendet wird - ersetzt durch func --------- */
             if(substr($command, 0, 7) == 'command'){
             $command = substr($command, 8, strlen($command)-9);
-            SetValueString($this->GetIDForIdent("CommandSendToServer"), $command);
+            $this->SetValueString("CommandSendToServer", $command);
             
                 IPS_RunScript($this->ReadPropertyInteger('IDcommand'));
                 $this->SendDebug('extrahierte Werte sind = ', $command, 0);
@@ -1454,12 +1454,22 @@ class MyWebsocketServer extends IPSModule
         $Result = $this->WaitForPong($Client);
         $this->{'Pong' . $Client->ClientIP . $Client->ClientPort} = '';
         if ($Result === false) {
+            //Client antwortet nicht
             $this->SendDebug('Timeout ' . $Client->ClientIP . ':' . $Client->ClientPort, '', 0);
-            $this->ModErrorLog($log, "WebsocketServer", "Receive of Pong from Client failed", $Result);
+           
             $this->LogMessage("WebsocketServer: Receive of Pong from Client failed".$Result, KL_ERROR);
             trigger_error($this->Translate('Timeout'), E_USER_NOTICE);
+            //Client entfernen und Verbindung zu Client schliessen
             $this->RemoveOneClient($Client);
             $this->CloseConnection($Client);
+            //falls Client auf einen Fully Kiosk Browser läuft - dann FKB nachstarten.
+            //Alle freigegebenen Clients durchsuchen
+            $fkbClient = $this->checkWhitelist($Client->ClientIP, true);
+            if($fkbClient){
+                FKB_loadStartURL(46525);
+            }
+
+
             return false;
         }
         if ($Result !== $Text) {
@@ -1697,7 +1707,7 @@ class MyWebsocketServer extends IPSModule
             $xml = json_encode($c);
             $this->SendText($xml);
             //zum sichtbar machen
-            setvalue($this->GetIDForIdent("DataSendToClient"), $xml);
+            $this->SetValue("DataSendToClient", $xml);
         } 
 
         /* ----------------------------------------------------------------------------
@@ -2101,10 +2111,10 @@ class MyWebsocketServer extends IPSModule
             //CLients in 4 Variable schreiben
              
             $n = 0;
-            setValue($this->GetIDForIdent("Client1"),'');   
-            setValue($this->GetIDForIdent("Client2"),'');    
-            setValue($this->GetIDForIdent("Client3"),'');    
-            setValue($this->GetIDForIdent("Client4"),'');   
+            $this->SetValue("Client1",'');   
+            $this->SetValue("Client2",'');    
+            $this->SetValue("Client3",'');    
+            $this->SetValue("Client4",'');   
             foreach ($list as $key => $value) {
                 
                 if($n == 0){
@@ -2147,16 +2157,33 @@ class MyWebsocketServer extends IPSModule
 
 
 
-        Protected function checkWhitelist($ClIP){
+        Protected function checkWhitelist($ClIP, $fkb=false){
             $WhiteListData = json_decode($this->ReadPropertyString("WhiteList"));
             $this->SendDebug('checkWhitelist: ' , $ClIP, 0);
             $this->SendDebug('checkWhitelist: ' , $WhiteListData, 0);
             foreach($WhiteListData as $WhiteListDataRow) {
                 
                     $this->SendDebug('Vergleiche Whitelist: ' , $ClIP . ':' . $WhiteListDataRow->WhiteListIP, 0);
-                    if ($ClIP == $WhiteListDataRow->WhiteListIP){
-                        return true;
-                    }
+                    
+                    
+                        if ($ClIP == $WhiteListDataRow->WhiteListIP){
+                            //nur auf vorhandene IP prüfen
+                            if($fkb == false){
+                                return true;
+                            }
+                            else{
+                                //auf FullyKioskBrowser prüfen
+                                if($WhiteListDataRow->FKB == true){
+                                    return true;
+                                }
+                                else{
+                                    return false;
+                                }
+                            }
+                        }
+                    
+
+
      					
             };
             return false;
