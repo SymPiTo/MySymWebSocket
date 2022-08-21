@@ -5,11 +5,6 @@
             "caption": "Activate WebSocketServer"
         },
         {
-            "name": "da",
-            "type": "CheckBox",
-            "caption": "Activate Debug"
-        },
-        {
             "type": "NumberSpinner",
             "name": "UpdateInterval",
             "caption": "UpdateInterval",
@@ -188,9 +183,7 @@
         "type": "Button",
         "caption": "Create WSS-Variable and Messages",
         "onClick": "MyWSS_RegisterIPSMessages($id);"
-
         }
-
     ],
     "status": [{
             "code": 101,
