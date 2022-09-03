@@ -2261,5 +2261,3 @@ class MyWebsocketServer extends IPSModule
         }
     }
 }
-
-
