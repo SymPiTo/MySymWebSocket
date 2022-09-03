@@ -5,11 +5,6 @@
             "caption": "Activate WebSocketServer"
         },
         {
-            "name": "da",
-            "type": "CheckBox",
-            "caption": "Activate Debug"
-        },
-        {
             "type": "NumberSpinner",
             "name": "UpdateInterval",
             "caption": "UpdateInterval",
@@ -155,7 +150,7 @@
                 {   
                     "caption": "aktivIP",
                     "name": "safeIP",
-                    "width": "50px",
+                    "width": "auto",
                     "visible": true,
                     "add": false,
                     "edit": 
@@ -168,7 +163,7 @@
                 {
                     "caption": "IP-Adresse",
                     "name": "WhiteListIP",
-                    "width": "200px",
+                    "width": "auto",
                     "visible": true,
                     "add": "",
                     "edit":
@@ -177,19 +172,6 @@
                         "type": "ValidationTextBox"
                     }
                      
-                },
-                {   
-                    "caption": "FKB",
-                    "name": "FKB",
-                    "width": "50px",
-                    "visible": true,
-                    "add": false,
-                    "edit": 
-                    {
-                        "caption": "FKB",
-                        "type": "CheckBox"
-                    }
-                    
                 }
             ], 
             "values": []
@@ -201,9 +183,7 @@
         "type": "Button",
         "caption": "Create WSS-Variable and Messages",
         "onClick": "MyWSS_RegisterIPSMessages($id);"
-
         }
-
     ],
     "status": [{
             "code": 101,
