@@ -37,7 +37,7 @@
         {
             "name": "Interval",
             "type": "NumberSpinner",
-            "caption": "Timeout"
+            "caption": "Timeout in sec."
         },
 
         {
@@ -147,6 +147,19 @@
             },
             "columns": 
             [
+                {   
+                    "caption": "aktivFKB",
+                    "name": "FKBon",
+                    "width": "auto",
+                    "visible": true,
+                    "add": false,
+                    "edit": 
+                    {
+                        "caption": "On",
+                        "type": "CheckBox"
+                    }
+                    
+                } ,
                 {   
                     "caption": "aktivIP",
                     "name": "safeIP",

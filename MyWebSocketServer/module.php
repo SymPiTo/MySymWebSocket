@@ -1472,6 +1472,8 @@ class MyWebsocketServer extends IPSModule
             trigger_error($this->Translate('Timeout'), E_USER_NOTICE);
             $this->RemoveOneClient($Client);
             $this->CloseConnection($Client);
+            //Nachladen
+            $this->FKBrestart($Client->ClientIP);
             return false;
         }
         if ($Result !== $Text) {
@@ -2071,6 +2073,7 @@ class MyWebsocketServer extends IPSModule
             
         /* -------------- Alle IPS Daten "WSS" und "WSS1" in den Puffer schreiben -------------- */
         $this->SetBuffer('IPSdata', json_encode($IpsVars));
+        
 
         /* -------------- Alle IPS Daten "WSS1" in den Puffer schreiben -------------- */
         $this->SetBuffer('IPSdataFast', json_encode($IpsVarsFast));
@@ -2157,7 +2160,26 @@ class MyWebsocketServer extends IPSModule
         }
 
 
-
+        Protected function FKBrestart($ClIP){
+            $WhiteListData = json_decode($this->ReadPropertyString("WhiteList"));
+            $this->SendDebug('FKBrestart: ' , $ClIP, 0);
+            $this->SendDebug('FKBrestart: ' , $WhiteListData, 0);
+            foreach($WhiteListData as $WhiteListDataRow) {
+                
+                    $this->SendDebug('Vergleiche FKBrestart: ' , $ClIP . ':' . $WhiteListDataRow->WhiteListIP, 0);
+                    if ($ClIP == $WhiteListDataRow->WhiteListIP){
+                        if($WhiteListDataRow->FKBon){
+                            $this->SendDebug('FKBrestart: ' , 'starte FKB nach', 0);
+                            $this->LogMessage("WebsocketServer: Starte FullyKioskBrowser: ".$ClIP, KL_MESSAGE);
+                            FKB_loadStartURL(46525);
+                            return true;
+                        }
+                        
+                    }
+     					
+            };
+            return false;
+        }
 
 
         Protected function checkWhitelist($ClIP){

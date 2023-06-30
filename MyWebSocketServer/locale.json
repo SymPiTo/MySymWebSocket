@@ -27,7 +27,7 @@
             "Unknow client": "Unbekannter Client",
             "Client not connected": "Client nicht verbunden",
             "FrameTyp invalid": "FrameTyp ungültig",
-            "Timeout": "Zeitüberschreitung",
+            "Timeout in sec.": "Zeitüberschreitung",
             "Wrong pong received": "Falschen pong empfangen"
         }
     }
